@@ -87,7 +87,7 @@ function saveClubs ($clubName, $clubLocation, $clubRate) {
   $mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
   $stmt = $mysqli->prepare("INSERT INTO goingClubbing (clubName, clubLocation, clubRate) VALUES (?, ?, ?)");
   echo $mysqli->error;
-  $stmt->bind_param("sss", $clubName, $clubLocation, $clubRate);
+  $stmt->bind_param("ssi", $clubName, $clubLocation, $clubRate);
 
   if ($stmt->execute()) {
     echo "salvestamine õnnestus";
@@ -108,7 +108,7 @@ function getAllClubs () { //fn kõikide klubide andmete saamiseks
       ");
       echo $mysqli->error;
 
-      $stmt->bind_result($id, $clubName, $clubLocation, $clubRate;
+      $stmt->bind_result($id, $clubName, $clubLocation, $clubRate); 
       $stmt->execute(); //paneb käsu tööle! saame teada, kas käsk läks läbi või mitte
 
       // array ("Inna", "I")
@@ -119,9 +119,8 @@ function getAllClubs () { //fn kõikide klubide andmete saamiseks
           //echo $color. "<br>";
           $person = new StdClass();
           $person->id = $id;
-          $person->gender = $gender;
-          $person->campusColor = $color;
-          $person->created = $created;
+          $person->clubName = $clubName;
+          $person->clubLocation = $clubLocation;
 
 
           array_push($result, $person);

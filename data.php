@@ -15,19 +15,23 @@ if (isset ($_GET["logout"])) {
 }
 
 //väljade "naine" ja "toon" ei ole tühjad kontroll
-if ( isset ($_POST ["campusGender"]) &&
-   isset ($_POST ["campusColor"]) &&
-   !empty ($_POST ["campusGender"]) &&
-   !empty ($_POST ["campusColor"])
+if ( isset ($_POST ["clubName"]) &&
+   isset ($_POST ["clubLocation"]) &&
+   isset ($_POST ["clubRate"]) &&
+   !empty ($_POST ["clubName"]) &&
+   !empty ($_POST ["clubLocation"]) &&
+   !empty ($_POST ["clubRate"])
 ) {
 
-  $gender = cleanInput ($_POST ["gender"]);
+  $clubName = cleanInput ($_POST ["clubName"]);
+  $clubLocation = cleanInput ($_POST ["clubLocation"]);
+  $clubRate = cleanInput ($_POST ["clubRate"]);
 
-  savePeople ( $_POST["campusGender"],  $_POST ["campusColor"]);
+  savePeople ( $_POST["clubName"],  $_POST ["clubLocation"], $_POST ["clubRate"]);
 // login sisse
 }
 
-  $people = getAllPeople(); //käivitan funktsiooni
+  $people = getAllClubs(); //käivitan funktsiooni
   var_dump($people);
 ?>
 
@@ -38,18 +42,37 @@ if ( isset ($_POST ["campusGender"]) &&
 
 <a href = "?logout=1"> Logi välja    </a>
 
-<h1> Salvesta mööduv tudeng </h1>
+<h1> Anna hinnang klubile </h1>
 
 <form method = "POST">
-  <label> Kirjuta sugu </label>
-  <input name ="campusGender" type = "text" placeholder="sugu" >
+  <label> Kirjuta klubi nimi </label>
+  <input name ="clubName" type = "text" placeholder="sugu" >
 
   <br> <br>
-  <label> Kirjuta värv </label>
+  <label> Kirjuta klubi asukoht </label>
 
-  <input  name = "campusColor" type = "color" placeholder="toon" >
+  <input  name = "clubLocation" type = "color" placeholder="toon" >
 
   <br> <br>
+  <label> Anna klubile hinnang  </label>
+
+          <?php if($gender == "male") { ?>
+                  <input type="radio" name="rate" value="male" checked> Mees<br>
+                 <?php } else { ?>
+                  <input type="radio" name="rate" value="male" > Mees<br>
+                 <?php } ?>
+
+                 <?php if($gender == "female") { ?>
+                  <input type="radio" name="rate" value="female" checked> Naine<br>
+                 <?php } else { ?>
+                  <input type="radio" name="rate" value="female" > Naine<br>
+                 <?php } ?>
+
+                 <?php if($gender == "other") { ?>
+                  <input type="radio" name="rate" value="other" checked> Muu<br>
+                 <?php } else { ?>
+                  <input type="radio" name="rate" value="other" > Muu<br>
+                 <?php } ?>
 
   <input type = "submit" value = "SALVESTA">
 
@@ -66,7 +89,7 @@ if ( isset ($_POST ["campusGender"]) &&
 	}
 ?>
 
-<h2>Arhiivtabel</h2>
+<h2>Klubireitingute tabel</h2>
 <?php
 
 	$html = "<table>";
