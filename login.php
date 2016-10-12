@@ -20,6 +20,8 @@
 	$loginError="";
 	$loginSalvestatudEmail="";
 	$birthdateError="";
+	$birthdate="";
+	
 
 	//Kas see on üldse olemas
 	if(isset($_POST["signupEmail"])){
@@ -32,7 +34,7 @@
 		}
 	}
 
-	if(isset($_POST["signupPassword"])){
+	if(isset($_POST["signupPasssword"])){
 		if(empty($_POST["signupPassword"])){
 			$signupPasswordError="<i>See väli on kohustuslik!</i>";
 		}else{
@@ -56,7 +58,9 @@
 
 	if(isset($_POST["birthdate"])){
 		if(empty( $_POST["birthdate"])){
-			$genderError ="<i>See väli on kohustuslik!</i>";
+			$birthdateError="<i>See väli on kohustuslik!</i>";
+		}else{
+			$birthdate=$_POST["birthdate"];
 		}
 	}
 	
@@ -78,9 +82,10 @@
 		$signupEmail = cleanInput($signupEmail);
 		$password = cleanInput($password);
 		$gender = cleanInput($gender);
-		$birthdate = cleanInput($birthdate);
 
 		signup($signupEmail, $password, $gender, $birthdate);
+		
+		//teeb lehele refreshi
 	}
 
 	if(isset($_POST["loginEmail"]) &&
@@ -157,7 +162,7 @@
 				<br><br>
 			
 			<label>Sünnikuupäev: </label>
-			<input type="date" name="birthdate"> <?php echo "<font color:'red'>$birthdateError</font>"; ?>
+			<input type="date" name="birthdate" value="<?=$birthdate;?>"> <?php echo "<font color:'red'>$birthdateError</font>"; ?>
 
 				<br><br>
 
