@@ -21,13 +21,15 @@
 	}
 	
 	// ei ole tühjad väljad mida salvestada
-	if ( isset($_POST["gender"]) &&
-		 isset($_POST["color"]) &&
-		 !empty($_POST["gender"]) &&
-		 !empty($_POST["color"])
+	if ( isset($_POST["book"]) &&
+		 isset($_POST["autor"]) &&
+		 isset ($_POST ["rating"]) &&
+		 !empty($_POST["book"]) &&
+		 !empty($_POST["autor"]) &&
+		 !empty ($_POST["rating"])
 	  ) {
-		$gender = cleanInput($_POST["gender"]);
-		savePeople($gender, cleanInput($_POST["color"]));
+		$book = cleanInput($_POST["book"]);
+		savePeople($book, cleanInput($_POST["autor"]), $_POST["rating"]);
 	}
 	
 	$people = getAllPeople();
@@ -44,57 +46,57 @@
 	<a href="?logout=1">Logi välja</a>
 </p> 
 
-<h1>Salvesta inimene</h1>
+<h1>Salvesta raamat</h1>
 <form method="POST">
 			
-	<label>Sugu</label><br>
-	<input type="radio" name="gender" value="male" > Mees<br>
-	<input type="radio" name="gender" value="female" > Naine<br>
-	<input type="radio" name="gender" value="Unknown" > Ei oska öelda<br>
+	<label>Raamatu pealkiri ja autor</label><br>
+	<input type="text" name="book" value="book" > 
+	<input type="text" name="autor" value="autor" > 
+
 	
-	<!--<input type="text" name="gender" ><br>-->
+
 	
 	<br><br>
-	<label>Värv</label><br>
-	<input name="color" type="color"> 
+	<label>Hinnang</label><br>
+	 <fieldset id='demo1' class="rating">
+                        <input class="stars" type="radio" id="star5" name="rating" value="5" />
+                        <label class = "full" for="star5" title="Awesome - 5 stars"></label>
+                        <input class="stars" type="radio" id="star4" name="rating" value="4" />
+                        <label class = "full" for="star4" title="Pretty good - 4 stars"></label>
+                        <input class="stars" type="radio" id="star3" name="rating" value="3" />
+                        <label class = "full" for="star3" title="Meh - 3 stars"></label>
+                        <input class="stars" type="radio" id="star2" name="rating" value="2" />
+                        <label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
+                        <input class="stars" type="radio" id="star1" name="rating" value="1" />
+                        <label class = "full" for="star1" title="Sucks big time - 1 star"></label>
+
+                    </fieldset> 
 	
 	<br><br>
 	<input type="submit" value="Salvesta">
 	
 </form>
 
-<h2>Arhiiv</h2>
-<?php 
 
-	foreach($people as $p){
-		
-		echo 	"<h3 style=' color:".$p->clothingColor."; '>"
-				.$p->gender
-				."</h3>";
-	}
-?>
 
-<h2>Arhiivtabel</h2>
+<h2>Loetud raamatute nimekiri</h2>
 <?php 
 	
 	$html = "<table>";
 		$html .= "<tr>";
 			$html .= "<th>id</th>";
-			$html .= "<th>Sugu</th>";
-			$html .= "<th>Värv</th>";
-			$html .= "<th>Loodud</th>";
+			$html .= "<th>Book</th>";
+			$html .= "<th>Autor</th>";
+			$html .= "<th>Rating</th>";
 		$html .= "</tr>";
 
 		foreach($people as $p){
 			$html .= "<tr>";
 				$html .= "<td>".$p->id."</td>";
-				$html .= "<td>".$p->gender."</td>";
-				$html .= "<td style=' background-color:".$p->clothingColor."; '>"
-						.$p->clothingColor
-						."</td>";
+				$html .= "<td>".$p->book."</td>";
+				$html .= "<td>".$p->rating."</td>";
 				//<img width="200" src=' ".$url." '>
-						
-				$html .= "<td>".$p->created."</td>";
+				
 			$html .= "</tr>";	
 		}
 		

@@ -1,4 +1,5 @@
 <?php
+require("../../config.php");
 //functions.php
 //alustan sessiooni, et saaks kasutada $_SESSIONS muutujaid
 session_start();
@@ -73,7 +74,7 @@ function hello ($firstname, $lastname) {
 				echo "kasutaja ".$id." logis sisse";
 				
 				
-				$_SESSION["userId"] = $id;
+				$_SESSION["userID"] = $id;
 				$_SESSION["email"] = $emailFromDb;
 				
 				//suunaks uuele lehele
@@ -98,14 +99,14 @@ function hello ($firstname, $lastname) {
 	}
 	
 	
-	function savePeople ($gender, $color) {
+	function savePeople ($book, $autor, $rating) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO ClothingOnTheCampus (gender, color) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO Lugemispaevik (book, autor, rating) VALUES (?, ?, ?)");
 		echo $mysqli->error;
 
-		$stmt->bind_param("ss", $gender, $color);
+		$stmt->bind_param("ss", $book, $autor, $rating);
 		
 		if ($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -121,12 +122,12 @@ function hello ($firstname, $lastname) {
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
 		$stmt = $mysqli->prepare("
-			SELECT id, gender, color, created
-			FROM clothingOnTheCampus
+			SELECT id, book, autor, rating, notes
+			FROM Lugemispaevik
 		");
 		echo $mysqli->error;
 		
-		$stmt->bind_result($id, $gender, $color, $created);
+		$stmt->bind_result($id, $book, $autor, $rating, $notes);
 		$stmt->execute();
 		
 	
@@ -137,9 +138,10 @@ function hello ($firstname, $lastname) {
 			
 			$person = new StdClass();
 			$person->id = $id;
-			$person->gender = $gender;
-			$person->clothingColor = $color;
-			$person->created = $created;
+			$person->book = $book;
+			$person->autor = $autor;
+			$person->rating = $rating;
+			$person->notes = $notes;
 			
 			//echo $color."<br>";
 			array_push($result, $person);
