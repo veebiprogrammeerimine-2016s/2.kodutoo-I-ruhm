@@ -34,18 +34,18 @@
 		");
 		echo $mysqli->error;
 		
-		//asendan küsimärgi
+		//Asendan küsimärgi
 		$stmt->bind_param("s", $email);
 		
-		//määran tupladele muutujad
+		//Määran tupladele muutujad
 		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $genderFromDb, $birthdateFromDb, $created);
 		$stmt->execute();
 		
-		//küsin rea andmeid
+		//Küsin rea andmeid
 		if($stmt->fetch()) {
-			//oli rida
+			//Oli rida
 		
-			// võrdlen paroole
+			//Võrdlen paroole
 			$hash = hash("sha512", $password);
 			if($hash == $passwordFromDb) {
 				
@@ -55,7 +55,7 @@
 				$_SESSION["userId"] = $id;
 				$_SESSION["email"] = $emailFromDb;
 				
-				//suunaks uuele lehele
+				//Suunaks uuele lehele
 				header("Location: data.php");
 				exit();
 				
@@ -64,7 +64,7 @@
 			}
 			
 		}else{
-			//ei olnud
+			//Ei olnud
 			$error = "E-mailiga ".$email." kasutajat ei eksisteeri!";
 		}
 		return $error;

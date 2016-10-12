@@ -2,14 +2,14 @@
 
 	require("functions.php");
 	
-	// Kas on sisseloginud
-	// kui ei ole siis suunata login lehele
+	//Kas on sisseloginud
+	//Kui ei ole, siis suunata login lehele
 	if (!isset ($_SESSION["userId"])) {
 		header("Location: login.php");
 		exit();
 	}
 	
-	//kas ?logout on aadressireal
+	//Kas ?logout on aadressireal
 	if (isset($_GET["logout"])) {
 		session_destroy();
 		header("Location: login.php");

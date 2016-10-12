@@ -85,7 +85,9 @@
 
 		signup($signupEmail, $password, $gender, $birthdate);
 		
-		//teeb lehele refreshi
+		//Teen lehele refreshi
+		header("Location: login.php");
+		exit();
 	}
 
 	if(isset($_POST["loginEmail"]) &&
@@ -162,7 +164,7 @@
 				<br><br>
 			
 			<label>Sünnikuupäev: </label>
-			<input type="date" name="birthdate" value="<?=$birthdate;?>"> <?php echo "<font color:'red'>$birthdateError</font>"; ?>
+			<input type="date" name="birthdate" value="<?=$birthdate;?>"> <?php echo "<font color='red'>$birthdateError</font>"; ?>
 
 				<br><br>
 
