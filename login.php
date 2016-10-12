@@ -91,18 +91,18 @@
 		echo "kasutajatunnus ".$signupUsername."<br>";
 		echo "email ".$signupEmail."<br>";
 		
-		$password = hash("sha512", $_POST["signupPassword"]);
+		$signupPassword = hash("sha512", $_POST["signupPassword"]);
 		
 		echo "parool ".$_POST["signupPassword"]."<br>";
-		echo "räsi ".$password."<br>";
+		echo "räsi ".$signupPassword."<br>";
 		echo "sugu ".$gender."<br>";
 		
 		//echo $serverUsername; 
 		
 		$signupEmail = cleanInput($signupEmail);
-		$password = cleanInput($password);
+		$signupPassword = cleanInput($signupPassword);
 		
-		signup($signupEmail, $password, $signupUsername, $gender);
+		signup($signupEmail, $signupPassword, $signupUsername, $gender);
 
 		}
 		
@@ -113,6 +113,10 @@
 			!empty($_POST["loginEmail"]) &&
 			!empty($_POST["loginPassword"])
 		) {
+			
+			$loginEmail = cleanInput($loginEmail);
+			$loginPassword = cleanInput($loginPassword);
+			
 			//login sisse
 			$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
 			
@@ -150,7 +154,7 @@
 		
 		<form method="POST"> 
 		
-			<input name="signupUsername" type="username" placeholder="Kasutajatunnus"> <?php echo $signupUsernameError; ?>
+			<input name="signupUsername" type="username" value="<?=$signupUsername;?>" placeholder="Kasutajatunnus"> <?php echo $signupUsernameError; ?>
 		
 			<br><br>
 			

@@ -75,31 +75,31 @@
 	}
 	
 	
-		function savePeople ($gender, $color) {
+	function Books ($author, $title) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 	
-		$stmt = $mysqli->prepare("INSERT INTO clothingOnTheCampus (gender, color) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO Books (author, title, user) VALUES (?, ?, ?)");
 		echo $mysqli->error;
 		
-		$stmt->bind_param("ss", $gender, $color);
+		$stmt->bind_param("ssi", $author, $title, $_SESSION["userId"]);
 		
 		if ($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 		} else {
 			echo "ERROR".$stmt->error;
 		}
 	}
 	
-	function getAllPeople() {
+	function AllBooks() {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 	
-		$stmt = $mysqli->prepare("SELECT id, gender, color, created FROM clothingOnTheCampus");
+		$stmt = $mysqli->prepare("SELECT id, author, title, created FROM Books WHERE user=?");
 		
 		echo $mysqli->error;
-		
-		$stmt->bind_result($id, $gender, $color, $created);
+		$stmt->bind_param("i",$_SESSION["userId"]);
+		$stmt->bind_result($id, $author, $title, $created);
 		$stmt->execute();
 		
 		//array("Karoliina", "Kullamaa")
@@ -110,8 +110,8 @@
 			
 			$person = new StdClass();
 			$person->id = $id;
-			$person->gender = $gender;
-			$person->color = $color;
+			$person->author = $author;
+			$person->title = $title;
 			$person->created = $created;
 			
 			//echo $color."<br>";
@@ -133,29 +133,6 @@
 		return $input;
 		
 	}
-	
-	
-	
-	
-	/*function sum ($x, $y) {
-		return $x + $y;
-		}
 
-	echo sum(375,555);
-	echo "<br>";
-	$answer = sum(10,15);
-	echo $answer;
-	echo "<br>";
-	
-	function hello ($firstname, $lastname) {
-		return "Tere tulemast ".$firstname." ".$lastname."!";
-	}
-	
-	echo sum(346,644);
-	echo "<br>";
-	$answer = sum(10,15);
-	echo $answer;
-	echo "<br>";
-	echo hello ("Karoliina", "K"); */
 ?>
 

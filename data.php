@@ -19,66 +19,59 @@
 	}
 
 	//ei ole tühjad väljad, mida salvestada (sugu ja värv)
-	if(isset($_POST["gender"]) &&
-			isset($_POST["color"]) &&
-			!empty($_POST["gender"]) &&
-			!empty($_POST["color"])
+	if(isset($_POST["author"]) &&
+			isset($_POST["title"]) &&
+			!empty($_POST["author"]) &&
+			!empty($_POST["title"])
 		) {
-			savePeople($_POST["gender"], $_POST["color"]);
+			Books($_POST["author"], $_POST["title"]);
 			
 		}
 	
 	
-	$people = getAllPeople();
+	$people = AllBooks();
 	
-	echo "<pre>";
-	var_dump($people);
-	echo "</pre>";
+	//echo "<pre>";
+	//var_dump($people);
+	//echo "</pre>";
 ?>
-<h1>Data</h1>
+<h1>Andmed</h1>
 <p> 
 	Tere tulemast <?=$_SESSION["email"];?>!
 	<a href="?logout=1">Logi välja</a>
 </p>
 
 <form method="POST"> 
-<label>Sugu</label><br>
+<label>Raamatu autor</label><br>
 			
-		<input type="text" name="gender" > <br><br>
+		<input type="text" name="author" > <br><br>
 	
-<label>Värv</label><br>
+<label>Raamatu pealkiri</label><br>
 		
-		<input type="color" name="color" > <br><br>
+		<input type="text" name="title" > <br><br>
 	
 	<input type="submit" value="Salvesta">	
 </form>
 
-<h2>Arhiiv</h2>
-<?php
 
-	foreach ($people as $p) {
-		
-		echo "<h3 style= ' color:".$p->color."; '>" .$p->gender."</h3>";
-	}
-?>
 
-<h2>Arhiivitabel</h2>
+<h2>Loetud raamatud</h2>
 <?php
 
 	$html = "<table>";
 	
 		$html .= "<tr>";
 			$html .= "<th>ID</th>";
-			$html .= "<th>Sugu</th>";
-			$html .= "<th>Värv</th>";
-			$html .= "<th>Loodud</th>";
+			$html .= "<th>Raamatu autor</th>";
+			$html .= "<th>Raamatu pealkiri</th>";
+			$html .= "<th>Loetud</th>";
 		$html .= "</tr>";
 
 	foreach($people as $p) {
 		$html .= "<tr>";
 			$html .= "<td>".$p->id."</td>";
-			$html .= "<td>".$p->gender."</td>";
-			$html .= "<td style=' background-color:".$p->color."; '>".$p->color."</td>";
+			$html .= "<td>".$p->author."</td>";
+			$html .= "<td>".$p->title."</td>";
 			$html .= "<td>".$p->created."</td>";
 		$html .= "</tr>";	
 	}
