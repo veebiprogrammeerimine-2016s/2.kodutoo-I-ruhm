@@ -36,16 +36,20 @@
 	//data faili vormi kontroll et väljad poleks tühjad
 	if ( isset($_POST["make"]) &&
 		 isset($_POST["model"]) &&
+		 isset($_POST["fuel"]) &&
+		 isset($_POST["carcolor"]) &&
 		 !empty($_POST["make"]) &&
-		 !empty($_POST["model"]) 
+		 !empty($_POST["model"]) &&
+		 !empty($_POST["fuel"]) &&
+		 !empty($_POST["carcolor"]) 
 	) {
 		
-		saveCars($_POST["make"], $_POST["model"]);	
+		saveCars($_POST["make"], $_POST["model"], $_POST["fuel"], $_POST["carcolor"]);	
 	}
 	
 	
 	$people = getAllPeople();
-	
+	$cars = getAllCars();
 	
 	
 	if ( isset ( $_POST["make"] ) ) {
@@ -64,6 +68,22 @@
 		}
 	}
 	
+	if ( isset ( $_POST["fuel"] ) ) {
+		if ( empty ( $_POST["fuel"] ) ) {
+			$modelError = "See väli on kohustuslik!";
+		} else {
+			$fuel = $_POST["fuel"];
+		}
+	}
+	
+	if ( isset ( $_POST["carcolor"] ) ) {
+		if ( empty ( $_POST["carcolor"] ) ) {
+			$modelError = "See väli on kohustuslik!";
+		} else {
+			$carcolor = $_POST["carcolor"];
+		}
+	}
+	
 	
 	
 	
@@ -76,39 +96,53 @@
 
 ?>
 
+
+
 <h1> Data </h1>
 <p>
 	Tere tulemast <?=$_SESSION["email"]; ?>!
 	
 	<a href="?logout=1">Logi välja</a>
 
-<h2>Salvesta auto</h2>
+<h2>Salvesta auto andmed</h2>
 <form method="POST">
 			
-	<label>Auto</label><br>
+	<label>Mark</label><br>
 
 		<select id="car" name="make" onchange="ChangeCarList()"> 
-		<option value="">--Vali mark--</option> 
-		<option value="VOLVO">Volvo</option> 
-		<option value="VW">Volkswagen</option> 
+		<option value="">Vali mark</option> 
+		<option value="Volvo">Volvo</option>
+		<option value="Toyota">Toyota</option> 
+		<option value="Volkswagen">Volkswagen</option> 
 		<option value="BMW">BMW</option> 
 		</select> 
 	<br><br>
-	<select id="carmodel" name="model"></select> 
+	<label>Mudel</label><br>
+	<select id="carmodel" name="model"></select>	
 
 	<br><br>
-	 
-	
+	<label>Kütus</label><br>
+	<select  name="fuel"> 
+		<option value="Diisel">Diisel</option> 
+		<option value="Bensiin">Bensiin</option> 
+		<option value="Bensiin/Gaas">Bensiin/Gaas</option> 
+		<option value="Elekter">Elekter</option> 
+	</select>
 	<br><br>
+	<label>Värv</label><br>
+	<input name="carcolor" type="color">
+	<br><br>
+	
 	<input type="submit" value="Salvesta">
 	
 
 
 <script>
 		var carsAndModels = {};
-		carsAndModels['VOLVO'] = ['--Vali mudel--', 'V70', 'XC60', 'XC90', 'S60', 'S80', 'S90'];
-		carsAndModels['VW'] = ['--Vali mudel--', 'Golf', 'Polo', 'Scirocco', 'Touareg', 'Passat', 'Transporter'];
-		carsAndModels['BMW'] = ['--Vali mudel--', 'M6', 'X5', 'Z3'];
+		carsAndModels['Volvo'] = ['Vali mudel', 'V70', 'XC60', 'XC90', 'S60', 'S80', 'S90'];
+		carsAndModels['Toyota'] = ['Vali mudel', 'Auris', 'Avensis', 'Corolla', 'Hilux', 'Land Cruiser', 'Prius'];
+		carsAndModels['Volkswagen'] = ['--Vali mudel--', 'Golf', 'Polo', 'Scirocco', 'Touareg', 'Passat', 'Transporter'];
+		carsAndModels['BMW'] = ['--Vali mudel--', '1.seeria', '2.seeria', '3.seeria', '4.seeria', '5.seeria', '6.seeria', '7.seeria', '8.seeria'];
 
 		function ChangeCarList() {
 			var carList = document.getElementById("car");
@@ -121,7 +155,7 @@
 			if (cars) {
 				var i;
 				for (i = 0; i < cars.length; i++) {
-					var car = new Option(cars[i], i);
+					var car = new Option(cars[i], cars[i]);
 					modelList.options.add(car);
 				}
 			}
@@ -132,7 +166,7 @@
 
 
 
-
+<!--
 	
 <h2>Salvesta inimene</h2>
 <form method="POST">
@@ -142,7 +176,7 @@
 	<input type="radio" name="sex" value="naine" > Naine<br>
 	<input type="radio" name="sex" value="teadmata" > Ei oska öelda<br>
 	
-	<!--<input type="text" name="gender" ><br>-->
+	
 	
 	<br><br>
 	<label>Värv</label><br>
@@ -152,37 +186,31 @@
 	<input type="submit" value="Salvesta">
 	
 </form>
+-->
+<h3>Arhiiv</h3>
 
-<h2>Arhiiv</h2>
+
 <?php
 
-
-	foreach($people as $p) {
-		
-		echo "<h3 style= ' color:".$p->clothingColor."; '>".$p->sex."</h3>";
-		
-	}
-
-?>
-
-<h2>Arhiivtabel</h2>
-<?php
-
-	$html = "<table>";
+	$html = "<table border='3px' cellpadding='10'>";
 		$html .= "<tr>";
-			$html .= "<td>id</td>";
-			$html .= "<td>Sugu</td>";
+			$html .= "<td>ID</td>";
+			$html .= "<td>Mark</td>";
+			$html .= "<td>Mudel</td>";
+			$html .= "<td>Kütus</td>";
 			$html .= "<td>Värv</td>";
 			$html .= "<td>Loodud</td>";
 		$html .= "</tr>";
 	
 
 
-	foreach($people as $p) {
+	foreach($cars as $p) {
 		$html .= "<tr>";
 				$html .= "<td>".$p->id."</td>";
-				$html .= "<td>".$p->sex."</td>";
-				$html .= "<td style=' background-color:".$p->clothingColor."; '>".$p->clothingColor."</td>";
+				$html .= "<td>".$p->make."</td>";
+				$html .= "<td>".$p->model."</td>";
+				$html .= "<td>".$p->fuel."</td>";
+				$html .= "<td style=' background-color:".$p->carcolor."; '>".$p->carcolor."</td>";
 				$html .= "<td>".$p->created."</td>";
 			$html .= "</tr>";	
 		
@@ -192,8 +220,6 @@
 	$html .= "</table>";
 	echo $html;
 ?>
-
-
 
 
 

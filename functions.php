@@ -130,20 +130,20 @@
 		
 	}
 	//andmete salvestamine andmebaasi
-	function saveCars ($make, $model) {
+	function saveCars ($make, $model, $fuel, $carcolor) {
 		
 		$error = "";
 		
 		//ühendus
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		//käsk
-		$stmt = $mysqli->prepare("INSERT INTO autod (make, model) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO autod (make, model, fuel, carcolor) VALUES (?, ?, ?, ?)");
 		
 		echo $mysqli->error;
 		//asendan küsimärgi väärtusetega
 		//iga muutuja kohta 1 täht, mis tüüpi muutuja on
 		// s- sring, i- integer, d- double/float
-		$stmt->bind_param("ss", $make, $model);
+		$stmt->bind_param("ssss", $make, $model, $fuel, $carcolor);
 		
 		if ($stmt->execute()) {
 			
@@ -188,8 +188,44 @@
 		
 		
 	}
+	
+	//fetchib andmeid andmebaasist
+	function getAllCars () {
+		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
+	
+		$stmt = $mysqli->prepare("SELECT id, make, model, fuel, carcolor, created FROM autod");
+		
+		echo $mysqli->error;
+		
+		$stmt->bind_result($id, $make, $model, $fuel, $carcolor, $created);
+		$stmt->execute();
+		
+		$result = array();
+		
+		
+		//seni kuni on 1 rida andmeid saada (10 rida = 10 korda)
+		while ($stmt->fetch()) {
+			
+			$singleCar = new StdClass();
+			$singleCar->id = $id;
+			$singleCar->make = $make;
+			$singleCar->model = $model;
+			$singleCar->fuel = $fuel;
+			$singleCar->carcolor = $carcolor;
+			$singleCar->created = $created;
+			
+			//echo $color."<br>";
+			array_push($result, $singleCar);
+			
+		}
+		$stmt->close();
+		$mysqli->close();
+		return $result;
+		
+		
+	}
 
-	fuction cleanInput($input) {
+	function cleanInput($input) {
 		
 		$input = trim($input);
 		$input = stripslashes($input);
