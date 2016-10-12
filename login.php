@@ -7,7 +7,7 @@
 	if (isset ($_SESSION["userId"])) {
 		
 		header("Location: data.php");
-		
+		exit();
 	}
 	//var_dump(5.5);
 	
@@ -90,6 +90,11 @@
 		echo "räsi ".$password."<br>";
 		
 		//echo $serverPassword;
+		
+		$signupEmail = cleanInput($signupEmail);
+		
+		
+		$password = cleanInput($password);
 		
 		signup($signupEmail, $password);
 	   

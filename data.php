@@ -6,7 +6,7 @@
 	if (!isset ($_SESSION["userId"])) {
 		
 		header("Location: login.php");
-		
+		exit();
 	}
 	
 	//kas ?logout on aadressireal
@@ -15,7 +15,7 @@
 		session_destroy();
 		
 		header("Location: login.php");
-		
+		exit();
 	}
 	
 	// ei ole tühjad väljad mida salvestada
@@ -25,6 +25,8 @@
 		 !empty($_POST["color"])
 	  ) {
 		
+	    $gender = cleanInput($_POST["gender"});
+		 
 		savePeople($_POST["gender"], $_POST["color"]);
 	}
 	

@@ -66,7 +66,7 @@
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
-				
+				exit();
 			} else {
 				$error = "parool vale";
 			}
@@ -136,7 +136,15 @@
 	}
 	
 	
-	
+	function cleanInput ($input) {
+		
+		$input = trim ($input);
+		$input = stripslashes($input);
+		$input = htmlspecialchars($input);
+		
+		return $input;
+		
+	}
 	
 	
 	
