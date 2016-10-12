@@ -79,15 +79,15 @@ function login ($email, $password) {
 }
 
 
-//uus funktsioon nimega savePeople nt, kuhu saadame andmed color ja soo kohta tabelisse. aluseks signUp funktsioon
+//uus funktsioon nimega saveClubs nt, kuhu saadame andmed clubName, clubLocation  ja hinde kohta tabelisse. aluseks signUp funktsioon
 
 
-function savePeople ($campusGender, $campusColor) {
+function saveClubs ($clubName, $clubLocation, $clubRate) {
 
   $mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
-  $stmt = $mysqli->prepare("INSERT INTO clothingOnTheCampus (gender, color) VALUES (?, ?)");
+  $stmt = $mysqli->prepare("INSERT INTO goingClubbing (clubName, clubLocation, clubRate) VALUES (?, ?, ?)");
   echo $mysqli->error;
-  $stmt->bind_param("ss", $campusGender, $campusColor);
+  $stmt->bind_param("sss", $clubName, $clubLocation, $clubRate);
 
   if ($stmt->execute()) {
     echo "salvestamine õnnestus";
@@ -97,18 +97,18 @@ function savePeople ($campusGender, $campusColor) {
 
 }
 
-function getAllPeople () {
+function getAllClubs () { //fn kõikide klubide andmete saamiseks
   $error = " ";
   $mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
   $stmt = $mysqli->prepare("
 
-      SELECT id, gender, color, created
-      FROM clothingOnTheCampus
+      SELECT id, clubName, clubLocation, clubRate
+      FROM goingClubbing
 
       ");
       echo $mysqli->error;
 
-      $stmt->bind_result($id, $gender, $color, $created);
+      $stmt->bind_result($id, $clubName, $clubLocation, $clubRate;
       $stmt->execute(); //paneb käsu tööle! saame teada, kas käsk läks läbi või mitte
 
       // array ("Inna", "I")

@@ -23,7 +23,7 @@ if ( isset ($_POST ["campusGender"]) &&
 
   $gender = cleanInput ($_POST ["gender"]);
 
-  savePeople ($_POST["campusGender"], cleanInput $_POST ["campusColor"]);
+  savePeople ( $_POST["campusGender"],  $_POST ["campusColor"]);
 // login sisse
 }
 
