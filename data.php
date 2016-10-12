@@ -62,7 +62,7 @@
 	
 		$html .= "<tr>";
 			$html .= "<th>ID</th>";
-			$html .= "<th>Raamatu autor</th>";
+			$html .= "<th style=' color:#66c2ff">Raamatu autor</th>";
 			$html .= "<th>Raamatu pealkiri</th>";
 			$html .= "<th>Loetud</th>";
 		$html .= "</tr>";
