@@ -63,7 +63,7 @@
 <h1>Esileht</h1>
 <p>
 
-	Tere tulemast <?=$_SESSION["email"];?>! Nuudsest on sinu nimi juhuslikult valituna Gaylord.
+	Tere tulemast <?=$_SESSION["username"];?>! Nuudsest on sinu nimi juhuslikult valituna Gaylord.
 	<br>
 	Kui sulle see ei meeldi, siis palun lahku! 
 	<a href="?logout=1">Logi valja</a>
@@ -115,7 +115,7 @@
 		echo 	"<h2>$p->sugu</h2>
 				<br><br>
 				
-				<img src=' ".$url." '>
+				<img src=' ".$p->url." '>
 				
 				$p->url
 				<br><br>
@@ -125,7 +125,7 @@
 	
 	
 ?>
-<img src=".$url." alt="$url">
+
 <?php
 /*
 	$html="<table>";

@@ -13,6 +13,8 @@
 	}
 	//MUUTUJAD
 	$signupUsernameError="";
+	$username="";
+	$signupUsername="";
 	$signupEmailError="";
 	$signupPasswordError="";
 	$signupPassword2Error="";
@@ -71,7 +73,7 @@
 			$signupUsernameError="See vali on kohustuslik!";
 			
 		} else {
-			$signupUsername=$_POST["signupEmail"];
+			$signupUsername=$_POST["signupUsername"];
 			
 		
 	
@@ -98,7 +100,8 @@
 					
 			$loginEmailError="Sisestage siia oma e-post, et sisse logida!";
 		
-	
+			} else {
+			$loginEmail=$_POST["loginEmail"];	
 		}
 	}
 	
@@ -116,16 +119,18 @@
 		
 		echo "Salvestan...<br>";
 		echo "email ".$signupEmail."<br>";
+		echo "kasutajanimi ".$signupUsername."<br>";
 		
 		$password = hash("sha512", $_POST["signupPassword"]);
 		
-		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "parooli hash ".$password."<br>";
 		
 		$signupEmail=cleanInput($signupEmail);
+		$signupUsername=cleanInput($signupUsername);
 		$password=cleanInput($password);
 		
-		signup($signupEmail, $password);
+		
+		signup($signupEmail, $signupUsername, $password);
 		
 		
 	}
@@ -155,7 +160,7 @@
 				
 				<br><br>
 				
-				<input name="loginPassword" type="password" placeholder="Parool"> <?php echo $loginEmailError;?>
+				<input name="loginPassword" type="password" placeholder="Parool"> <?php echo $loginPasswordError;?>
 				
 				<br> <br>
 				
@@ -173,7 +178,7 @@
 			
 				<label>Kasutajanimi</label>
 				<br>
-				<input name="signupUsername" type="username"> <?php echo $signupUsernameError;?>
+				<input name="signupUsername" type="username" value="<?=$signupUsername;?>"> <?php echo $signupUsernameError;?>
 				<br><br>
 			
 				<label>E-post</label>

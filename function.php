@@ -5,22 +5,17 @@
 	
 	$database = "if16_clevenl";
 	
-	function signup ($email, $password) {
+	function signup ($email, $username, $password) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		
-		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?,?)");
-		
-		//asendan kusimargi vaartustega
-		//iga muutuja kohta 1 taht, mis tuupi muutuja on
-		// s - string
-		// i - integer
-		// d - double/float
-		$stmt->bind_param("ss", $email, $password);
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, username, password) VALUES (?,?,?)");
+
+		$stmt->bind_param("sss", $email, $username, $password);
 		
 		if ($stmt->execute()) {
 			
-			echo "salvestamine onnestus!";
+			echo "Salvestamine 6nnestus!";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
@@ -51,7 +46,7 @@
 		
 		$stmt = $mysqli->prepare("
 		
-			SELECT id, email, password, created
+			SELECT id, email, username, password, created
 			FROM user_sample
 			WHERE email = ?
 		
@@ -59,7 +54,7 @@
 		
 		$stmt->bind_param("s", $email);
 		
-		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
+		$stmt->bind_result($id, $emailFromDb, $usernameFromDb, $passwordFromDb, $created);
 		$stmt->execute();
 		
 		if($stmt->fetch()){
@@ -70,17 +65,19 @@
 				
 				$_SESSION["userId"] = $id;
 				$_SESSION["email"] = $emailFromDb;
+				$_SESSION["username"] = $usernameFromDb;
+				
 				
 				header("Location: data.php");
 				exit();
 				
 			} else {
-				$error = "parool vale";
+				$error = "Parool vale, proovi uuesti!";
 			}
 			
 		} else {	
 			
-			$error = "sellise emailiga ".$email." kasutajat ei olnud";
+			$error = "Sellise ".$email." emailiga kasutajat ei ole salvestatud";
 		}
 		
 		return $error;
