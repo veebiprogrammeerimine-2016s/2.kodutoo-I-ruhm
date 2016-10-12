@@ -2,7 +2,7 @@
 
 <?php
 
-// võtab ja kopeerig config.php faili config.php
+// võtab ja kopeerib config.php faili config.php
 
 require ("function.php");
 //kas kasutaja on sisse logitud
@@ -25,19 +25,21 @@ if  (isset ($_SESSION ["userId"])) {
 
     // MUUTUJAD:
 
+// REGISTREEMISMUUTUJAD
 $signUpEmail = ""; //alguses on ta tühi väärtus
+$signUpName = "";
+$signUpFamilyName = "";
 $signUpEmailError = "";
 $signUpPasswordError = "";
 $signUpNameError = "";
 $signUpFamilyNameError = "";
-$signUpBirthdayError = "";
-$signUpCodeError = "";
 $gender = "";
+
+//SISSELOGIMISMUUTUJAD
 $loginEmail = "";
 $loginPassword = "";
 $loginEmailError = "";
 $loginPasswordError = "";
-
 
 
     if (isset ($_POST["loginEmail"]) ) {
@@ -78,28 +80,6 @@ $loginPasswordError = "";
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if (isset ($_POST["signUpEmail"]) ) {
 //kas keegi vajutas submit nuppu nii, et e-mail oli olemas!
             if (empty ($_POST["signUpEmail"] ) ) {
@@ -136,7 +116,9 @@ $loginPasswordError = "";
           // oli nimi, kuid see oli tühi
             $signUpNameError =  "See väli on kohustuslik";
 
-                }
+          } else {
+              $signUpName = $_POST["signUpName"];
+          }
               }
 
                 if (isset ($_POST["signUpFamilyName"]) ) {
@@ -145,7 +127,9 @@ $loginPasswordError = "";
           // oli e-mail, kuid see oli tühi
                 $signUpFamilyNameError =  "See väli on kohustuslik";
 
-                    } else {
+              } else {
+                  $signUpFamilyName = $_POST["signUpFamilyName"];
+              }
 
           //tean, et perekonnanimi oli ja see ei olnud tühi
 
@@ -153,25 +137,8 @@ $loginPasswordError = "";
 
                     $signUpFamilyNameError = "Perekonnanimi peab olema vähemalt 1 tähemärk pikk!";
                   }
-                }
-              }
+        }
 
-              if (isset ($_POST["signUpBirthday"]) ) {
-
-                            if (empty ($_POST["signUpBirthday"] ) ) {
-                      // oli sünniaeg, kuid see oli tühi
-                          $signUpBirthdayError =  "See väli on kohustuslik";
-
-                      }
-                      }
-
-                      if (isset ($_POST["signUpCode"])) {
-
-                              if (empty ($_POST["signUpCode"] ) ) {
-                                  $signUpCodeError =  "Kontrolli kontrollkoodi";
-
-                              }
-                              }
 
  if (isset ($_POST["gender"]) ) {
          if (empty ($_POST["gender"] ) ) {
@@ -183,31 +150,33 @@ $loginPasswordError = "";
     }
 
 
-
-
 //Tean, et ühtegi viga ei olnud ja saan kasutaja andmed salvestada:
 
 if (  isset($_POST["signUpPassword"]) &&
       isset($_POST["signUpEmail"]) &&
+      isset ($_POST["signUpName"]) &&
+      isset ($_POST["signUpFamilyName"]) &&
       empty ($signUpEmailError) &&
+      empty ($signUpNameError) &&
+      empty ($signUpFamilyNameError) &&
       empty ($signUpPasswordError) )
       {
 
       echo "Salvestan... <br>";
       echo "email ".$signUpEmail."<br>";
-
       $password = hash ("sha512", $_POST["signUpPassword"]);
-
       echo "parool" .$_POST["signUpPassword"]. "<br>";
       echo "räsi ".$password."<br>";
+      echo "eesnimi" .$signUpName. "<br>";
+
 
       $signUpEmail = cleanInput($signUpEmail);
-
-
-      $signUpPassword = cleanInput ($signUpPassword);
+      $signUpPassword = cleanInput ($password);
+      $signUpName = cleanInput ($signUpName);
+      $signUpFamilyName = cleanInput ($signUpFamilyName);
 
       // echo $serverUsername;  ECHO ON PRINTIMINE!!
-      signup ($signUpEmail, $password);
+      signup ($signUpEmail, $password, $signUpName, $signUpFamilyName, $gender);
 
 }
 $error = " ";
@@ -269,13 +238,6 @@ if ( isset ($_POST ["loginEmail"]) &&
         <br><br>
 
         <input name = "signUpFamilyName" type = "familyname" placeholder = "Sinu perekonnanimi"> <?php echo $signUpFamilyNameError; ?>
-        <br><br>
-
-        <input name = "signUpBirthday" type = "birthday" placeholder= "Sinu sünniaeg pp/kk/aaaa"> <?php echo $signUpBirthdayError; ?>
-        <br><br>
-
-        <label>Sisesta kontrollkood</label> <br>
-        <input name = "signUpCode" type = "controlcode" placeholder = "XgT64Hrf"> <?php echo $signUpCodeError; ?>
         <br><br>
 
         <?php if($gender == "male") { ?>
