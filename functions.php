@@ -7,6 +7,15 @@
 	
 	$database = "if16_raunot_web";
 	
+	function cleanInput($input){
+		
+		$input = trim($input);
+		$input = stripslashes($input);
+		$input = htmlspecialchars($input);
+		
+		return $input;
+	}
+	
 	function signup ($email, $password, $gender, $birthdate){
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
@@ -69,13 +78,20 @@
 		}
 		return $error;
 	}
-
-	function cleanInput($input){
+	
+	function savePeople ($gender, $color) {
 		
-		$input = trim($input);
-		$input = stripslashes($input);
-		$input = htmlspecialchars($input);
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("INSERT INTO pic_info (author, date_taken, description) VALUES (?, ?, ?)");
+		echo $mysqli->error;
+		$stmt->bind_param("sss", $author, $date_taken, $description);
 		
-		return $input;
+		if ($stmt->execute()) {
+			echo "Salvestamine õnnestus!";
+		}else{
+			echo "ERROR ".$stmt->error;
+		}
+		
 	}
+
 ?>
