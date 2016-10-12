@@ -16,6 +16,22 @@
 		exit();
 	}
 	
+	if (isset($_POST["author"]) &&
+		isset($_POST["date_taken"]) &&
+		isset($_POST["description"]) &&
+		!empty($_POST["author"]) &&
+		!empty($_POST["date_taken"]) &&
+		!empty($_POST["description"])
+	){
+		
+		$author = cleanInput($_POST["author"]);
+		$date_taken = cleanInput($_POST["date_taken"]);
+		$description = cleanInput($_POST["description"]);
+		
+		//$savePicture($author, $date_taken, $description($_POST["color"])
+		
+	}
+	
 ?>
 
 <h1>Data page</h1>

@@ -79,7 +79,7 @@
 		return $error;
 	}
 	
-	function savePeople ($gender, $color) {
+	function savePicture ($author, $date_taken, $description){
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		$stmt = $mysqli->prepare("INSERT INTO pic_info (author, date_taken, description) VALUES (?, ?, ?)");
