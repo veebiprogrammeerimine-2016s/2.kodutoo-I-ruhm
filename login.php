@@ -34,13 +34,17 @@
 		}
 	}
 
-	if(isset($_POST["signupPasssword"])){
+	if(isset($_POST["signupPassword"])){
 		if(empty($_POST["signupPassword"])){
 			$signupPasswordError="<i>See väli on kohustuslik!</i>";
 		}else{
 			if(strlen($_POST["signupPassword"]) <8 ){
 				$signupPasswordError="<i>Parool peab olema vähemalt 8 tähemärki pikk!</i>";
 			}
+		}
+		
+	if(isset($_POST["gender"])){
+		$gender = $_POST["gender"];
 		}
 	}
 
