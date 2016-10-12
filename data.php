@@ -27,7 +27,7 @@
     !empty($_POST["gender_1"]) &&
     !empty($_POST["color"])
     ) {
-        $gender_1 = cleanInput($_POST["gender_1"])
+        $gender_1 = cleanInput($_POST["gender_1"]);
 
         clothingCampus($_POST["gender_1"], $_POST["color"]);
     }
@@ -39,24 +39,45 @@
     //var_dump($people);
     //echo"</pre>";
 ?>
-<h1>Data</h1>
+<h1>Autopesula - MobileSPA</h1>
 <p>
 	Tere tulemast! <?=htmlspecialchars($_SESSION["email"]);?>!
 	<a href="?logout=1">Log out</a>
 </p>
+<h2>Esita oma tellimus.</h2>
+    <form method = "POST">
+        <lable>Broneeri aeg</lable><br>
+        <br>
+        <label>Sinu nimi</label><br>
+        <input name="klient" type="text" placeholder="Sisesta enda nimi"><br>
+        <br>
+        <lable>Vali pakett</lable><br>
+        <select>
+            <option value="tellimus">Tavaline survepesu</option>
+            <option value="tellimus">Põhjalik survepesu koos leotusega</option>
+            <option value="tellimus">1 Detaili poleerimine (hind sõltub detailist)</option>
+            <option value="tellimus">Terve auto poleerimine</option>
+            <option value="tellimus">Sisepesu koos nahahooldusega</option>
+            <option value="tellimus">Põhjalik sisepesu koos põhjaliku välispesuga</option>
+            <option value="tellimus">Põhjalik sisepesu koos põhjaliku välispesuga ja terve auto poleerimine</option>
+        </select>
+        <br><br>
+        <lable>Vali auto tüüp</lable><br>
+        <select>
+            <option value="tyyp">Luukpära</option>
+            <option value="tyyp">Sedaan</option>
+            <option value="tyyp">Universaal</option>
+            <option value="tyyp">Mahtuniversaal</option>
+            <option value="tyyp">Maastur</option>
+            <option value="tyyp">Kaubik</option>
+        </select>
+        <br><br>
+        <lable>Vali oma autopesu jaoks sobiv aeg</lable><br>
 
-<form method = "POST">
-    <lable>Color</lable><br>
-    <input name = "color" type = "color" ><br>
-    <br>
-    <lable>Gender</lable><br>
-    <input type="radio" name="gender_1" value="female"> Female<br>
-    <input type="radio" name="gender_1" value="male"> Male<br>
-    <input type="radio" name="gender_1" value="unknown"> Unknown<br>
-    <br><br>
-    <input  type = "submit" value="Save clothing">
-</form>
-<h2>Archive</h2>
+        <br><br>
+        <input  type = "submit" value="Broneeri">
+    </form>
+<h3>Archive</h3>
 <?php
     foreach ($people as $p){
 
