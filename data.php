@@ -2,26 +2,34 @@
 	
 	require('functions.php');
 	//kui pole sisse logitud, siinatakse login lehele
-	if (!isset ($_SESSION['userId']) ) {
-		
+	if (!isset ($_SESSION['userId']) ) {		
 		header('Location: login.php');
-		exit();
-		
+		exit();		
 	}
-	
-	$scramble = scramble();		
 	
 	//kas ?logout on addressireal
 	if (isset($_GET['logout'])) {
-		session_destroy();
-		
+		session_destroy();		
 		header('Location: login.php');
+		exit();
 	}
 	
-	if (isset ($_POST['aeg']) && !empty ($_POST['aeg'])) {
+	if (isset($_POST['alusta'])) {		
+		$_SESSION["start_time"] = microtime(TRUE);
+	}
+	
+	if (isset($_POST['end'])) {
+		$_SESSION["solve_time"] =  microtime(TRUE) - $_SESSION["start_time"];
+		$_SESSION["start_time"] = 0;
+	}
+	
+	if (isset($_POST["select_scramble"])) {
+		$_SESSION['selected_scramble'] = save_scramble();
+	}
+	
+	if (isset ($_SESSION["solve_time"]) && isset($_POST["end"])) {
 		$_SESSION['username'] = clean_input($_SESSION['username']);
-		$scramble, $_POST['aeg'] = clean_input($scramble, $_POST['aeg']);
-		result_to_db($_SESSION['username'], $scramble, $_POST['aeg']);
+		result_to_db($_SESSION['username'], $_SESSION['selected_scramble'], $_SESSION["solve_time"]);
 	};
 	
 	$results = result_from_db($_SESSION['username']);
@@ -35,17 +43,23 @@
 	<form method = 'POST'>
 	<table>
 		<tr>
-			<td style = "text-align:center"> Scramble </td>
-			<td style = "text-align:center"> Kaua lahendasid? </td>
+			<td> <input name = "select_scramble" type = "submit" value = "Hangi segamise algoritm"> </td>
 		</tr>
-		<tr>
-			<td> <?=$scramble?> </td>
-			<td> <input name = 'aeg' type = 'text'> </td>
-		</tr>
-		<tr>
-			<td> </td>
-			<td style = "text-align:right"> <input type = 'submit' value = 'Salvesta tulemus'> </td>
-		<tr>
+			<?php if (isset($_POST["select_scramble"]) OR isset($_SESSION['start_time'])): ?>
+				<tr>
+					<td style = "text-align:center"> Scramble </td>					
+				</tr>
+				<tr>
+					<td> <?=$_SESSION['selected_scramble']?>
+					<td> 
+						<?php if (!isset($_SESSION['start_time']) OR ($_SESSION['start_time'] == 0)): ?>
+							<input type="submit" name='alusta' value="Alusta lahendamist">
+						<?php else: ?>
+							<input type="submit" name='end' value="Lahendatud">
+						<?php endif; ?>
+					</td>
+				</tr>				
+			<?php endif; ?>
 	</table>
 	</form>
 

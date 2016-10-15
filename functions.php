@@ -41,6 +41,10 @@
 		return $scramble_string;
 	}
 	
+	function save_scramble() {
+		return scramble();
+	}
+	
 	function result_to_db($username, $scramble, $time) {
 		$mysqli = new mysqli( $GLOBALS['serverHost'], $GLOBALS['serverUsername'], $GLOBALS['serverPassword'], $GLOBALS['database']);
 		$stmt = $mysqli -> prepare ("INSERT INTO ".$username." (scramble, time) VALUES (?,?)");
