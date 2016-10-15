@@ -14,7 +14,7 @@
 	
 	$database = "if16_anna";
 	
-	function signup ($email, $password) {
+	function signup ($email, $password, $nickname) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
@@ -30,6 +30,7 @@
 		}
 		
 	}
+
 	
 	
 	function login($email, $password) {
@@ -104,37 +105,40 @@
 		}
 		
 	}
-
-	
-	function getAllPeople(){
+		function getAllPeople () {
+		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
 		$stmt = $mysqli->prepare("
-			SELECT id, birthday, country, created FROM finish_registration
+			SELECT id, birthday, country, created
+			FROM finish_registration
 		");
 		echo $mysqli->error;
+		
 		$stmt->bind_result($id, $birthday, $country, $created);
 		$stmt->execute();
 		
-		$result=array();
+		// array("Romil", "R")
+		$result = array();
 		
-		//seni kui on üks rida andmeid saada(10 rida = 10 korda)
-		while ($stmt->fetch()){
+		// seni kuni on üks rida andmeid saada (10 rida = 10 korda)
+		while ($stmt->fetch()) {
+			
 			$person = new StdClass();
 			$person->id = $id;
 			$person->birthday = $birthday;
 			$person->country = $country;
 			$person->created = $created;
 			
+			//echo $color."<br>";
 			array_push($result, $person);
-			
-			
 		}
+		
 		$stmt->close();
 		$mysqli->close();
 		
 		return $result;
-	}
+		}
 	
 	function cleanInput ($input){
 		$input = trim($input);

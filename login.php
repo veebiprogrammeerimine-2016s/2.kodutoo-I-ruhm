@@ -15,6 +15,7 @@ if (isset ($_SESSION["userId"])) {
 	$signuppassworderror = "";
 	$loginemailerror = "";
 	$loginpassworderror = "";
+	$loginpassword = "";
 	$nickname = "";
 	$nicknameerror = "";
 	$loginemail = "";
@@ -29,17 +30,19 @@ if (isset ($_SESSION["userId"])) {
 			$signupemailerror = "See väli on tühi";
 			
 		}else {
+				$signupemail = $_POST["signupemail"];
+			}
+	}
+	if(isset ($_POST["signuppassword"])){
+		if (empty ($_POST["signuppassword"])){
+			$signuppassworderror = "See väli on tühi";
+		}else {
 			//tean et oli parool ja ei olnud tühi.
 			//vähemalt 8
 			if (strlen($_POST["signuppassword"]) < 8) {
 				$signuppassworderror = "Parool peab olema vähemalt 8 tähemärkki pikk";
 			}
 			
-		}
-	}
-	if(isset ($_POST["signuppassword"])){
-		if (empty ($_POST["signuppassword"])){
-			$signuppassworderror = "See väli on tühi";
 		}
 		
 	}
@@ -48,24 +51,31 @@ if (isset ($_SESSION["userId"])) {
 		if (empty ($_POST ["loginemail"])){
 			$loginemailerror = "See väli on tühi";
 		}else {
-			if (strlen ($_POST["loginpassword"])< 8) {
+			$loginemail=$_POST["loginemail"];
+			}
+		}
+	
+	
+	if (isset($_POST ["loginpassword"])){
+		if (empty ($_POST ["loginpassword"])){
+			$loginpassworderror = "See väli on tühi";
+		}else {
+			//tean et oli parool ja ei olnud tühi.
+			//vähemalt 8
+			if (strlen($_POST["loginpassword"]) < 8) {
 				$loginpassworderror = "Parool peab olema vähemalt 8 tähemärkki pikk";
 			}
 		}
 	}
 	
-	if (isset($_POST ["loginpassword"])){
-		if (empty ($_POST ["loginpassword"])){
-			$loginpassworderror = "See väli on tühi";
-		}
-	}
-	
 	if (isset ($_POST ["nickname"])){
-		if (empty($_POST ["nicknameerror"])){
+		if (empty($_POST ["nickname"])){
 			$nicknameerror = "See väli on tühi";
 		}else {
 			if (strlen ($_POST["nickname"])< 8) {
 				$nicknameerror = "Kasutajanimi peab olema vähemalt 8 tähemärkki pikk";
+			}else {
+				$nickname = $_POST ["nickname"];
 			}
 		}	
 	}
@@ -86,33 +96,13 @@ if (isset ($_SESSION["userId"])) {
 		echo "parool ".$_POST["signuppassword"]."<br>";
 		echo "räsi ".$password."<br>";
 		
-		//echo $serverPassword;
-		$database = "if16_anna";
 		
-		//ühendus
-		$mysqli = new mysqli($serverHost,$serverUsername,$serverPassword,$database);
-		
-		//käsk
-		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, nickname) VALUES (?, ?, ?)");
-		
-		echo $mysqli->error;
-		
-		//asendan küsimärgi väärtustega
-		//iga muutuja kohta 1 täht, mis tüüpi muutuja on
-		// s - string
-		// i - integer
-		// d - double/float
-		$stmt->bind_param("sss", $signupemail, $password, $nickname);
-		
-		if ($stmt->execute()) {
-				
-			echo "salvestamine õnnestus";
-	   } else {
-		   echo "ERROR ".$stmt->error;
-	   }
-		$signupEmail = cleanInput($signupEmail);
+		$signupemail = cleanInput($signupemail);
 		$password = cleanInput($password);
-		signup($signupemail, $password);
+		$nickname = cleanInput($nickname);
+		
+		
+		signup($signupemail, $password, $nickname);
 	   }
 		
 	$error = "";
@@ -122,8 +112,7 @@ if (isset ($_SESSION["userId"])) {
 		 !empty($_POST["loginemail"]) &&
 		 !empty($_POST["loginpassword"])
 	  ) {
-		$_POST["loginemail"]= cleanInput($loginemail);
-		$_POST["loginpassword"]= cleanInput($loginpassword);
+		
 		//login sisse
 		$error = login($_POST["loginemail"], $_POST["loginpassword"]);
 		
