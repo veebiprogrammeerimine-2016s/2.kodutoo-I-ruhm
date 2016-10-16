@@ -2,18 +2,18 @@
 
 	//functions.php
 	require("../../config.php");
-	//alustan sessiooni, et saks kasutada $_SESSION muutujaid
+	//alustan sessiooni, et saaks kasutada $_SESSION muutujaid
 	session_start();
 	
 	//SIGNUP
 	$database="if16_mariiviita";
-	function signup ($Email, $password){
+	function signup ($Name, $Age, $Email, $password, $gender){
 		
 		//ühendus
 		$mysqli=new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		
 		//käsk
-		$stmt=$mysqli->prepare("INSERT INTO user_sample (Email, password) VALUES(?,?)");
+		$stmt=$mysqli->prepare("INSERT INTO user_sample (Name, Age, Email, password, gender) VALUES(?,?,?,?,?)");
 		
 		echo $mysqli->error;
 		
@@ -22,7 +22,7 @@
 		//s-stringi
 		//i-integer
 		//d-double/float
-		$stmt->bind_param("ss",$Email, $password);
+		$stmt->bind_param("sisss",$Name, $Age, $Email, $password, $gender);
 		
 		if($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -74,7 +74,7 @@
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
-				
+				exit();
 				
 			} else {
 				$error="parool vale";
@@ -93,15 +93,15 @@
 		
 	}
 	
-	function savePeople ($Gender, $Color){
+	function savePeople ($Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength){
 		
 		//ühendus
 		$mysqli=new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		
 		//käsk
-		$stmt=$mysqli->prepare("INSERT INTO clothingOnTheCampus (Gender, Color) VALUES(?,?)");
+		$stmt=$mysqli->prepare("INSERT INTO HealthCondition (Gender, Age, daynumber, month, year, NumberofSteps, LandLength) VALUES(?,?,?,?,?)");
 		
-		$stmt->bind_param("ss",$Gender, $Color);
+		$stmt->bind_param("siiiiii",$Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength);
 		
 		if($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -120,11 +120,11 @@
 		
 		//käsk
 		$stmt=$mysqli->prepare("
-			SELECT id, Gender, Color, created
-			FROM clothingOnTheCampus
+			SELECT id, Gender, Age, daynumber, month, year, NumberofSteps, LandLength
+			FROM HealthCondition
 		");
 		echo $mysqli->error;
-		$stmt->bind_result($id, $Gender, $Color, $created);
+		$stmt->bind_result($id, $Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength);
 		$stmt->execute();
 		
 		//array("Marii", "M")
@@ -134,8 +134,12 @@
 			$person=new StdClass();
 			$person->id=$id;
 			$person->Gender=$Gender;
-			$person->Color=$Color;
-			$person->created=$created;
+			$person->Age=$Age;
+			$person->daynumber=$daynumber;
+			$person->month=$month;
+			$person->year=$year;
+			$person->NumberofSteps=$NumberofSteps;
+			$person->LandLength=$LandLength;
 			
 			//echo $Color."<br>";
 			array_push($result, $person);

@@ -20,6 +20,9 @@
 	//var_dump($_POST);
 	
 	//muutujad
+	$SignupName="";
+	$gender="";
+	$SignupAge="";
 	$SignupEmail="";
 	$SignupEmailError="";
 	$SignupPasswordError="";
@@ -116,6 +119,8 @@
 	if (isset ($_POST["SignupName"])) {
 		if (empty($_POST["SignupName"])) {
 			$SignupNameError="See väli on kohustuslik!";
+		}else {
+			$SignupName=$_POST["SignupName"];
 		}
 	}
 	
@@ -123,6 +128,8 @@
 	if (isset ($_POST["SignupAge"])) {
 		if (empty($_POST["SignupAge"])) {
 			$SignupAgeError="See väli on kohustuslik!";
+		}else {
+			$SignupAge=$_POST["SignupAge"];
 		}
 	}
 	
@@ -135,8 +142,17 @@
 	}
 
 	//tean, et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
-	if(isset($_POST["SignupEmail"])&& isset($_POST["SignupPassword"]) && empty($SignupEmailError) && empty($SignupPasswordError)){
-		
+if( isset($_POST["SignupName"])&& 
+	isset($_POST["SignupAge"]) &&
+	isset ($_POST["SignupEmail"]) &&
+	isset ($_POST["SignupPassword"]) && 
+	isset($_POST["gender"]) && 
+	empty($SignupNameError) && 
+	empty($SignupAgeError) && 
+	empty ($SignupEmailError) && 
+	empty ($SignupPasswordError) && 
+	empty($SignupgenderError)){
+		echo "siin";
 		echo "Salvestan...<br>";
 		echo "Email ".$SignupEmail."<br>";
 		
@@ -150,7 +166,7 @@
 		$SignupEmail=cleanInput($SignupEmail);
 		$SignupPassword=cleanInput($password);
 		
-		signup($SignupEmail, $password);
+		signup($SignupName,$SignupAge,$SignupEmail,$password,$gender);
 			
 	
 	}
@@ -162,6 +178,9 @@
 	if(isset($_POST["LoginEmail"]) && isset($_POST["LoginPassword"]) && !empty($_POST["LoginEmail"]) && !empty($_POST["LoginPassword"])){
 	
 		echo "siin";
+		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
+		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
+		
 	//login sisse
 		$error=login($_POST["LoginEmail"], $_POST["LoginPassword"]);
 		
@@ -195,11 +214,11 @@
 		<h1>Loo kasutaja</h1>
 		<form method="POST">
 			
-			<input name="SignupName" type="name" placeholder="Nimi"><?php echo $SignupNameError;?>
+			<input name="SignupName" type="name" placeholder="Nimi" value="<?=$SignupName;?>"> <?php echo $SignupNameError; ?>
 			
 			<br><br>
 			
-			<input name="SignupAge" type="age" placeholder="Vanus"><?php echo $SignupAgeError;?>
+			<input name="SignupAge" type="age" placeholder="Vanus" value="<?=$SignupAge;?>"> <?php echo $SignupAgeError; ?>
 			
 			<br><br>
 			
@@ -207,7 +226,7 @@
 		
 			<br><br>
 		
-			<input name="SignupPassword" type="password" placeholder="Parool"><?php echo $SignupPasswordError; ?>
+			<input name="SignupPassword" type="password" placeholder="Parool"> <?php echo $SignupPasswordError; ?>
 			
 			<br><br>
 			
