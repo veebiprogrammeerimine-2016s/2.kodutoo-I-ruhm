@@ -20,7 +20,6 @@
 	$signupPasswordError = "";
 	$signupError = "";
 	$signupEmail = "";
-	$gender = "male";
 	$signupage = "";
 	$signupageError = "";
 	$loginpassword = "";

@@ -33,7 +33,7 @@
 	
 		$person = getallrestos();
 		//echo"<pre>";
-		var_dump($person);
+		//var_dump($person);
 		//echo"</pre>";
 
 
@@ -118,15 +118,15 @@
 <?php
 
 	foreach($person as $P);{
-		if ("hinne"=="1")
+		if ($hinne="1")
 		echo '<h2 style="color:red;">'.$P->restorani_nimi.'</h2>';
-		if ($hinne==2)
+		if ($hinne="2")
 		echo '<h2 style="color:orange;">'.$P->restorani_nimi.'</h2>';
-		if ("hinne"=="3")
+		if ($hinne="3")
 		echo '<h2 style="color:yellow;">'.$P->restorani_nimi.'</h2>';
-		if ("hinne"=="4")
-		echo '<h2 style="color:light-green;">'.$P->restorani_nimi.'</h2>';
-		if ("hinne"=="5")
+		if ($hinne="4")
+		echo '<h2 style="color:LawnGreen;">'.$P->restorani_nimi.'</h2>';
+		if ($hinne="5")
 		echo '<h2 style="color:green;">'.$P->restorani_nimi.'</h2>';
 		
 	}
