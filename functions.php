@@ -1,6 +1,6 @@
 <?php
 	
-	require("../../config.php");
+	require_once("../config.php");
 	date_default_timezone_set('Europe/Tallinn');
 	$now = Date('Y/m/d H:i:s');
 	
@@ -12,6 +12,8 @@
 	$GLOBALS['scramble_back'] = array('B', "B'", 'B2');
 	$GLOBALS['scramble_options'] = array($scramble_up, $scramble_down, $scramble_left, $scramble_right, $scramble_front, $scramble_back);
 	$GLOBALS['scramble'] = array();
+	
+	$database = 'if16_randotm_web';
 	
 	//alustan sessiooni, et saaks kasutada $_SESSION muutujaid
 	session_start();

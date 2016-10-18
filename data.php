@@ -1,6 +1,6 @@
 <?php
 	
-	require('functions.php');
+	require_once('functions.php');
 	//kui pole sisse logitud, siinatakse login lehele
 	if (!isset ($_SESSION['username']) ) {
 		header('Location: login.php');
