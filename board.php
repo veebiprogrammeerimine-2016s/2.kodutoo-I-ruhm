@@ -4,6 +4,7 @@
  */
 $boardName = $_GET["name"];
 $postContentError = "";
+$postUrlError = "";
 $postName = $postContent = $postImage = $postPassword = "";
 if (isset($_POST["name"]) && !empty($_POST["name"])) {
     $postName = $_POST["name"];
@@ -15,7 +16,13 @@ if (isset($_POST["post"]) && !empty($_POST["post"])) {
 
 }
 if (isset($_POST["image"]) && !empty($_POST["image"])) {
-    $postImage = $_POST["image"];
+    if (filter_var($_POST["image"], FILTER_VALIDATE_URL)) {
+        $postImage = $_POST["image"];
+    }
+    else {
+        $postImage = " ";
+        $postImageError = "This is not a valid address!";
+    }
 } else {
     $postImage = " ";
 }
@@ -27,12 +34,19 @@ if (isset($_POST["password"]) && !empty($_POST["password"])) {
 }
 
 if (empty($postContentError) &&
+    empty($postUrlError) &&
     isset($_POST["post"]) &&
     !empty($_POST["post"])
 ) {
     createPost($boardName, $postName, $postPassword, $postContent, $postImage);
-} else if (isset($_POST["post"])) {
-    echo "Post not created. Check that your post field has any text.";
+    //remove POST for easy user refresh, it is unnecessary.
+    echo "
+    <script>
+    window.location = window.location;
+    </script>
+    ";
+} else if (isset($_POST["post"]) || isset($_POST["imgDir"])) {
+    echo "Post not created. Check the fields for any errors.";
 }
 
 ?>
@@ -45,6 +59,7 @@ if (empty($postContentError) &&
     <br>
     <label>Image URL:
         <input name="image" name="url" type="url">
+        <?=$postUrlError?>
     </label>
     <br>
     <label>Post:
@@ -79,7 +94,7 @@ foreach ($post as $p) {
         $html .= "<td></td>";
     } else {
         $html .= "'<td><a href='". $p->imgdir .
-            "'><img src='" . $p->imgdir . "' height='100' width='120'>" . "</td></a>";
+            "'><img src='" . $p->imgdir . "' height='100' width='auto'>" . "</td></a>";
     }
     $html .= "<td>" . $p->name . "</td>";
     $html .= "<td>" . $p->text . "</td>";
