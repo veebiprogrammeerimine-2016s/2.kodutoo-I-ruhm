@@ -14,14 +14,14 @@
 	$GLOBALS['scramble'] = array();
 	
 	//alustan sessiooni, et saaks kasutada $_SESSION muutujaid
-	session_start();	
+	session_start();
 	
 	function clean_input($input) {
 		$input = trim($input);
 		$input = stripslashes($input);
 		$input = htmlspecialchars($input);
 		return $input;
-	}	
+	}
 	
 	function scramble() {
 		//number, mis ei asi 0 ja 5 vahel.
@@ -56,8 +56,8 @@
 	
 	function result_from_db ($username) {
 		$results = array();
-		$mysqli = new mysqli( $GLOBALS['serverHost'], $GLOBALS['serverUsername'], $GLOBALS['serverPassword'], $GLOBALS['database']);		
-		$stmt = $mysqli->prepare("SELECT id, scramble, time FROM ".$username);		
+		$mysqli = new mysqli( $GLOBALS['serverHost'], $GLOBALS['serverUsername'], $GLOBALS['serverPassword'], $GLOBALS['database']);
+		$stmt = $mysqli->prepare("SELECT id, scramble, time FROM ".$username);
 		echo $mysqli -> error;
 		$stmt -> bind_result($id, $scramble, $time);
 		$stmt -> execute();
@@ -71,25 +71,18 @@
 			array_push($results, $result);
 		}
 		
-		return $results;
-		
+		return $results;		
 		$stmt -> close();
 		$mysqli -> close();
 	}
 	
 	function signup($email, $password, $username, $name, $d_o_b, $now) {
-		
 		$mysqli = new mysqli( $GLOBALS['serverHost'], $GLOBALS['serverUsername'], $GLOBALS['serverPassword'], $GLOBALS['database']);
-		
-		$stmt = $mysqli->prepare ('INSERT INTO user_sample (email, password, username, name, date_of_birth, created) VALUES (?,?,?,?,?,?)' );
-		
+		$stmt = $mysqli->prepare ('INSERT INTO users (email, password, username, name, date_of_birth, created) VALUES (?,?,?,?,?,?)' );
 		echo $mysqli -> error;
-		
 		$stmt -> bind_param ('ssssss', $email, $password, $username, $name, $d_o_b, $now);
 		
-		if ($stmt -> execute()) {
-			echo 'Salvestamine õnnestus.';
-		} else {
+		if (!($stmt -> execute())) {
 			echo 'Error'.$stmt->error;
 		}
 		
@@ -97,8 +90,9 @@
 		$mk_tbl_stmt = "CREATE TABLE ".$username." (
 		id INT(6) AUTO_INCREMENT PRIMARY KEY,
 		scramble VARCHAR(80) NOT NULL,
-		time DECIMAL NOT NULL 
+		time DECIMAL NOT NULL
 		)";
+		
 		if (mysqli_query($mysqli, $mk_tbl_stmt)) {
 			echo "Kasutaja tegemine õnnestus!";
 		} else {
@@ -107,65 +101,50 @@
 		
 		$stmt -> close();
 		$mysqli -> close();
-		
 	}
 	
 	function login($username, $password) {
-		
+		$users = array();
 		$error = '';
-		
 		$mysqli = new mysqli( $GLOBALS['serverHost'], $GLOBALS['serverUsername'], $GLOBALS['serverPassword'], $GLOBALS['database']);
 		
-		//käsk - english (statement)
-		$stmt = $mysqli->prepare ('		
-			SELECT id, username, password, created
-			FROM user_sample
-			WHERE username = ?		
-		' );
-		
-		//asendan küsimärgi		
-		$stmt -> bind_param('s', $username);
-		
-		//määran tulpadele muutujad (kus tulpade andmeid hoian)		
-		$stmt -> bind_result($id, $username_from_db, $password_from_db, $created);
-		
-		$stmt -> execute();
-		
-		//küsin rea andmeid
-		if($stmt->fetch()) {
-			//oli rida
+			//käsk - english (statement)
+			$stmt = $mysqli->prepare (
+				'SELECT username, password
+				FROM users
+				WHERE username = ?;'
+			);
 			
-			//võrdlen paroole
-			$hash = hash('sha512', $password);
-			if ($hash ==$password_from_db) {
-				
-				echo 'Kasutaja '.$id.' logis sisse.';
-				
-				$_SESSION['userId'] = $id;
-				$_SESSION['username'] = $username_from_db;
-				
-				//suuname uuele lehele kasutaja
-				//location võib olla url, või siis faili nimi, kui on samas kasutas / kohas - lehestikus
-				header('Location: data.php');
-				exit();
-				
+			//asendan küsimärgi
+			$stmt -> bind_param('s', $username);
+			
+			//määran tulpadele muutujad (kus tulpade andmeid hoian)
+			$stmt -> bind_result($username_from_db, $password_from_db);
+			$stmt -> execute();
+			
+			//küsin rea andmeid
+			if($stmt->fetch()) {
+				// Jõuab siia kui oli rida, seejärel võrdlen paroole
+				$hash = hash('sha512', $password);
+				if ($hash ==$password_from_db) {
+					$_SESSION['username'] = $username_from_db;
+					
+					//suuname uuele lehele kasutaja
+					//location võib olla url, või siis faili nimi, kui on samas kasutas / kohas - lehestikus
+					header('Location: data.php');
+					exit();
+				} else {
+					$error = 'Vale parool või kasutajanimi!';
+				}
 			} else {
-				$error = 'Parool vale!';
+				//ei olnud rida
+				$error =  'Vale parool või kasutajanimi!';
 			}
-			
-		} else {
-			//ei olnud rida			
-			$error =  'Sellist kasutajat ei ole.';
-		}		
-		
 		$stmt -> close();
 		$mysqli -> close();
-		
 		return $error;
 	}
-	
-	
-	
+		
 	function checkField ($field) {
 		if (isset ($field) ) {
 			if (empty ($field) ) {
