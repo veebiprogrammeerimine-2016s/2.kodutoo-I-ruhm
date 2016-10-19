@@ -25,9 +25,9 @@
 		 !empty($_POST["color"])
 	  ) {
 		
-	    $gender = cleanInput($_POST["gender"});
+	    $gender = cleanInput($_POST["gender"]);
 		 
-		savePeople($_POST["gender"], $_POST["color"]);
+		savePeople($_POST["gender"], cleanInput($_POST["color"]));
 	}
 	
 	$people = getAllPeople();

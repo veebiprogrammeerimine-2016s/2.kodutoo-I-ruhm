@@ -18,10 +18,15 @@
 	// MUUTUJAD
 	$signupEmailError = "";
 	$signupPasswordError = "";
-	$signupEmail = "";
 	$signupNumberError = "";
+	$signupNameError = "";
+	$signupEmail = "";
+	$signupNumber = "";
+	$signupName = "";
+	
 	
 	// kas e/post oli olemas
+	
 	if ( isset ( $_POST["signupEmail"] ) ) {
 		
 		if ( empty ( $_POST["signupEmail"] ) ) {
@@ -60,6 +65,47 @@
 		
 	}
 	
+	if ( isset ( $_POST["signupNumber"] ) ) {
+		
+		if ( empty ( $_POST["signupNumber"] ) ) {
+			
+			// oli nr, kuid see oli tühi
+			$signupNumberError = "See väli on kohustuslik!";
+			
+		} else {
+			
+			// tean et parool on ja see ei olnud tühi
+			// VÄHEMALT 8
+			
+			if ( strlen($_POST["signupNumber"]) < 7 ) {
+				
+				$signupNumberError = "Sisestage õige telefoninumber";
+				
+			} else {
+				
+				$signupNumber = $_POST["signupNumber"];
+			}
+			
+		}
+		
+	}
+	
+	if ( isset ( $_POST["signupName"] ) ) {
+		
+		if ( empty ( $_POST["signupName"] ) ) {
+			
+			// oli nimi, kuid see oli tühi
+			$signupNameError = "See väli on kohustuslik!";
+			
+		} else {
+			
+			// nimi on õige, salvestan väärtuse muutujasse
+			$signupName = $_POST["signupName"];
+			
+		}
+		
+	}
+	
 	
 	$gender = "male";
 	// KUI Tühi
@@ -77,26 +123,32 @@
 	// Kus tean et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
 	if ( isset($_POST["signupPassword"]) &&
 		 isset($_POST["signupEmail"]) &&	
+		 isset($_POST["signupNumber"]) &&	
+		 isset($_POST["signupName"]) &&	
 		 empty($signupEmailError) && 
-		 empty($signupPasswordError)
+		 empty($signupPasswordError)&&
+		 empty($signupNumberError)&&
+		 empty($signupNameError)
 	   ) {
 		
 		echo "Salvestan...<br>";
 		echo "email ".$signupEmail."<br>";
 		
 		$password = hash("sha512", $_POST["signupPassword"]);
+		$number = $_POST["signupNumber"];
+		$name = $_POST["signupName"];
 		
 		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "räsi ".$password."<br>";
 		
+		
+		
 		//echo $serverPassword;
 		
 		$signupEmail = cleanInput($signupEmail);
-		
-		
 		$password = cleanInput($password);
 		
-		signup($signupEmail, $password);
+		signup($signupEmail, $password, $number, $name);
 	   
 	   
 		
@@ -110,6 +162,9 @@
 		 !empty($_POST["loginEmail"]) &&
 		 !empty($_POST["loginPassword"])
 	  ) {
+		  
+		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
+		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
 		
 		//login sisse
 		$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
@@ -154,7 +209,11 @@
 			
 			<br><br>
 			
-			<input name="signupNumber" type="text" placeholder="Telefoninumber"> <?php echo $signupNumberError; ?>
+			<input name="signupNumber" type="tel" placeholder="Telefoninumber" value="<?=$signupNumber;?>"> <?php echo $signupNumberError; ?>
+			
+			<br><br>
+			
+			<input name="signupName" type="name" placeholder="Ees- ja perekonnanimi" value="<?=$signupName;?>"> <?php echo $signupNameError; ?>
 			
 			<br><br>
 			
