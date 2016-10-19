@@ -82,12 +82,12 @@ function login ($email, $password) {
 //uus funktsioon nimega saveClubs nt, kuhu saadame andmed clubName, clubLocation  ja hinde kohta tabelisse. aluseks signUp funktsioon
 
 
-function saveClubs ($clubName, $clubLocation, $clubRate) {
+function saveClubs ($clubName, $clubLocation, $rate) {
 
   $mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
   $stmt = $mysqli->prepare("INSERT INTO goingClubbing (clubName, clubLocation, clubRate) VALUES (?, ?, ?)");
   echo $mysqli->error;
-  $stmt->bind_param("ssi", $clubName, $clubLocation, $clubRate);
+  $stmt->bind_param("ssi", $clubName, $clubLocation, $rate);
 
   if ($stmt->execute()) {
     echo "salvestamine õnnestus";
@@ -108,7 +108,7 @@ function getAllClubs () { //fn kõikide klubide andmete saamiseks
       ");
       echo $mysqli->error;
 
-      $stmt->bind_result($id, $clubName, $clubLocation, $clubRate); 
+      $stmt->bind_result($id, $clubName, $clubLocation, $rate);
       $stmt->execute(); //paneb käsu tööle! saame teada, kas käsk läks läbi või mitte
 
       // array ("Inna", "I")
@@ -118,9 +118,10 @@ function getAllClubs () { //fn kõikide klubide andmete saamiseks
       while ($stmt->fetch()) { //üks rida andmeid andmebaasist ja paneb need muutujate asemele
           //echo $color. "<br>";
           $person = new StdClass();
-          $person->id = $id;
+          //$person->id = $id;
           $person->clubName = $clubName;
           $person->clubLocation = $clubLocation;
+          $person->rate = $rate;
 
 
           array_push($result, $person);
