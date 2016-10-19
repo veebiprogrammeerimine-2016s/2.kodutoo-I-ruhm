@@ -106,7 +106,7 @@ function hello ($firstname, $lastname) {
 		$stmt = $mysqli->prepare("INSERT INTO Lugemispaevik (book, autor, rating) VALUES (?, ?, ?)");
 		echo $mysqli->error;
 
-		$stmt->bind_param("ss", $book, $autor, $rating);
+		$stmt->bind_param("ssi", $book, $autor, $rating);
 		
 		if ($stmt->execute()) {
 			echo "salvestamine õnnestus";
