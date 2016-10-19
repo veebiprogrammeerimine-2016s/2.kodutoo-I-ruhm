@@ -2,13 +2,13 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
+require("../../config.php");
 $serverHost = "localhost";
-$serverUsername = "root";
-$serverPassword = "";
 
-function connectDB($database)
+
+function connectDB()
 {
-    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
+    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], "if16_alaraasa_board");
     return $mysqli;
 }
 

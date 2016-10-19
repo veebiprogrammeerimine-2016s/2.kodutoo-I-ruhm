@@ -13,7 +13,7 @@ if (isset($_POST["name"]) && !empty($_POST["name"])) {
 }
 if (isset($_POST["post"]) && !empty($_POST["post"])) {
     $postContent = $_POST["post"];
-
+    
 }
 if (isset($_POST["image"]) && !empty($_POST["image"])) {
     if (filter_var($_POST["image"], FILTER_VALIDATE_URL)) {
@@ -35,9 +35,9 @@ if (isset($_POST["password"]) && !empty($_POST["password"])) {
 
 if (empty($postContentError) &&
     empty($postUrlError) &&
-    isset($_POST["post"]) &&
-    !empty($_POST["post"])
-) {
+    (isset($_POST["post"]) && !empty($_POST["post"])) ||
+    (isset($_POST["image"]) && !empty($_POST["image"]))
+    ) {
     createPost($boardName, $postName, $postPassword, $postContent, $postImage);
     //remove POST for easy user refresh, it is unnecessary.
     echo "
@@ -77,7 +77,6 @@ if (empty($postContentError) &&
 
 <?php
 $post = getAllPosts($boardName);
-//var_dump($post);
 $html = "<table>";
 $html .= "<tr>";
 $html .= "<th>#</th>";

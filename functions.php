@@ -12,9 +12,10 @@ function createBoard($table)
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100),
     password VARCHAR(150),
-    text LONGTEXT,
+    text TEXT(1000),
     imgdir VARCHAR(150),
-    created DATETIME NOT NULL DEFAULT NOW() 
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    trashed TINYINT(1) DEFAULT 0
     )";
 
     return editTable("boards", $query);
@@ -23,7 +24,7 @@ function createBoard($table)
 function createPost($board, $name, $password, $post, $image)
 {
     //WORKS
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     sqlConnectTest($mysqli);
 //    var_dump($mysqli);
     cleanInput($name);
@@ -42,14 +43,13 @@ function createPost($board, $name, $password, $post, $image)
 
 function getAllPosts($board)
 {
-
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     $stmt = $mysqli->prepare("
     SELECT id, name, text, imgdir, created
     FROM $board
+    WHERE trashed != 1
     ");
     echo $mysqli->error;
-
     $stmt->bind_result($id, $name, $text, $imgDir, $created);
     $stmt->execute();
     $result = array();
@@ -72,7 +72,7 @@ function getAllPosts($board)
 
 function editGetPost($board, $id)
 {
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     $stmt = $mysqli->prepare("
     SELECT text, imgdir , password FROM $board WHERE id = $id
     ");
@@ -96,7 +96,7 @@ function editGetPost($board, $id)
 
 function editPost($board, $id, $text, $image)
 {
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     if ($text == "" || $text == NULL) {
         $text = " ";
     }
@@ -123,9 +123,10 @@ function editPost($board, $id, $text, $image)
 }
 
 function deletePost($board, $id){
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     $stmt = $mysqli->prepare("
-    DELETE FROM $board
+    UPDATE $board
+    SET trashed = 1
     WHERE id = $id
     ");
     if ($stmt->execute()){
@@ -137,9 +138,9 @@ function deletePost($board, $id){
 
 function getTables()
 {
-    $mysqli = connectDB("boards");
+    $mysqli = connectDB();
     //sqlConnectTest("boards");
-    $query = "SHOW TABLES FROM boards";
+    $query = "SHOW TABLES FROM if16_alaraasa_board";
     $stmt = $mysqli->prepare($query);
     $stmt->bind_result($boards);
     $stmt->execute();
@@ -158,7 +159,7 @@ function getTables()
 
 function editTable($database, $query)
 {
-    $mysqli = connectDB($database);
+    $mysqli = connectDB();
     sqlConnectTest($mysqli);
     if (!$mysqli->query($query)) {
         echo "Table edit failed: (" . $mysqli->errno . ") " . $mysqli->error;
@@ -166,6 +167,14 @@ function editTable($database, $query)
     }
     $mysqli->close();
     return true;
+}
+
+function disableBoard(){
+    $mysqli = connectDB();
+    
+
+    $mysqli->close;
+    return;
 }
 
 function cleanInput($input)
