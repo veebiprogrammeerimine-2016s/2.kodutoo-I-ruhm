@@ -11,12 +11,31 @@ require("functions.php");
 		!empty($_POST["people"]) &&
 		!empty($_POST["comment"]) 
 		
-	  ) {
-		  
-		 
+	)
+	
+	{
+		  	 
 		reservation($_POST["place"], $_POST["time"], $_POST["people"], $_POST["comment"]);
-		  
-		  
+			  
+	}
+	
+	elseif (
+		
+		isset($_POST["place"]) &&
+		isset($_POST["time"]) &&
+		isset($_POST["people"]) &&
+		isset($_POST["comment"]) &&
+		(empty($_POST["place"]) OR
+		empty($_POST["time"]) OR
+		empty($_POST["people"]) OR
+		empty($_POST["comment"]) 
+	
+		)
+		
+	) {
+	
+		echo "täida kõik väljad!";
+		
 	}
 	
 	$reservation = getAllReservation();
@@ -71,7 +90,7 @@ require("functions.php");
 	$html="<table>";
 	
 	$html .= "<tr>";
-		$html .= "<th></th>";
+		
 			$html .= "<th>id</th>";
 			$html .= "<th>place</th>";
 			$html .= "<th>time</th>";
