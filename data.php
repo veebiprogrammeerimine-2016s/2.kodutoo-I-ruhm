@@ -50,7 +50,7 @@ if ( isset ($_POST ["clubName"]) &&
 
 
 <h1> Data </h1>
-<p>Tere tulemast! <?=$_SESSION ["email"];?> </p>
+<p>Tere tulemast <?=$_SESSION ["firstname"];?> </p>
 
 <a href = "?logout=1"> Logi välja    </a>
 

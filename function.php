@@ -39,7 +39,7 @@ function login ($email, $password) {
   $mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
   $stmt = $mysqli->prepare("
 
-  SELECT id, email, password, created
+  SELECT id, email, password, created, firstname
   FROM user_sample
   WHERE email = ?");
 
@@ -49,7 +49,7 @@ function login ($email, $password) {
   $stmt->bind_param("s", $email);
   // määran tulpadele muutujaid, kus ma tulpade andmeid http_negotiate_content_type
 
-  $stmt->bind_result($id, $emailFromDatabase, $passwordFromDb, $created);
+  $stmt->bind_result($id, $emailFromDatabase, $passwordFromDb, $created, $firstnameFromDatabase);
   $stmt->execute(); //paneb päringu teele, tulemus igal juhul tõene, päring õnnestub igal juhul
   //küsin rea andmeid
   if($stmt->fetch()) {
@@ -61,6 +61,7 @@ function login ($email, $password) {
 
           $_SESSION ["userId"] = $id;
           $_SESSION ["email"] = $emailFromDatabase;
+          $_SESSION ["firstname"] = $firstnameFromDatabase;
 
 
           header ("Location: data.php ");
