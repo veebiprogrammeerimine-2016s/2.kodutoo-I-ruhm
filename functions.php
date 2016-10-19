@@ -93,15 +93,15 @@
 		
 	}
 	
-	function savePeople ($Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength){
+	function savePeople ($Gender, $Age, $date, $NumberofSteps, $LandLength){
 		
 		//ühendus
 		$mysqli=new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		
 		//käsk
-		$stmt=$mysqli->prepare("INSERT INTO HealthCondition (Gender, Age, daynumber, month, year, NumberofSteps, LandLength) VALUES(?,?,?,?,?)");
+		$stmt=$mysqli->prepare("INSERT INTO HealthCondition (Gender, Age, date, NumberofSteps, LandLength) VALUES(?,?,?,?,?)");
 		
-		$stmt->bind_param("siiiiii",$Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength);
+		$stmt->bind_param("siiii",$Gender, $Age, $date, $NumberofSteps, $LandLength);
 		
 		if($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -120,11 +120,11 @@
 		
 		//käsk
 		$stmt=$mysqli->prepare("
-			SELECT id, Gender, Age, daynumber, month, year, NumberofSteps, LandLength
+			SELECT id, Gender, Age, date, NumberofSteps, LandLength
 			FROM HealthCondition
 		");
 		echo $mysqli->error;
-		$stmt->bind_result($id, $Gender, $Age, $daynumber, $month, $year, $NumberofSteps, $LandLength);
+		$stmt->bind_result($id, $Gender, $Age, $date, $NumberofSteps, $LandLength);
 		$stmt->execute();
 		
 		//array("Marii", "M")
@@ -135,9 +135,7 @@
 			$person->id=$id;
 			$person->Gender=$Gender;
 			$person->Age=$Age;
-			$person->daynumber=$daynumber;
-			$person->month=$month;
-			$person->year=$year;
+			$person->date=$date;
 			$person->NumberofSteps=$NumberofSteps;
 			$person->LandLength=$LandLength;
 			
