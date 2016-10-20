@@ -89,14 +89,14 @@
 	}
 	
 	$database = "if16_ALARI_VEREV";
-	function saverestos($restorani_nimi, $hinne, $kommentaar, $kliendi_sugu){
+	function saverestos($restoName, $grade, $comment, $customer_sex){
 		
 		
 		//yhendus olemas
 	$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		
 		//kask
-		$stmt = $mysqli->prepare("INSERT INTO restoranid (restorani_nimi,hinne,kommentaar,kliendi_sugu) VALUES (?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO restoranid (restoName,grade,comment,customer_sex) VALUES (?, ?, ?, ?)");
 		
 		echo $mysqli->error;
 		//asendan kysimargid vaartustega
@@ -104,7 +104,7 @@
 		//s tahistab stringi
 		//i integer
 		//d double/float
-		$stmt->bind_param("ssss", $restorani_nimi, $hinne, $kommentaar, $kliendi_sugu);
+		$stmt->bind_param("ssss", $restoName, $grade, $comment, $customer_sex);
 		
 		if($stmt->execute()){
 			echo "salvestamine onnestus ";
@@ -121,11 +121,11 @@
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		
 		//kask
-		$stmt = $mysqli->prepare("SELECT id, restorani_nimi, hinne, kommentaar, kliendi_sugu, created FROM restoranid");
+		$stmt = $mysqli->prepare("SELECT id, restoName, grade, comment, customer_sex, created FROM restoranid");
 		
 		echo $mysqli->error;
 		
-		$stmt->bind_result($id, $restorani_nimi, $hinne, $kommentaar, $kliendi_sugu, $created);
+		$stmt->bind_result($id, $restoName, $grade, $comment, $customer_sex, $created);
 		$stmt->execute();
 		
 		$result = array();
@@ -136,10 +136,10 @@
 			
 			$person = new StdClass();
 			$person->id = $id;
-			$person->restorani_nimi = $restorani_nimi;
-			$person->hinne = $hinne;
-			$person->kommentaar = $kommentaar;
-			$person->kliendi_sugu = $kliendi_sugu;
+			$person->restoName = $restoName;
+			$person->grade = $grade;
+			$person->comment = $comment;
+			$person->customer_sex = $customer_sex;
 			$person->created = $created;
 			
 			//echo $color. "<br>";

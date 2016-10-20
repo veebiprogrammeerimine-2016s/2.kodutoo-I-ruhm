@@ -1,3 +1,6 @@
+<fieldset>
+
+
 <?php
 	require("restoFunctions.php");
 
@@ -14,19 +17,19 @@
 		exit();
 	}
 	
-	$restorani_nimi = "";
-	$hinne = "";
-	$kommentaar= "";
-	$kliendi_sugu = "";
+	$restoName = "";
+	$grade = "";
+	$comment= "";
+	$customer_sex = "";
 	$person = "";
 	//kontrollin et valjad poleks tyhjad
-	if( isset($_POST["restorani_nimi"]) &&
-		isset($_POST["kommentaar"]) &&
-		!empty($_POST["restorani_nimi"]) &&
-		!empty($_POST["kommentaar"])
+	if( isset($_POST["restoName"]) &&
+		isset($_POST["comment"]) &&
+		!empty($_POST["restoName"]) &&
+		!empty($_POST["comment"])
 	)	{
 		//login sisse
-		saverestos($_POST["restorani_nimi"],$_POST["hinne"],$_POST["kommentaar"],$_POST["kliendi_sugu"]);
+		saverestos($_POST["restoName"],$_POST["grade"],$_POST["comment"],$_POST["customer_sex"]);
 		header("Location: restoData.php");
 		exit();
 	}
@@ -60,25 +63,19 @@
 				.welcome{
 				margin: 0 auto;
 				}
-				.1{
-					color:red;
+				
+				.table{
+					margin: 0 auto;
 				}
-				.2{
-					color:orange
-				}
-				.3{
-					color:yellow
-				}
-				.4{
-					color:light-green
-				}
-				.5{
-					color:green
+				.center {
+					margin: 0 auto;
+					max-width: 180px;
 				}
 			</style>
 			
 		<p><span style="float: right" class="logout">
-		<a href="?logout=1">LOGI VALJA</a></span></p>
+		<a href="?logout=1">LOGI VALJA</a><br><?=$_SESSION["email"];?></span></p>
+
 	
 	<h1 class="restoguru">RestoGuru</h1>
 		
@@ -90,23 +87,25 @@
 		
 		<form method="POST">
 		
-			<input placeholder="Restorani nimi" name="restorani_nimi" type="text">
+			<input placeholder="Restorani nimi" name="restoName" type="text">
 			
 			<br><br>
 			hinnang restoranile:<br>
-			<input type="radio" class="1" name="hinne" value="1"> 1<br>
-			<input type="radio" class="2" name="hinne" value="2"> 2<br>
-			<input type="radio" class="3" name="hinne" value="3"> 3<br>
-			<input type="radio" class="4" name="hinne" value="4"> 4<br>
-			<input type="radio" class="5" name="hinne" value="5" checked> 5
+			<input type="radio" name="grade" value="1"> 1<br>
+			<input type="radio" name="grade" value="2"> 2<br>
+			<input type="radio" name="grade" value="3"> 3<br>
+			<input type="radio" name="grade" value="4"> 4<br>
+			<input type="radio" name="grade" value="5" checked> 5
 			
 			<br><br>
 			
-			<input placeholder="kommentaar" name="kommentaar" type="text">
+			<input placeholder="kommentaar" name="comment" type="text">
 			
 			<br><br>
 
-			<input placeholder="Mees/Naine" name="kliendi_sugu" type="text">
+            Sugu:<br>
+            <input type="radio" name="customer_sex" value="Mees"> Mees<br>
+            <input type="radio" name="customer_sex" value="Naine"> Naine
 			
 			<br><br>
 			
@@ -116,20 +115,42 @@
 		
 <h2>Arhiiv</h2>
 <?php
-
-	foreach($person as $P);{
-		if ($hinne="1")
-		echo '<h2 style="color:red;">'.$P->restorani_nimi.'</h2>';
-		if ($hinne="2")
-		echo '<h2 style="color:orange;">'.$P->restorani_nimi.'</h2>';
-		if ($hinne="3")
-		echo '<h2 style="color:yellow;">'.$P->restorani_nimi.'</h2>';
-		if ($hinne="4")
-		echo '<h2 style="color:LawnGreen;">'.$P->restorani_nimi.'</h2>';
-		if ($hinne="5")
-		echo '<h2 style="color:green;">'.$P->restorani_nimi.'</h2>';
+	foreach($person as $P){
+			if($P->grade=="1"){
+				echo '<h2 style="color:red;">'.$P->restoName.'</h2>';
+			}
+			if($P->grade=="2"){
+				echo '<h2 style="color:orange;">'.$P->restoName.'</h2>';
+			}
+			if($P->grade=="3"){
+				echo '<h2 style="color:yellow;">'.$P->restoName.'</h2>';
+			}
+			if($P->grade=="4"){
+				echo '<h2 style="color:LawnGreen;">'.$P->restoName.'</h2>';
+			}
+			if($P->grade=="5"){
+				echo '<h2 style="color:green;">'.$P->restoName.'</h2>';
+		}
 		
 	}
+	/*
+	switch($grade){
+		case "1":
+			echo '<h2 style="color:red;">'.$P->restoName.'</h2>';
+			break;
+		case "2":
+			echo '<h2 style="color:orange;">'.$P->restoName.'</h2>';
+			break;
+		case "3":
+			echo '<h2 style="color:yellow;">'.$P->restoName.'</h2>';
+			break;
+		case "4":
+			echo '<h2 style="color:LawnGreen;">'.$P->restoName.'</h2>';
+			break;
+		case "5":
+			echo '<h2 style="color:green;">'.$P->restoName.'</h2>';
+			break;
+	}*/
 ?>	
 <h2>arhiivtabel</h2>
 <?php
@@ -144,14 +165,14 @@
 			$html .= "<th>loodud</th>";
 		$html .= "</tr>";
 
-	foreach($person as $P);{
+	foreach($person as $P){
 		$html .= "<tr>";
-			$html .= "<td>".$P->id."</td>";
-			$html .= "<td>".$P->restorani_nimi."</td>";
-			$html .= "<td>".$P->hinne."</td>";
-			$html .= "<td>".$P->kommentaar."</td>";
-			$html .= "<td>".$P->kliendi_sugu."</td>";
-			$html .= "<td>".$P->created."</td>";
+			$html .= '<td>'.$P->id."</td>";
+			$html .= '<td>'.$P->restoName."</td>";
+			$html .= '<td>'.$P->grade."</td>";
+			$html .= '<td>'.$P->comment."</td>";
+			$html .= '<td>'.$P->customer_sex."</td>";
+			$html .= '<td>'.$P->created."</td>";
 		$html .= "</tr>";
 		
 	}
@@ -159,3 +180,4 @@
 	echo $html;
 	
 ?>
+</fieldset>

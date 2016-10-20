@@ -1,7 +1,7 @@
 <?php
 	//votab ja kopeerib faili sisu
 	require("restoFunctions.php");
-	//require("song.mp3");
+
 	
 	//kas kasutaja on sisse loginud
 	if(isset ($_SESSION["userId"])) {
@@ -26,63 +26,94 @@
 	$loginpasswordError = "";
 	$loginEmail = "";
 	$loginemailError = "";
-	$age = "";
-	$ageError = "";
 	$phonenr = "";
-	$phonenrError = "";
 	$gender = "";
+	$signupName = "";
+	$signupNameError = "";
+	$signupLName = "";
+	$signupLNameError = "";
+
 	
 	//kas on üldse olemas
-	if (isset ($_POST["signupEmail"])) {
+	if (isset ($_POST ["signupEmail"])) {
 		// oli olemas, ehk keegi vajutas nuppu
-		if (empty($_POST["signupEmail"])) {
+		if (empty($_POST ["signupEmail"])) {
 			//oli tõesti tühi
-			$signupEmailError = "See väli on kohustuslik";
+			$signupEmailError = "Sisesta E-mail!";
 		} else {
 			
-			$signupEmail = $_POST["signupEmail"];
+			$signupEmail = $_POST ["signupEmail"];
 			
 		}
 			
 	}
-	if (isset ($_POST["signupageError"])) {
+	//kas on üldse olemas
+	if (isset ($_POST["signupName"])) {
 		// oli olemas, ehk keegi vajutas nuppu
-		if (empty($_POST["signupage"])) {
+		if (empty($_POST["signupName"])) {
 			//oli tõesti tühi
-			$signupageError = "See väli on kohustuslik";
+			$signupNameError = "Sisesta eesnimi!";
 		} else {
-			
-			$signupage = $_POST["signupage"];
+
+			$signupName = $_POST["signupName"];
+
 		}
+
 	}
-	if (isset ($_POST["age"])) {
-		if (empty($_POST["age"])) {
-			$ageError = "See väli on kohustuslik";
+	//kas on üldse olemas
+	if (isset ($_POST["signupLName"])) {
+		// oli olemas, ehk keegi vajutas nuppu
+		if (empty($_POST["signupLName"])) {
+			//oli tõesti tühi
+			$signupLNameError = "Sisesta perekonnanimi!";
 		} else {
-		
-			$age = $_POST["age"];
+
+			$signupLName = $_POST["signupLName"];
+
 		}
-	}	
-	if (isset ($_POST["phonenr"])) {
-		if (empty($_POST["phonenr"])) {
-			$phonenrError = "See väli on kohustuslik";
-		} else {
-		
-			$phonenr = $_POST["phonenr"];
-		}
-	}		
-	if (isset($_POST["gender"])){
-		$gender = $_POST["gender"];
+
 	}
+    if (isset ($_POST ["phonenr"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST ["phonenr"])) {
+            //oli tõesti tühi
+            $phonenrError = "Sisesta telefoni number!";
+        } else {
+
+            $phonenr = $_POST ["phonenr"];
+
+        }
+
+    }
+    //kas on üldse olemas
+    if (isset ($_POST["signupPassword"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST["signupPassword"])) {
+            //oli tõesti tühi
+            $signupPasswordError = "Sisesta parool!";
+
+        } else {
+            //oli midagi, ei olnud tühi
+            //kas pikkust vähemalt 8
+
+            if (strlen($_POST["signupPassword"]) < 8 ) {
+
+                $signupPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
+
+            }
+        }
+    }
 		//tean yhtegi viga ei olnud
 	if( empty($signupEmailError)&&
 		empty($signupPasswordError)&&
-		empty($ageError)&&
-		empty($phonenrError)&&
+		empty($signupNameError)&&
+		empty($signupLNameError)&&
 		isset($_POST["signupPassword"])&&
 		isset($_POST["signupEmail"])&&
-		isset($_POST["age"])&&
-		isset($_POST["phonenr"])
+		isset($_POST["signupName"])&&
+		isset($_POST["signupLName"])&&
+        isset($_POST["signupage"])&&
+        isset($_POST["phonenr"])
 		
 		)
 		{
@@ -94,54 +125,27 @@
 		
 		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "rasi ".$password."<br>";
-		echo "vanus ".$age."<br>";
-		echo "telefoni number ".$phonenr."<br>";
+		echo "vanus ".$signupage."<br>";
+		echo "eesnimi ".$signupName." ".$signupLName."<br>";
 		echo "sugu ".$gender."<br>";
-		//echo $serverPassword
+        echo "telefoni number ".$phonenr."<br>";
 		
 		$signupEmail = cleanInput($signupEmail);
 		
 		
 		$password = cleanInput($password);
 		
-		signup($signupEmail, $password, $age, $phonenr, $gender);
+		signup($signupEmail, $password, $signupage, $phonenr, $gender);
 		
 	}
 	
-	//kas on üldse olemas
-	if (isset ($_POST["signupPassword"])) {
-		// oli olemas, ehk keegi vajutas nuppu
-		if (empty($_POST["signupPassword"])) {
-			//oli tõesti tühi
-			$signupPasswordError = "See väli on kohustuslik";
-			
-		} else {
-			//oli midagi, ei olnud tühi
-			//kas pikkust vähemalt 8
-			
-			if (strlen($_POST["signupPassword"]) < 8 ) {
-				
-				$signupPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
-				
-			}
-		}
-	}
-	
-		
-	if (isset ($_POST["gender"])) {
-		if (empty($_POST["gender"])) {
-			$genderError = "See väli on kohustuslik";
-		} else {
-			
-			$gender = $_POST["gender"];
 
-		}
-	}
+
 	if (isset($_POST["loginPassword"])){
 		
 		if (empty($_POST["loginPassword"])){
 			
-			$loginpasswordError = "sisesta parool";
+			$loginpasswordError = "sisesta parool!";
 		}
 	}
 	if (isset($_POST["loginEmail"])){
@@ -151,6 +155,7 @@
 			$loginemailError = "sisesta e-mail";
 		}
 	}
+
 	$error= "";
 	//kontrollin et kasutaja taitis valjad ja voib sisse logida
 	if( isset($_POST["loginEmail"]) &&
@@ -190,7 +195,7 @@
 				font-size: 60px;
 			}
 			.new-user {
-				max-width: 400px;
+				width: 400px;
 				color:green;
 				margin: 0 auto;
 			}
@@ -203,7 +208,11 @@
 				margin: 0 auto;
 				max-width: 85px;
 			}
-			
+			.errors {
+				margin: 0 auto;
+				max-width: 150px;
+				color:red;
+			}
 		</style>
 	</head>
 	<body>
@@ -229,30 +238,82 @@
 			<br><br>
 			<p class="buttons">
 			<input style="color:grey;" type="submit">
+
 			</p>
 			</fieldset>
 		
 		</form>
 
 		<h1 class="heading-center">Loo kasutaja</h1>
-		
+		<p class="errors"><?php echo $signupEmailError; ?></p><br>
+		<p class="errors"><?php echo $signupPasswordError; ?></p><br>
+		<p class="errors"><?php echo $signupNameError; ?></p><br>
+		<p class="errors"><?php echo $signupLNameError; ?></p>
+
 		<form method="POST">
 			<fieldset class="new-user">
 			<legend class="legend-center"> Uus kasutaja </legend>
 			<p style="color:red;">*Kohustuslikud väljad </p>
 			<br>
+                <a>E-mail</a><a><span style="float: right">Parool</span></a><br>
 			<h style="color:red;">*</h>
-			<input placeholder="E-mail" name="signupEmail" type="email"  value = "<?=$signupEmail;?>"> <?php echo $signupEmailError; ?>
-			
+			<input placeholder="E-mail" name="signupEmail" type="email"  value = "<?=$signupEmail;?>">
+			<span style="float: right"><h style="color:red;">*</h>
+			<input placeholder="Parool" name="signupPassword" type="password"> </span>
+
+			<br><br>
+                <a>Eesnimi</a><a><span style="float: right">Perekonnanimi</span></a><br>
 			<h style="color:red;">*</h>
-			<input placeholder="Parool" name="signupPassword" type="password"> <?php echo $signupPasswordError; ?>
+			<input placeholder="Eesnimi" name="signupName" type="text"  value = "<?=$signupName;?>">
+
+			<span style="float: right"><h style="color:red;">*</h>
+			<input placeholder="Perekonnanimi" name="signupLName" type="text" value = "<?=$signupLName;?>"> </span>
 			
 			<br><br>
-			<h style="color:red;">&nbsp&nbsp</h>
-			<input placeholder="vanus" name="age" type="number">  <?php echo $signupageError; ?>
-			<h style="color:white;">&nbsp&nbsp</h>
-			<input placeholder="telefoni number" name="phonenr" type="number"> 
-			
+                <a>Vanus</a><a><span style="float: right">Telefoni number</span></a><br>
+                &nbsp&nbsp&nbsp
+                <select>
+                    <option></option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                    <option value="32">32</option>
+                    <option value="33">33</option>
+                    <option value="34">34</option>
+                    <option value="35">35</option>
+                    <option value="36">36</option>
+                    <option value="37">37</option>
+                    <option value="38">38</option>
+                    <option value="39">39</option>
+                    <option value="40">40</option>
+                </select>
+
+			<span style="float: right"><h style="color:white;">&nbsp&nbsp</h>
+			<input placeholder="telefoni number" name="phonenr" type="number"></span>
+
 			<br><br>
 			<fieldset class="sided-fieldset">
 			Sugu
@@ -277,8 +338,8 @@
 			<br>
 			</fieldset>
 			
-			<audio controls autoplay loop>
-			<source src="song.mp3" type="audio/mpeg" >
+			<audio autoplay loop >
+			<source src="song.mp3" type="audio/mpeg"  > audio.volume=0.2;
 			</audio>
 			
 			
