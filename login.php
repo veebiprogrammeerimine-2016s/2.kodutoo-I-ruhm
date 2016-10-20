@@ -115,10 +115,10 @@
 		) {
 			
 			$loginEmail = cleanInput($loginEmail);
-			$loginPassword = cleanInput($loginPassword);
+			$loginPassword = cleanInput($_POST["loginPassword"]);
 			
 			//login sisse
-			$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
+			$error = login($_POST["loginEmail"], $loginPassword);
 			
 		}
 		

@@ -18,7 +18,7 @@
 		exit();
 	}
 
-	//ei ole tühjad väljad, mida salvestada (sugu ja värv)
+	//ei ole tühjad väljad, mida salvestada
 	if(isset($_POST["author"]) &&
 			isset($_POST["title"]) &&
 			!empty($_POST["author"]) &&
@@ -28,6 +28,29 @@
 			
 		}
 	
+	$author = "";
+	$authorError = "";
+	$title = "";
+	$titleError = "";
+	
+	if (isset ($_POST["author"]) ) {
+	
+		if (empty ($_POST["author"]) ) { 
+			$authorError = "Palun täitke see väli!";
+		} else {
+			$author = $_POST["author"];
+		}
+	}
+	
+	
+	if (isset ($_POST["title"]) ) {
+	
+		if (empty ($_POST["title"]) ) { 
+			$titleError = "Palun täitke see väli!";
+		} else {
+			$title = $_POST["title"];
+		}
+	}
 	
 	$people = AllBooks();
 	
@@ -44,11 +67,11 @@
 <form method="POST"> 
 <label>Raamatu autor</label><br>
 			
-		<input type="text" name="author" > <br><br>
+		<input type="text" name="author" value="<?=$author;?>"> <?php echo $authorError;?> <br><br>
 	
 <label>Raamatu pealkiri</label><br>
 		
-		<input type="text" name="title" > <br><br>
+		<input type="text" name="title" value="<?=$title;?>"> <?php echo $titleError;?> <br><br>
 	
 	<input type="submit" value="Salvesta">	
 </form>
@@ -62,7 +85,7 @@
 	
 		$html .= "<tr>";
 			$html .= "<th>ID</th>";
-			$html .= "<th style=' color:#66c2ff">Raamatu autor</th>";
+			$html .= "<th>Raamatu autor</th>";
 			$html .= "<th>Raamatu pealkiri</th>";
 			$html .= "<th>Loetud</th>";
 		$html .= "</tr>";
