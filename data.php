@@ -85,7 +85,7 @@
 	</p>
 
 	<h1>Salvesta pilt</h1>
-	<form method="POST">
+	<form method="POST" enctype="multipart/form-data">
 	
 		<label>Autori nimi:</label>
 			<br>
@@ -105,14 +105,12 @@
 		
 			<br><br>
 			
-		<input type="submit" value="Saada">
+		<input type="submit" value="Lae üles">
 		
 	</form>
 
 	<h1>Salvestatud pildid</h1>
 
-	<p>
-		Salvestatud piltide vaatamiseks kliki <a href="user.php">siia!</a>
-	</p>
+	Salvestatud piltide vaatamiseks kliki <a href="user.php">siia!</a>
 
 </html>
