@@ -73,7 +73,7 @@
 <!DOCTYPE html>
 <html>
 
-	<h1>Data page</h1>
+	<h1>Kasutaja info</h1>
 	<p>
 
 		Tere tulemast <?=$_SESSION["email"];?>!
@@ -108,5 +108,11 @@
 		<input type="submit" value="Saada">
 		
 	</form>
+
+	<h1>Salvestatud pildid</h1>
+
+	<p>
+		Salvestatud piltide vaatamiseks kliki <a href="user.php">siia!</a>
+	</p>
 
 </html>
