@@ -4,6 +4,7 @@
 	require("functions.php");
 
 	//Kas kasutaja on sisse logitud
+	//Kui jah, siis suunata data lehele
 	if(isset($_SESSION["userId"])){
 		header("Location: data.php");
 		exit();
@@ -99,7 +100,6 @@
 		!empty($_POST["loginEmail"]) &&
 		!empty($_POST["loginPassword"])
 	){
-
 		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
 		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
 

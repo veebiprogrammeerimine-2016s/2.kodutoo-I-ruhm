@@ -1,70 +1,112 @@
 <?php 
 
+	//Võtab ja kopeerib faili sisu
 	require("functions.php");
 	
 	//Kas on sisseloginud
 	//Kui ei ole, siis suunata login lehele
-	if (!isset ($_SESSION["userId"])) {
+	if (!isset ($_SESSION["userId"])){
 		header("Location: login.php");
 		exit();
 	}
 	
-	//Kas ?logout on aadressireal
-	if (isset($_GET["logout"])) {
+	//Kui vajutada logi välja nuppu, viib tagasi login lehele	
+	if (isset($_GET["logout"])){
 		session_destroy();
 		header("Location: login.php");
 		exit();
 	}
-	
+
+	//Muutujad
+	$author="";
+	$date_taken="";
+	$description="";
+	$authorError="";
+	$date_takenError="";
+	$descriptionError="";
+
+	if(isset($_POST["author"])){
+		if(empty($_POST["author"])){
+			$authorError="<i>See väli on kohustuslik!</i>";
+		}else{
+			$author=$_POST["author"];
+		}
+	}	
+
+	if(isset($_POST["date_taken"])){
+		if(empty($_POST["date_taken"])){
+			$date_takenError="<i>See väli on kohustuslik!</i>";
+		}else{
+			$date_taken=$_POST["date_taken"];
+		}
+	}	
+
+	if(isset($_POST["description"])){
+		if(empty($_POST["description"])){
+			$descriptionError="<i>See väli on kohustuslik!</i>";
+		}else{
+			$description=$_POST["description"];
+		}
+	}	
+
+	// Kus tean, et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
 	if (isset($_POST["author"]) &&
 		isset($_POST["date_taken"]) &&
 		isset($_POST["description"]) &&
-		!empty($_POST["author"]) &&
-		!empty($_POST["date_taken"]) &&
-		!empty($_POST["description"])
+		empty($authorError) &&
+		empty($date_takenError) &&
+		empty($descriptionError)
 	){
-		
-		$author = cleanInput($_POST["author"]);
-		$date_taken = cleanInput($_POST["date_taken"]);
-		$description = cleanInput($_POST["description"]);
-		
-		//$savePicture($author, $date_taken, $description($_POST["color"])
-		
+		$author = cleanInput($author);
+		$date_taken = cleanInput($date_taken);
+		$description = cleanInput($description);
+
+		savePicture($author, $date_taken, $description);
+
+		//Teen lehele refreshi
+		header("Location: login.php");
+		exit();
 	}
 	
 ?>
 
-<h1>Data page</h1>
-<p>
-	Tere tulemast <?=$_SESSION["email"];?>!
-	
-		<br>
-	
-	<a href="?logout=1">Logi välja</a>
+<!DOCTYPE html>
+<html>
 
-</p>
+	<h1>Data page</h1>
+	<p>
 
-<h1>Salvesta pilt</h1>
-<form method="POST">
+		Tere tulemast <?=$_SESSION["email"];?>!
+
+			<br>
+
+		<a href="?logout=1">Logi välja</a>
+
+	</p>
+
+	<h1>Salvesta pilt</h1>
+	<form method="POST">
 	
-	<label>Autori nimi:</label>
-		<br>
-	<input name="author" type="text">
+		<label>Autori nimi:</label>
+			<br>
+		<input name="author" type="text" value="<?=$author;?>"> <?php echo "<font color='red'>$authorError</font>"; ?>
 	
-		<br><br>
+			<br><br>
 		
-	<label>Pildi tegemise kuupäev:</label>
-		<br>
-	<input name="date_taken" type="date">
-	
-		<br><br>
+		<label>Pildi tegemise kuupäev:</label>
+			<br>
+		<input name="date_taken" type="date" value="<?=$date_taken;?>"> <?php echo "<font color='red'>$date_takenError</font>"; ?>
 		
-	<label>Pildi kirjeldus:</label>
-		<br>
-	<input name="description" type="text">
-	
-		<br><br>
+			<br><br>
+			
+		<label>Pildi kirjeldus:</label>
+			<br>
+		<input name="description" type="text" value="<?=$description;?>"> <?php echo "<font color='red'>$descriptionError</font>"; ?>
 		
-	<input type="submit" value="Saada">
-	
-</form>
+			<br><br>
+			
+		<input type="submit" value="Saada">
+		
+	</form>
+
+</html>

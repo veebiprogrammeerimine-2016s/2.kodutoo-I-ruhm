@@ -16,7 +16,7 @@
 		return $input;
 	}
 	
-	function signup ($email, $password, $gender, $birthdate){
+	function signup($email, $password, $gender, $birthdate){
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		$stmt = $mysqli->prepare("INSERT INTO registered_users (email, password, gender, birthdate) VALUES (?, ?, ?, ?)");
@@ -28,7 +28,6 @@
 		}else{
 			echo "ERROR ".$stmt->error;
 		}
-		
 	}
 	
 	function login($email, $password){
@@ -79,7 +78,7 @@
 		return $error;
 	}
 	
-	function savePicture ($author, $date_taken, $description){
+	function savePicture($author, $date_taken, $description){
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 		$stmt = $mysqli->prepare("INSERT INTO pic_info (author, date_taken, description) VALUES (?, ?, ?)");
@@ -91,7 +90,6 @@
 		}else{
 			echo "ERROR ".$stmt->error;
 		}
-		
 	}
 
 ?>
