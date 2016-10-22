@@ -28,6 +28,9 @@
 		}else{
 			echo "ERROR ".$stmt->error;
 		}
+
+		$stmt->close();
+		$mysqli->close();
 	}
 	
 	function login($email, $password){
@@ -90,6 +93,41 @@
 		}else{
 			echo "ERROR ".$stmt->error;
 		}
+
+		$stmt->close();
+		$mysqli->close();
+	}
+
+	function getAllPics(){
+			
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("SELECT id, author, date_taken, description FROM pic_info");
+		echo $mysqli->error;
+		$stmt->bind_result($id, $author, $date_taken, $description);
+		$stmt->execute();
+			
+		//Tekitan massiivi
+		$result = array();
+			
+		//Tee seda seni, kuni on rida andmeid
+		//Mis vastab select lausele
+		while ($stmt->fetch()){
+				
+			//tekitan objekti
+			$i = new StdClass();
+				
+			$i->id = $id;
+			$i->author = $author;
+			$i->date_taken = $date_taken;
+			$i->description = $description;
+			
+			array_push($result, $i);
+		}
+			
+		$stmt->close();
+		$mysqli->close();
+			
+		return $result;
 	}
 
 ?>

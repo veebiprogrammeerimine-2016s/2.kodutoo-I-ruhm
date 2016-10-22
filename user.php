@@ -16,11 +16,27 @@
 		exit();
 	}
 
+	$userPics = getAllPics();		
+
 ?>
 
 <!DOCTYPE html>
 
-	<a href="data.php"><<< Tagasi</a>
+	<a href="data.php">< Tagasi</a>
 	<h1>Salvestatud pildid</h1>
+
+	<?php
+    
+    	$listHtml = "<ul>";
+	
+		foreach($userPics as $i){
+			$listHtml .= "<li>".$i->pic."</li>";
+		}
+    
+    	$listHtml .= "</ul>";
+	
+		echo $listHtml;
+    
+	?>
 
 </html>
