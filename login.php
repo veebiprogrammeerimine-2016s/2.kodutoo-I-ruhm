@@ -22,7 +22,6 @@
 	$loginSalvestatudEmail="";
 	$birthdateError="";
 	$birthdate="";
-	
 
 	//Kas see on üldse olemas
 	if(isset($_POST["signupEmail"])){
@@ -43,10 +42,10 @@
 				$signupPasswordError="<i>Parool peab olema vähemalt 8 tähemärki pikk!</i>";
 			}
 		}
+	}
 		
 	if(isset($_POST["gender"])){
 		$gender = $_POST["gender"];
-		}
 	}
 
 	if(isset($_POST["loginEmail"])){
@@ -79,8 +78,10 @@
 		empty($genderError) &&
 		empty($birthdateError)
 	){
+		//EI TÖÖTA !!! ------------------
 		echo "Registreerin..<br>";
 		echo "email".$signupEmail."<br>";
+		//EI TÖÖTA !!! ------------------
 		
 		$password=hash("sha512", $_POST["signupPassword"]);
 		

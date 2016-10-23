@@ -16,7 +16,7 @@
 		exit();
 	}
 
-	$userPics = getAllPics();		
+	$picData = getAllPics();		
 
 ?>
 
@@ -27,15 +27,30 @@
 
 	<?php
     
-    	$listHtml = "<ul>";
-	
-		foreach($userPics as $i){
-			$listHtml .= "<li>".$i->pic."</li>";
+		$html = "<table>";
+		
+		$html .= "<tr>";
+			$html .= "<th>ID</th>";
+			$html .= "<th>Autor</th>";
+			$html .= "<th>Kuupäev</th>";
+			$html .= "<th>Kirjeldus</th>";
+		$html .= "</tr>";
+		
+		//Iga liikme kohta massiivis
+		foreach($picData as $p){
+			//Iga pilt on $p
+			
+			$html .= "<tr>";
+				$html .= "<td>".$p->id."</td>";
+				$html .= "<td>".$p->author."</td>";
+				$html .= "<td>".$p->date_taken."</td>";
+				$html .= "<td>".$p->description."</td>";
+			$html .= "</tr>";
 		}
-    
-    	$listHtml .= "</ul>";
-	
-		echo $listHtml;
+		
+		$html .= "</table>";
+		
+		echo $html;
     
 	?>
 
