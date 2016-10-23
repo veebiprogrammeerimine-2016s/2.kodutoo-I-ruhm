@@ -11,7 +11,7 @@
 	//*******************************
 	
 	$database = "if16_ALARI_VEREV";
-	function signup ($email, $password, $age, $phonenr, $gender){
+	function signup ($signupEmail, $signupPassword, $signupName, $signupLName, $signupage, $phonenr, $signupgender){
 		
 		
 		
@@ -19,7 +19,7 @@
 	$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		
 		//kask
-		$stmt = $mysqli->prepare("INSERT INTO user_sample (email,password,age,phonenr,gender) VALUES (?, ?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email,password, name, lastname, age, phonenr, gender) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		
 		echo $mysqli->error;
 		//asendan kysimargid vaartustega
@@ -27,7 +27,7 @@
 		//s tahistab stringi
 		//i integer
 		//d double/float
-		$stmt->bind_param("ssiis", $email, $password, $age, $phonenr, $gender);
+		$stmt->bind_param("sssssis", $signupEmail, $signupPassword, $signupName, $signupLName, $signupage, $phonenr, $signupgender);
 		
 		if($stmt->execute()){
 			echo "salvestamine onnestus ";
@@ -35,8 +35,7 @@
 			echo"ERROR ".$stmt->error;
 		}
 	}
-	
-	
+
 	function login($email, $password){
 		
 		$error = "";
@@ -70,7 +69,7 @@
 			
 			$_SESSION["userId"]= $id;
 			$_SESSION["email"]=$emailfromdatabase;
-			
+
 			//suunan uuele lehele
 			header("location: restoData.php");
 			
@@ -178,16 +177,3 @@
 	
 	*/
 	?>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

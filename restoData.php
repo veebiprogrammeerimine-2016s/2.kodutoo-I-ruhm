@@ -16,6 +16,8 @@
 		header("Location: restoSisselogimine.php");
 		exit();
 	}
+
+
 	
 	$restoName = "";
 	$grade = "";
@@ -35,7 +37,8 @@
 	}
 	
 		$person = getallrestos();
-		//echo"<pre>";
+
+//echo"<pre>";
 		//var_dump($person);
 		//echo"</pre>";
 

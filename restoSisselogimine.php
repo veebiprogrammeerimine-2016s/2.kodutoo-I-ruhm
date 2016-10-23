@@ -27,7 +27,8 @@
 	$loginEmail = "";
 	$loginemailError = "";
 	$phonenr = "";
-	$gender = "";
+	$signupgender = "";
+    $signupgenderError = "";
 	$signupName = "";
 	$signupNameError = "";
 	$signupLName = "";
@@ -85,6 +86,30 @@
         }
 
     }
+    if (isset ($_POST ["signupage"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST ["signupage"])) {
+            //oli tõesti tühi
+            $signupageError = "Sisesta vanus!";
+        } else {
+
+            $signupage = $_POST ["signupage"];
+
+        }
+
+    }
+    if (isset ($_POST ["signupage"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST ["signupgender"])) {
+            //oli tõesti tühi
+            $signupgenderError = "Vali sugu!";
+        } else {
+
+            $signupgender = $_POST ["signupgender"];
+
+        }
+
+    }
     //kas on üldse olemas
     if (isset ($_POST["signupPassword"])) {
         // oli olemas, ehk keegi vajutas nuppu
@@ -113,6 +138,7 @@
 		isset($_POST["signupName"])&&
 		isset($_POST["signupLName"])&&
         isset($_POST["signupage"])&&
+		isset($_POST["signupgender"])&&
         isset($_POST["phonenr"])
 		
 		)
@@ -120,22 +146,18 @@
 		
 		echo "SALVESTAN...<br>";
 		echo "email ".$signupEmail."<br>";
-		
 		$password = hash ("sha512", $_POST["signupPassword"]);
-		
+		echo "siin";
 		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "rasi ".$password."<br>";
 		echo "vanus ".$signupage."<br>";
-		echo "eesnimi ".$signupName." ".$signupLName."<br>";
-		echo "sugu ".$gender."<br>";
+		echo "nimi ".$signupName." ".$signupLName."<br>";
+		echo "sugu ".$signupgender."<br>";
         echo "telefoni number ".$phonenr."<br>";
 		
 		$signupEmail = cleanInput($signupEmail);
-		
-		
 		$password = cleanInput($password);
-		
-		signup($signupEmail, $password, $signupage, $phonenr, $gender);
+		signup($signupEmail, $password, $signupName, $signupLName, $signupage, $phonenr, $signupgender);
 		
 	}
 	
@@ -162,13 +184,13 @@
 		isset($_POST["loginPassword"]) &&
 		!empty($_POST["loginEmail"]) &&
 		!empty($_POST["loginPassword"])
+
 	)	{
 		
 		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
 		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
 		//login sisse
 		$error = login($_POST["loginEmail"],$_POST["loginPassword"]);
-	
 	}
 ?>
 <!DOCTYPE html>
@@ -249,6 +271,8 @@
 		<p class="errors"><?php echo $signupPasswordError; ?></p><br>
 		<p class="errors"><?php echo $signupNameError; ?></p><br>
 		<p class="errors"><?php echo $signupLNameError; ?></p>
+        <p class="errors"><?php echo $signupageError; ?></p>
+        <p class="errors"><?php echo $signupgenderError; ?></p>
 
 		<form method="POST">
 			<fieldset class="new-user">
@@ -262,7 +286,8 @@
 			<input placeholder="Parool" name="signupPassword" type="password"> </span>
 
 			<br><br>
-                <a>Eesnimi</a><a><span style="float: right">Perekonnanimi</span></a><br>
+			
+            <a>Eesnimi</a><a><span style="float: right">Perekonnanimi</span></a><br>
 			<h style="color:red;">*</h>
 			<input placeholder="Eesnimi" name="signupName" type="text"  value = "<?=$signupName;?>">
 
@@ -270,46 +295,11 @@
 			<input placeholder="Perekonnanimi" name="signupLName" type="text" value = "<?=$signupLName;?>"> </span>
 			
 			<br><br>
-                <a>Vanus</a><a><span style="float: right">Telefoni number</span></a><br>
-                &nbsp&nbsp&nbsp
-                <select>
-                    <option></option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
-                    <option value="25">25</option>
-                    <option value="26">26</option>
-                    <option value="27">27</option>
-                    <option value="28">28</option>
-                    <option value="29">29</option>
-                    <option value="30">30</option>
-                    <option value="31">31</option>
-                    <option value="32">32</option>
-                    <option value="33">33</option>
-                    <option value="34">34</option>
-                    <option value="35">35</option>
-                    <option value="36">36</option>
-                    <option value="37">37</option>
-                    <option value="38">38</option>
-                    <option value="39">39</option>
-                    <option value="40">40</option>
-                </select>
+			
+            <a>Vanus</a><a><span style="float: right">Telefoni number</span></a><br>
+            &nbsp&nbsp
+			<input placeholder="Vanus" name="signupage" type="text"  value = "<?=$signupage;?>">
+                
 
 			<span style="float: right"><h style="color:white;">&nbsp&nbsp</h>
 			<input placeholder="telefoni number" name="phonenr" type="number"></span>
@@ -318,9 +308,9 @@
 			<fieldset class="sided-fieldset">
 			Sugu
 			<br>
-			<input type="radio" name="gender" value="male" checked> Male<br>
-			<input type="radio" name="gender" value="female"> Female<br>
-			<input type="radio" name="gender" value="other"> Other
+			<input type="radio" name="signupgender" value="male" checked> Male<br>
+			<input type="radio" name="signupgender" value="female"> Female<br>
+			<input type="radio" name="signupgender" value="other"> Other
 			</fieldset>
 			<fieldset class="sided-fieldset">
 			
@@ -338,9 +328,9 @@
 			<br>
 			</fieldset>
 			
-			<audio autoplay loop >
-			<source src="song.mp3" type="audio/mpeg"  > audio.volume=0.2;
-			</audio>
+			<!--<audio autoplay loop >
+			<source src="Song.mp3" type="audio/mpeg"  > audio.volume=0.2;
+			</audio>-->
 			
 			
 			
