@@ -20,8 +20,7 @@
 		exit();
 		
 	}
-	
-	
+		
 		//echo $date;
 	
 	//ei ole tühjad väljad, mida salvestada
@@ -37,7 +36,11 @@
 		!empty($_POST["LandLength"])
 		){
 		
-		$gender=cleanInput($_POST["Gender"]);
+		$Gender=cleanInput($_POST["Gender"]);
+		$Age=cleanInput($_POST["Age"]);
+		$date=cleanInput($_POST["date"]);
+		$NumberofSteps=cleanInput($_POST["NumberofSteps"]);
+		$LandLength=cleanInput($_POST["LandLength"]);
 		
 		$date =  new DateTime($_POST['date']);
 		$date =  $date->format('Y-m-d');
@@ -54,7 +57,7 @@
 ?>
 
 <h1>Hinda oma tervislikku seisundit</h1>
-<p>Tere tulemast <?=$_SESSION["Email"];?>!
+<p>Tere tulemast <?=$_SESSION["name"];?>!
 	<a href="?logout=1">Logi välja</a>
 </p>
 
@@ -98,7 +101,7 @@
 
 
 <br><br>
-<h2>Arhiivtabel</h2>
+<h2>Kasutajate andmed</h2>
 <?php
 	$html="<table>";
 		$html .="<tr>";

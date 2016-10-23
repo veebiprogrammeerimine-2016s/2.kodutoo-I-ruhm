@@ -42,7 +42,7 @@
 		
 		$stmt=$mysqli->prepare("
 		
-			SELECT id, Email, password, created
+			SELECT id, Email, password, created, Name
 			FROM user_sample
 			WHERE Email=?
 						
@@ -55,7 +55,7 @@
 		$stmt->bind_param("s", $Email);
 		
 		//määran tulpadele muutujad
-		$stmt->bind_result($id, $EmailFromDB, $passwordFromDB, $created);
+		$stmt->bind_result($id, $EmailFromDB, $passwordFromDB, $created, $NameFromDB);
 		
 		$stmt->execute();
 		
@@ -71,6 +71,7 @@
 				
 				$_SESSION["userId"]=$id;
 				$_SESSION["Email"]=$EmailFromDB;
+				$_SESSION["name"]=$nameFromDB;
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
