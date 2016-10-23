@@ -22,7 +22,8 @@
 	$gender = "";
 	$error = "";
 	$bday = "";
-	
+	$loginEmail = "";
+
 	// kas e-post oli olemas
 	
 	if ( isset ( $_POST["signupEmail"] ) ) {
@@ -74,6 +75,10 @@
 				
 			$loginEmailError = "Insert your e-mail!";
 				
+		} else {
+
+			$loginEmail = ($_POST["loginEmail"]);
+
 		}
 			
 	}
@@ -138,13 +143,26 @@
 <html>
 	<head>
 		<title>Log in or Sign up</title>
+		<style>
+			.form-input{
+				max-width: 193px;
+				color:darkorange;
+				margin: 0 auto;
+			}
+			.heading-center{
+				margin: 0 auto;
+				max-width: 193px;
+
+			}
+
+		</style>
 	</head>
 	<body>
 
-	<h1>Log in</h1>
+	<h1 class="form-input">Log in</h1>
 		<form method = "POST">
 			<p style="color:red;"><?=$error;?>
-			<fieldset>
+			<fieldset class="heading-center">
 				<legend>Existing users.</legend>
 				<lable>E-mail</lable><br> 
 				<input name = "loginEmail" type = "email" placeholder = "E-mail"> <?php echo $loginEmailError; ?>
@@ -159,9 +177,9 @@
 			</fieldset>	
 		</form>
 		
-	<h1>Sign up</h1>
+	<h1 class="form-input">Sign up</h1><br>
 		<form method = "POST">
-			<fieldset>
+			<fieldset class="heading-center">
 				<legend>Create a new user.</legend>
 				<lable>E-mail</lable><br> 
 				<input name = "signupEmail" type = "email" placeholder = "E-mail" value = "<?= $signupEmail;?>"> <?php  echo $signupEmailError; ?>

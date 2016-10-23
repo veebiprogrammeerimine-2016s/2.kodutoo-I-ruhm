@@ -1,38 +1,47 @@
 ﻿<?php
 	require("functions.php");
 
-    $gender_1 = "";
-    $color = "";
-	
+    //$order1 = "";
+    //$cartype = "";
+    //$clientname = "";
+    //$washdate = "";
+
 	//kas on sisseloginud, kui eiole siis suunata login lehele
-	
+
 	if (!isset($_SESSION["userID"])){
-		
+
 		header ("Location: login.php");
 		exit ();
 	}
-	
-	
+
+
 	if (isset($_GET["logout"])){
-		
+
 		session_destroy();
-		
+
 		header("Location: login.php");
         exit ();
 	}
 
 	// ei ole tyhjad v2ljad
-    if ( isset($_POST["gender_1"]) &&
-    isset($_POST["color"]) &&
-    !empty($_POST["gender_1"]) &&
-    !empty($_POST["color"])
+    if ( isset($_POST["order1"]) &&
+    isset($_POST["cartype"]) &&
+    isset($_POST["clientname"]) &&
+    isset($_POST["washdate"]) &&
+    !empty($_POST["order1"]) &&
+    !empty($_POST["cartype"]) &&
+    !empty($_POST["clientname"]) &&
+    !empty($_POST["washdate"])
     ) {
-        $gender_1 = cleanInput($_POST["gender_1"]);
+        $order1 = cleanInput($_POST["order1"]);
+        $cartype = cleanInput($_POST["cartype"]);
+        $clientname = cleanInput($_POST["clientname"]);
+        $washdate = cleanInput($_POST["washdate"]);
 
-        clothingCampus($_POST["gender_1"], $_POST["color"]);
+        carWash($_POST["order1"], $_POST["cartype"], $_POST["clientname"], $_POST["washdate"]);
     }
 
-    $people = getAllPeople();
+    $carWash = getWashData();
 
 
     //echo "<pre>";
@@ -47,76 +56,74 @@
 <h2>Esita oma tellimus.</h2>
     <form method = "POST">
         <lable>Broneeri aeg</lable><br>
+        <style>
+            table, th, td{
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+
+            }
+        </style>
         <br>
         <label>Sinu nimi</label><br>
-        <input name="klient" type="text" placeholder="Sisesta enda nimi"><br>
+        <input name="clientname" type="text" placeholder="Sisesta enda nimi"><br>
         <br>
         <lable>Vali pakett</lable><br>
-        <select>
-            <option value="tellimus">Tavaline survepesu</option>
-            <option value="tellimus">Põhjalik survepesu koos leotusega</option>
-            <option value="tellimus">1 Detaili poleerimine (hind sõltub detailist)</option>
-            <option value="tellimus">Terve auto poleerimine</option>
-            <option value="tellimus">Sisepesu koos nahahooldusega</option>
-            <option value="tellimus">Põhjalik sisepesu koos põhjaliku välispesuga</option>
-            <option value="tellimus">Põhjalik sisepesu koos põhjaliku välispesuga ja terve auto poleerimine</option>
+        <select name = "order1" type = "order1">
+            <option value="Tavaline survepesu">Tavaline survepesu</option>
+            <option value="Põhjalik survepesu koos leotusega">Põhjalik survepesu koos leotusega</option>
+            <option value="Detaili poleerimine (hind sõltub detailist)">Detaili poleerimine (hind sõltub detailist)</option>
+            <option value="Terve auto poleerimine">Terve auto poleerimine</option>
+            <option value="Sisepesu koos nahahooldusega">Sisepesu koos nahahooldusega</option>
+            <option value="Põhjalik sisepesu koos põhjaliku välispesuga">Põhjalik sisepesu koos põhjaliku välispesuga</option>
+            <option value="Põhjalik sisepesu koos põhjaliku välispesuga ja terve auto poleerimine">Põhjalik sisepesu koos põhjaliku välispesuga ja terve auto poleerimine</option>
         </select>
         <br><br>
         <lable>Vali auto tüüp</lable><br>
-        <select>
-            <option value="tyyp">Luukpära</option>
-            <option value="tyyp">Sedaan</option>
-            <option value="tyyp">Universaal</option>
-            <option value="tyyp">Mahtuniversaal</option>
-            <option value="tyyp">Maastur</option>
-            <option value="tyyp">Kaubik</option>
+        <select name = "cartype" type = "cartype">
+            <option value="Luukpära">Luukpära</option>
+            <option value="Sedaan">Sedaan</option>
+            <option value="Universaal">Universaal</option>
+            <option value="Mahtuniversaal">Mahtuniversaal</option>
+            <option value="Maastur">Maastur</option>
+            <option value="Kaubik">Kaubik</option>
         </select>
         <br><br>
-        <lable>Vali oma autopesu jaoks sobiv aeg</lable><br>
-
+        <lable>Vali oma autopesu jaoks sobiv päev.</lable><br>
+        <input type="date" name="washdate">
         <br><br>
-        <input  type = "submit" value="Broneeri">
+        <input type="submit" value="Broneeri">
     </form>
-<h3>Archive</h3>
-<?php
-    foreach ($people as $p){
+<!--h3>Archive</h3-->
 
-        echo "<h3 style=' color:" .$p->clothingColor."; '>"
-        .$p->gender
-        ."</h3>";
+<?php
+
+
+    $html = "<table style='width: 100%'>";
+
+        $html .= "<tr>";
+            $html .= "<th>ID</th>";
+            $html .= "<th>Tellimus</th>";
+            $html .= "<th>Tüüp</th>";
+            $html .= "<th>Broneeringu aeg</th>";
+            $html .= "<th>Klient</th>";
+        $html .= "<tr>";
+
+    foreach ($carWash as $w) {
+        $html .= "<tr>";
+            $html .= "<td>".$w->id."</td>";
+            $html .= "<td>".$w->order1."</td>";
+            $html .= "<td>".$w->cartype."</td>";
+            $html .= "<td>".$w->washdate."</td>";
+            $html .= "<td>".$w->clientname."</td>";
+        $html .= "<tr>";
 
     }
 
 
-
-
-?>
-
-<h2>Archive table</h2>
-<?php
-
-    $html = "<table>";
-
-        $html .= "<tr>";
-            $html .= "<th>if</th>";
-            $html .= "<th>Sex</th>";
-            $html .= "<th>Color</th>";
-            $html .= "<th>Created</th>";
-        $html .= "<tr>";
-
-    foreach ($people as $p) {
-        $html .= "<tr>";
-            $html .= "<td>".$p->id."</td>";
-            $html .= "<td>".$p->gender."</td>";
-            $html .= "<td style=' background-color: ".$p->clothingColor."; '>".$p->clothingColor."</td>";
-            $html .= "<td>".$p->created."</td>";
-        $html .= "<tr>";
-
-    }
-
-    $html .= "<table>";
 
     echo $html;
 
 ?>
-
