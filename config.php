@@ -2,9 +2,7 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
-require("../../config.php");
-$serverHost = "localhost";
-
+require_once("../../config.php");
 
 function connectDB()
 {

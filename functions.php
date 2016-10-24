@@ -2,6 +2,8 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
+require("config.php");
+
 function createBoard($table)
 {
     $table = cleanInput($table);
