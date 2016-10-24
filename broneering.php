@@ -53,10 +53,11 @@ $commentError = "";
 		!empty($_POST["comment"]) 
 		
 	)
+
 	
 	{
 		  	 
-		reservation($_POST["place"], $_POST["time"], $_POST["people"], $_POST["comment"]);
+		reservation($_POST["place"], $_POST["time"], cleanInput($_POST["people"]), cleanInput($_POST["comment"]));
 			  
 	}
 	
@@ -89,8 +90,8 @@ $commentError = "";
 <form method="POST">
 <label>Millisesse kohta soovite lauda broneerida?</label>
 <br><br>
-<select name="place" type="place" value="<?php echo $place; ?>"> <?php echo $placeError;  ?>
-  <option value="Vali koht">Vali koht...</option>
+<select name="place" type="text" value="<?php echo $place; ?>"> <?php echo $placeError;  ?>
+  <option value="">Vali koht</option>
   <option value="butterfly">Butterfly Lounge</option>
   <option value="tuljak">Tuljak</option>
   <option value="wesset">Villa Wesset</option>
@@ -110,12 +111,12 @@ $commentError = "";
 
 <label>Mitu inimest teid on?</label>
 <br><br>
-<input name="people" type="people" placeholder="Mitu inimest?" value="<?php echo $people; ?>"> <?php echo $peopleError;  ?>
+<input name="people" type="text" placeholder="Mitu inimest?" value="<?php echo $people; ?>"> <?php echo $peopleError;  ?>
 <br><br>
 
 <label>Siia kirjutage oma erisoovid.</label>
 <br><br>
-<input name="comment" type="comment" placeholder="Erisoov" style="width: 500px;" value="<?php echo $comment; ?>"> <?php echo $commentError;  ?>
+<input name="comment" type="text" placeholder="Erisoov" style="width: 500px;" value="<?php echo $comment; ?>"> <?php echo $commentError;  ?>
 <br><br>
 
 <br><br>
