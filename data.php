@@ -1,98 +1,120 @@
-<?php
-
-	$campusgender = "";
-	$campuscolor = "";
-
-    require ("functions.php");
-    require ("../../config.php");
-
-    //Kas on sisseloginud, kui ei ole siis suunata login lehele
-    if (!isset($_SESSION["userID"])) {
-
-        header("Location: login.php");
-				exit();
-
-    }
-
-    //Kas ?kogout on aadressireal?
-    if (isset($_GET["logout"])) {
-
-        session_destroy();
-
-        header("Location: login.php");
-				exit();
-
-    }
-    //Salvestab värvi ja soo
-    if (isset($_POST["campusgender"]) && isset($_POST["campuscolor"]) && !empty($_POST["campuscolor"])) {
-
-		data($_POST["campusgender"], $_POST["campuscolor"]);
-
+<?php 
+	
+	require("functions.php");
+	
+	//kui ei ole kasutaja id'd
+	if (!isset($_SESSION["userId"])){
+		
+		//suunan sisselogimise lehele
+		header("Location: login.php");
+		exit();
 	}
+	
+	
+	//kui on ?logout aadressireal siis login välja
+	if (isset($_GET["logout"])) {
+		
+		session_destroy();
+		header("Location: login.php");
+		exit();
+	}
+	
+	$msg = "";
+	if(isset($_SESSION["message"])){
+		$msg = $_SESSION["message"];
+		
+		//kui ühe näitame siis kustuta ära, et pärast refreshi ei näitaks
+		unset($_SESSION["message"]);
+	}
+	
+	
+	if ( isset($_POST["plate"]) && 
+		isset($_POST["plate"]) && 
+		!empty($_POST["color"]) && 
+		!empty($_POST["color"])
+	  ) {
+		  
+		saveCar(cleanInput($_POST["plate"]), cleanInput($_POST["color"]));
+		
+	}
+	
+	//saan kõik auto andmed
+	$carData = getAllCars();
+	//echo "<pre>";
+	//var_dump($carData);
+	//echo "</pre>";
+?>
+<h1>Data</h1>
+<?=$msg;?>
+<p>
+	Tere tulemast <a href="user.php"><?=$_SESSION["userEmail"];?>!</a>
+	<a href="?logout=1">Logi välja</a>
+</p>
 
-	$people = getAllPeople();
-	echo "<pre>";
-	var_dump($people);
-	echo "</pre>";
+
+<h2>Salvesta auto</h2>
+<form method="POST">
+	
+	<label>Auto nr</label><br>
+	<input name="plate" type="text">
+	<br><br>
+	
+	<label>Auto värv</label><br>
+	<input type="color" name="color" >
+	<br><br>
+	
+	<input type="submit" value="Salvesta">
+	
+	
+</form>
+
+<h2>Autod</h2>
+<?php 
+	
+	$html = "<table>";
+	
+	$html .= "<tr>";
+		$html .= "<th>id</th>";
+		$html .= "<th>plate</th>";
+		$html .= "<th>color</th>";
+	$html .= "</tr>";
+	
+	//iga liikme kohta massiivis
+	foreach($carData as $c){
+		// iga auto on $c
+		//echo $c->plate."<br>";
+		
+		$html .= "<tr>";
+			$html .= "<td>".$c->id."</td>";
+			$html .= "<td>".$c->plate."</td>";
+			$html .= "<td style='background-color:".$c->carColor."'>".$c->carColor."</td>";
+		$html .= "</tr>";
+	}
+	
+	$html .= "</table>";
+	
+	echo $html;
+	
+	
+	$listHtml = "<br><br>";
+	
+	foreach($carData as $c){
+		
+		
+		$listHtml .= "<h1 style='color:".$c->carColor."'>".$c->plate."</h1>";
+		$listHtml .= "<p>color = ".$c->carColor."</p>";
+	}
+	
+	echo $listHtml;
+	
+	
+	
 
 ?>
 
-<h1>Data</h1>
-<p>
-    Tere tulemast <?=$_SESSION["email"];?>!
+<br>
+<br>
+<br>
+<br>
+<br>
 
-      <form method="POST">
-    <label>Värv</label><br>
-    <input name="campuscolor" type="color" placeholder="Sisestage värv">
-    <br>
-    <label>Sugu</label><br>
-          <input type="radio" name="campusgender" value="male" > Mees<br>
-          <input type="radio" name="campusgender" value="female" > Naine<br>
-          <input type="radio" name="campusgender" value="other" checked> Muu<br>
-    <br>
-    <input type="submit" value="Salvesta">
-
-  </form>
-
-    <a href="?logout=1">Logi välja</a>
-
-</p>
-
-<h2>Arhiiv</h2>
-
-<?php
-
-	foreach ($people as $p) {
-
-		echo "<h3 style='color:".$p->color."; '>".$p->gender."</h3>";
-
-
-	}
- ?>
-
- <h2>Arhiivtabel</h2>
-
-<?php
-
-	$html = "<table>";
-		$html .= "<tr>";
-			$html .= "<th>id</th>";
-			$html .= "<th>sugu</th>";
-			$html .= "<th>värv</th>";
-			$html .= "<th>loodud</th>";
-	$html .= "</tr>";
-
-	foreach ($people as $p) {
-			$html .= "<tr>";
-				$html .= "<td>".$p->id."</td>";
-				$html .= "<td>".$p->gender."</td>";
-				$html .= "<td style='background-color:".$p->color."; '>".$p->color."</td>";
-				$html .= "<td>".$p->created."</td>";
-		$html .= "</tr>";
-
-}
-
-	$html .="</table>";
-	echo $html;
-
- ?>

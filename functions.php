@@ -1,175 +1,332 @@
 <?php
+	require_once("../config.php");
+	$database = "if16_hinrek";
+	
+	session_start();
+	$mysqli = new mysqli($servername, $username, $password, $database);
+	
+	//***************
+	//**** SIGNUP ***
+	//***************
 
-	require ("../../config.php");
+	function signUp ($email, $password, $firsname, $lastname) {
+		global $mysqli;
+		
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, firstname, lastname) VALUES (?, ?, ?, ?)");
 
-//alustan sessiooni, et saaks kasutada $_SESSION muutjuaid
+		echo $mysqli->error;
 
-//****************
-//*****SESSION****
-//****************
+		$stmt->bind_param("ssss", $email, $password, $firsname, $lastname);
 
-    session_start();
+		if($stmt->execute()) {
+			echo "Kasutaja loodud!";
+		} else {
+		 	echo "ERROR ".$stmt->error;
+		}
 
+		$stmt->close();
+		$mysqli->close();
 
-//****************
-//**CLEAN INPUT***
-//****************
+	}
 
-	function cleanInput($input) {
+	//***************
+	//**** LOGIN ****
+	//***************
 
-		$input = trim($input);
-		$input = stripslashes($input);
-		$input = htmlspecialchars($input);
+	function login ($email, $password) {
+		global $mysqli;
+		
+		$error = "";
 
-		return $input
+		$stmt = $mysqli->prepare("
+		SELECT id, email, password, created
+		FROM user_sample
+		WHERE email = ?");
+
+		echo $mysqli->error;
+
+		//asendan küsimärgi
+		$stmt->bind_param("s", $email);
+
+		//määran väärtused muutujatesse
+		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
+		$stmt->execute();
+
+		//andmed tulid andmebaasist või mitte
+		// on tõene kui on vähemalt üks vaste
+		if($stmt->fetch()){
+
+			//oli sellise meiliga kasutaja
+			//password millega kasutaja tahab sisse logida
+			$hash = hash("sha512", $password);
+			if ($hash == $passwordFromDb) {
+
+				echo "Kasutaja logis sisse ".$id;
+
+				//määran sessiooni muutujad, millele saan ligi
+				// teistelt lehtedelt
+				$_SESSION["userId"] = $id;
+				$_SESSION["userEmail"] = $emailFromDb;
+
+				$_SESSION["message"] = "<h1>Tere tulemast!</h1>";
+
+				header("Location: data.php");
+				exit();
+
+			}else {
+				$error = "vale parool, proovi uuesti!";
+			}
+
+		} else {
+
+			// ei leidnud kasutajat selle meiliga
+			$error = "Selline kasutaja puudub!";
+		}
+
+		return $error;
+		
+		$stmt->close();
+		$mysqli->close();
 
 	}
 
 
-//****************
-//*****SIGNUP*****
-//****************
-
-    function signup($email, $password) {
-
-    $database = "if16_hinrek";
-
-    //Ühendus
-    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
-
-    //Käsk
-    $stmt = $mysqli ->prepare("INSERT INTO user_sample (email, password) VALUES (?,?)");
-
-    //Asendan (?,?) väärtustega turvalisuse pärast
-    //iga muutuja kohta üks täht et mis tüüpi muutuja on
-    // s- string i- integer d-double/float
-    $stmt->bind_param("ss", $email, $password);
-    if ($stmt->execute()) {
-
-        echo "salvestamine õnnestus";
-
-    } else {
-        echo "ERROR".$stmt->error;
-    }
-
-}
-
-//****************
-//*****DATA*******
-//****************
-
-	function data($campusgender, $campuscolor) {
-
-	$database = "if16_hinrek";
-
-	$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
-	$stmt = $mysqli ->prepare("INSERT INTO clothingOnTheCampus (gender, color) VALUES (?,?)");
-
-	$stmt->bind_param("ss", $campusgender, $campuscolor);
-    if ($stmt->execute()) {
-
-        echo "salvestamine õnnestus";
-
-    } else {
-        echo "ERROR".$stmt->error;
-    }
-
-}
-
-//****************
-//**DATAKUVAMINE**
-//****************
-
-	function getAllPeople() {
+	function saveCar ($plate, $color) {
 
 		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
 
-		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
-		$stmt = $mysqli ->prepare("SELECT id, gender, color, created FROM clothingOnTheCampus");
+		$stmt = $mysqli->prepare("INSERT INTO cars_and_colors (plate, color) VALUES (?, ?)");
+
 		echo $mysqli->error;
 
-		$stmt->bind_result($id, $gender, $color, $created);
+		$stmt->bind_param("ss", $plate, $color);
+
+		if($stmt->execute()) {
+			echo "salvestamine õnnestus";
+		} else {
+		 	echo "ERROR ".$stmt->error;
+		}
+
+		$stmt->close();
+		$mysqli->close();
+
+	}
+
+
+	function getAllCars() {
+
+		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+
+		$stmt = $mysqli->prepare("
+			SELECT id, plate, color
+			FROM cars_and_colors
+		");
+		echo $mysqli->error;
+
+		$stmt->bind_result($id, $plate, $color);
 		$stmt->execute();
 
-		//seni kuni on üks rida andmeid salvestada (10 rida võrdub 10 korda)
-		//array("hinrek", "R")
+
+		//tekitan massiivi
 		$result = array();
 
+		// tee seda seni, kuni on rida andmeid
+		// mis vastab select lausele
 		while ($stmt->fetch()) {
 
-			$person = new StdClass();
-			$person->id = $id;
-			$person->gender = $gender;
-			$person->color = $color;
-			$person->created = $created;
+			//tekitan objekti
+			$car = new StdClass();
 
-			//echo $gender." ".$color."<br>";
-			array_push($result, $person);
+			$car->id = $id;
+			$car->plate = $plate;
+			$car->carColor = $color;
 
+			//echo $plate."<br>";
+			// iga kord massiivi lisan juurde nr märgi
+			array_push($result, $car);
 		}
 
 		$stmt->close();
 		$mysqli->close();
 
 		return $result;
+	}
+
+	//***************
+	//** CLEANINPUT *
+	//***************
+	
+	function cleanInput($input){
+
+		$input = trim($input);
+		$input = stripslashes($input);
+		$input = htmlspecialchars($input);
+
+		return $input;
 
 	}
-//****************
-//*****LOGIN******
-//****************
 
-    function login($email, $password) {
+	function saveInterest ($interest) {
 
-        $error = "";
+		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
 
-        $database = "if16_hinrek";
+		$stmt = $mysqli->prepare("INSERT INTO interests (interest) VALUES (?)");
 
-        //Ühendus
-        $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
+		echo $mysqli->error;
 
-        //Käsk
-        $stmt = $mysqli ->prepare("SELECT id, email, password, created FROM user_sample WHERE email=?");
+		$stmt->bind_param("s", $interest);
+
+		if($stmt->execute()) {
+			echo "salvestamine õnnestus";
+		} else {
+		 	echo "ERROR ".$stmt->error;
+		}
+
+		$stmt->close();
+		$mysqli->close();
+
+	}
+
+	function saveUserInterest ($interest_id) {
+		//Vaatan mida ja mis IDga salvestab
+		echo "huviala".$interest_id."<br>";
+		echo "kasutaja".$_SESSION["userId"]."<br>";
+		//-----------------------------------------
+		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+
+		//Kas huviala on juba olemas
+		$stmt = $mysqli->prepare("SELECT id FROM user_interests WHERE user_id=? AND interes_id=?");
+		$stmt->bind_param("ii",$_SESSION["userId"], $interest_id);
+		$stmt->execute();
+
+		if ($stmt->fetch()) {
+			//oli olemas
+			echo "juba olemas";
+			//ära salvestamisega jätekita
+			return;
+		}
+
+		$stmt->close();
+		//Jätkan salvestamisega
+		$stmt = $mysqli->prepare("INSERT INTO user_interests (user_id, interes_id) VALUES (?, ?)");
+
+		echo $mysqli->error;
+
+		$stmt->bind_param("ii",$_SESSION["userId"], $interest_id);
+
+		if($stmt->execute()) {
+			echo "salvestamine õnnestus";
+		} else {
+			echo "ERROR ".$stmt->error;
+		}
+
+		$stmt->close();
+		$mysqli->close();
+
+	}
+
+	function getAllInterests() {
+
+		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+
+		$stmt = $mysqli->prepare("
+			SELECT id, interest
+			FROM interests
+		");
+		echo $mysqli->error;
+
+		$stmt->bind_result($id, $interest);
+		$stmt->execute();
 
 
-        echo $mysqli->error;
+		//tekitan massiivi
+		$result = array();
 
-        //asendan küsimärgi
-        $stmt->bind_param("s", $email);
+		// tee seda seni, kuni on rida andmeid
+		// mis vastab select lausele
+		while ($stmt->fetch()) {
 
-        //määran tulpadele muutujad
-        $stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
-        $stmt->execute();
+			//tekitan objekti
+			$i = new StdClass();
 
-        //küsin rea andmeid
-        if ($stmt->fetch()){
-            //oli rida
+			$i->id = $id;
+			$i->interest = $interest;
 
-            //võrdlen paroole
-            $hash = hash("sha512", $password);
-            if ($hash == $passwordFromDb) {
+			array_push($result, $i);
+		}
 
-                echo "kasutaja ".$id." logis sisse";
+		$stmt->close();
+		$mysqli->close();
 
-                $_SESSION["userID"] = $id;
-                $_SESSION["email"] = $emailFromDb;
+		return $result;
+	}
 
-                //suunaks kasutaja uuele lehele
-                header("Location: data.php");
-								exit();
+	function getAllUserInterests() {
 
-            }else{
+		$database = "if16_hinrek";
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
 
-                $error = "parool vale!";
+		$stmt = $mysqli->prepare("SELECT interest from interests join user_interests
+			on interests.id = user_interests.interes_id
+			where user_interests.user_id = ?");
+		echo $mysqli->error;
 
-            }
+		$stmt->bind_param("i", $_SESSION["userId"]);
 
-        }else{
-            //ei olnud
-            $error = "Sellise emailiga ".$email." kasutajat ei olnud";
-        }
+		$stmt->bind_result($interest);
+		$stmt->execute();
 
-        return $error;
 
-    }
+		//tekitan massiivi
+		$result = array();
+
+		// tee seda seni, kuni on rida andmeid
+		// mis vastab select lausele
+		while ($stmt->fetch()) {
+
+			//tekitan objekti
+			$i = new StdClass();
+
+			$i->interest = $interest;
+
+			array_push($result, $i);
+		}
+
+		$stmt->close();
+		$mysqli->close();
+
+		return $result;
+	}
+
+
+
+
+
+
+
+	/*function sum($x, $y) {
+
+		return $x + $y;
+
+	}
+
+
+	function hello($firsname, $lastname) {
+
+		return "Tere tulemast ".$firsname." ".$lastname."!";
+
+	}
+
+	echo sum(5123123,123123123);
+	echo "<br>";
+	echo hello("Romil", "Robtsenkov");
+	echo "<br>";
+	echo hello("Juku", "Juurikas");
+	*/
 
 ?>
