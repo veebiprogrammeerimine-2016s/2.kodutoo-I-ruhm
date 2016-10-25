@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
- * Public configuration file 
+ * Public configuration file
  */
 require_once("../../config.php");
 

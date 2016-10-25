@@ -22,7 +22,7 @@ if (isset($_POST["createBoardName"])) {
         $createBoardError = "Board name cannot be empty.";
     }
     $boardName = $_POST["createBoardName"];
-    if(createBoard($boardName)){
+    if (createBoard($boardName)) {
         echo "Board " . $boardName . " created successfully!";
     }
     echo "<br>";

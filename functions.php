@@ -62,10 +62,10 @@ function getAllPosts($board)
     //Returns all post data necessary for displaying it for users.
     $mysqli = connectDB();
     $stmt = $mysqli->prepare("
-    SELECT id, name, text, imgdir, created
-    FROM $board
-    WHERE trashed != 1
-    ");
+        SELECT id, name, text, imgdir, created
+        FROM $board
+        WHERE trashed != 1
+        ");
     echo $mysqli->error;
     $stmt->bind_result($id, $name, $text, $imgDir, $created);
     $stmt->execute();
@@ -92,7 +92,7 @@ function editGetPost($board, $id)
     //Used for displaying current post values in the edit window.
     $mysqli = connectDB();
     $query = "SELECT text, imgdir , password FROM $board WHERE id = $id";
-    if ($stmt = $mysqli->prepare($query)){
+    if ($stmt = $mysqli->prepare($query)) {
         $stmt->execute();
         $stmt->bind_result($text, $imgDir, $password);
         $result = array();
@@ -104,7 +104,7 @@ function editGetPost($board, $id)
 
             array_push($result, $post);
         }
-        $stmt->close();    
+        $stmt->close();
 
     } else {
         echo "This board or post doesn't exist!";
@@ -130,29 +130,30 @@ function editPost($board, $id, $text, $image)
 
 
     $stmt = $mysqli->prepare("
-    UPDATE $board
-    SET text = ?,
+        UPDATE $board
+        SET text = ?,
         imgdir = ?
-    WHERE id = $id
-    ");
+        WHERE id = $id
+        ");
 
     $stmt->bind_param("ss", $text, $image);
     if ($stmt->execute()) {
-       return true;
+        return true;
     } else {
         return false;
     }
 }
 
-function deletePost($board, $id){
+function deletePost($board, $id)
+{
     //Does not remove posts, just trashes them
     $mysqli = connectDB();
     $stmt = $mysqli->prepare("
-    UPDATE $board
-    SET trashed = 1
-    WHERE id = $id
-    ");
-    if ($stmt->execute()){
+        UPDATE $board
+        SET trashed = 1
+        WHERE id = $id
+        ");
+    if ($stmt->execute()) {
         return true;
     } else {
         return false;
@@ -179,7 +180,6 @@ function getTables()
     $mysqli->close();
     return $result;
 }
-
 
 
 function trashBoard($board)

@@ -2,7 +2,7 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
-require ("/../../config.php")
+require("/../../config.php")
 require("config.php");
 //quick and simple database regeneration
 function createDB($database)

@@ -12,33 +12,32 @@ $postName = $postContent = $postImage = $postPassword = "";
 $boardCheck = getTables();
 
 foreach ($boardCheck as $a) {
-    if ($a->name == $_GET["name"]){
+    if ($a->name == $_GET["name"]) {
         $wrongBoardError = "";
     }
 }
 
 //If the board does not exist, remove GET and POST data
-if (!empty($wrongBoardError)){
+if (!empty($wrongBoardError)) {
     $_GET["name"] = NULL;
     $_POST["post"] = NULL;
     $_POST["image"] = NULL;
     $_POST["password"] = NULL;
 }
 
-if (isset($_POST["name"]) && !empty($_POST["name"]))  {
+if (isset($_POST["name"]) && !empty($_POST["name"])) {
     $postName = $_POST["name"];
 } else {
     $postName = "Anonymous";
 }
 if (isset($_POST["post"]) && !empty($_POST["post"])) {
     $postContent = $_POST["post"];
-    
+
 }
 if (isset($_POST["image"]) && !empty($_POST["image"])) {
     if (filter_var($_POST["image"], FILTER_VALIDATE_URL)) {
         $postImage = $_POST["image"];
-    }
-    else {
+    } else {
         $postImage = " ";
         $postImageError = "This is not a valid address!";
     }
@@ -57,10 +56,10 @@ if (empty($wrongBoardError) &&
     empty($postUrlError) &&
     (isset($_POST["post"]) && !empty($_POST["post"])) ||
     (isset($_POST["image"]) && !empty($_POST["image"]))
-    ) {
+) {
     createPost($boardName, $postName, $postPassword, $postContent, $postImage);
     //remove POST for easy user refresh, POST is unnecessary after sending it once.
-echo "
+    echo "
 <script>
     window.location = window.location;
 </script>
@@ -70,7 +69,7 @@ echo "
 }
 
 
-if (empty($wrongBoardError)){
+if (empty($wrongBoardError)) {
     echo '
     <h1>' . $boardName . '</h1>
     <form method="post">
@@ -96,39 +95,39 @@ if (empty($wrongBoardError)){
         <br>
         <br>
         ';
-    }
+}
 
-    if (empty($wrongBoardError)){
-        $post = getAllPosts($boardName);
-        $html = "<table>";
+if (empty($wrongBoardError)) {
+    $post = getAllPosts($boardName);
+    $html = "<table>";
+    $html .= "<tr>";
+    $html .= "<th>#</th>";
+    $html .= "<th>Image</th>";
+    $html .= "<th>Name</th>";
+    $html .= "<th>Post</th>";
+    $html .= "<th>Created</th>";
+    $html .= "<th>Edit</th>";
+    $html .= "</tr>";
+    foreach ($post as $p) {
         $html .= "<tr>";
-        $html .= "<th>#</th>";
-        $html .= "<th>Image</th>";
-        $html .= "<th>Name</th>";
-        $html .= "<th>Post</th>";
-        $html .= "<th>Created</th>";
-        $html .= "<th>Edit</th>";
-        $html .= "</tr>";
-        foreach ($post as $p) {
-            $html .= "<tr>";
-            $html .= "<td>" . $p->id . "</td>";
-            if ($p->imgdir == " " || $p->imgdir == "") {
-                $html .= "<td></td>";
-            } else {
-                $html .= "'<td><a href='". $p->imgdir .
+        $html .= "<td>" . $p->id . "</td>";
+        if ($p->imgdir == " " || $p->imgdir == "") {
+            $html .= "<td></td>";
+        } else {
+            $html .= "'<td><a href='" . $p->imgdir .
                 "'><img src='" . $p->imgdir . "' height='100' width='auto'>" . "</td></a>";
-            }
-            $html .= "<td>" . $p->name . "</td>";
-            $html .= "<td>" . $p->text . "</td>";
-            $html .= "<td>" . $p->created . "</td>";
-            $html .= "<td>" . "<a href='editpost.php?name=" . $boardName ."&id=". $p->id . "' target='_blank'>Edit post</a></td>";
-            $html .= "</tr>";
         }
-        $html .= "</table>";
-        echo $html;
-    } else {
-        echo $wrongBoardError;
+        $html .= "<td>" . $p->name . "</td>";
+        $html .= "<td>" . $p->text . "</td>";
+        $html .= "<td>" . $p->created . "</td>";
+        $html .= "<td>" . "<a href='editpost.php?name=" . $boardName . "&id=" . $p->id . "' target='_blank'>Edit post</a></td>";
+        $html .= "</tr>";
     }
+    $html .= "</table>";
+    echo $html;
+} else {
+    echo $wrongBoardError;
+}
 
-    echo "<br><a href='" . "index.php" . "'>Change board </a>";
-    ?>
+echo "<br><a href='" . "index.php" . "'>Change board </a>";
+?>
