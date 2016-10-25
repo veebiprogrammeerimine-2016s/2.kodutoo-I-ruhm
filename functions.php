@@ -100,41 +100,69 @@
 		
 	}
 	
-	
-	function getAllPeople () {
+		function saveCar ($model, $plate, $color, $information) {
 		
-		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
+		$database = "if16_JohanR";
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
+
+		$stmt = $mysqli->prepare("INSERT INTO cars_and_colors (model, plate, color, information) VALUES (?, ?, ?, ?)");
+	
+		echo $mysqli->error;
+		
+		$stmt->bind_param("ssss", $model, $plate, $color, $information);
+		
+		if($stmt->execute()) {
+			echo "salvestamine õnnestus";
+		} else {
+		 	echo "ERROR ".$stmt->error;
+		}
+		
+		$stmt->close();
+		$mysqli->close();
+		
+	}
+
+	function getAllCars() {
+		
+		$database = "if16_JohanR";
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
+		
 		$stmt = $mysqli->prepare("
-			SELECT id, gender, color
-			FROM ClothingOnTheCampus
+			SELECT id, model, plate, color, information
+			FROM cars_and_colors
 		");
 		echo $mysqli->error;
 		
-		$stmt->bind_result($id, $gender, $color);
+		$stmt->bind_result($id, $model, $plate, $color, $information);
 		$stmt->execute();
 		
-		// array("Johan", "R")
+		
+		//tekitan massiivi
 		$result = array();
 		
-		// seni kuni on üks rida andmeid saada (10 rida = 10 korda)
+		// tee seda seni, kuni on rida andmeid
+		// mis vastab select lausele
 		while ($stmt->fetch()) {
 			
-			$person = new StdClass();
-			$person->id = $id;
-			$person->gender = $gender;
-			$person->clothingColor = $color;;
+			//tekitan objekti
+			$car = new StdClass();
 			
-			//echo $color."<br>";
-			array_push($result, $person);
+			$car->id = $id;
+			$car->model = $model;
+			$car->plate = $plate;
+			$car->carColor = $color;
+			$car->information = $information;
+			
+			//echo $plate."<br>";
+			// iga kord massiivi lisan juurde nr märgi
+			array_push($result, $car);
 		}
 		
 		$stmt->close();
 		$mysqli->close();
 		
 		return $result;
-		
-	}
-	
+	}	
 	
 	function cleanInput ($input) {
 		

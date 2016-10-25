@@ -3,6 +3,10 @@
 	
 	// kas on sisseloginud, kui ei ole siis
 	// suunata login lehele
+	
+
+
+	
 	if (!isset ($_SESSION["userId"])) {
 		
 		header("Location: login.php");
@@ -18,82 +22,103 @@
 		exit();
 	}
 	
-	// ei ole tühjad väljad mida salvestada
-	if ( isset($_POST["gender"]) &&
-		 isset($_POST["color"]) &&
-		 !empty($_POST["gender"]) &&
-		 !empty($_POST["color"])
+	
+	if ( isset($_POST["model"]) && 
+		isset($_POST["plate"]) && 
+		isset($_POST["color"]) && 
+		isset($_POST["information"]) && 
+		!empty($_POST["model"]) && 
+		!empty($_POST["plate"]) && 
+		!empty($_POST["color"]) && 
+		!empty($_POST["information"])
 	  ) {
+		  
+		saveCar(cleanInput($_POST["model"]), cleanInput($_POST["plate"]), cleanInput($_POST["color"]), cleanInput($_POST["information"]));
 		
-	    $gender = cleanInput($_POST["gender"]);
-		 
-		savePeople($_POST["gender"], cleanInput($_POST["color"]));
 	}
 	
-	$people = getAllPeople();
-	
+	//saan kõik auto andmed
+	$carData = getAllCars();
 	//echo "<pre>";
-	//var_dump($people);
-	//echo "</pre>";
-	
+	//var_dump($carData);
+	//echo "</pre>";	
 	
 ?>
-<h1>Data</h1>
+
+<h1>Norm masin</h1>
 <p>
 	Tere tulemast <?=$_SESSION["email"];?>!
 	<a href="?logout=1">Logi välja</a>
 </p> 
 
-<h1>Salvesta inimene</h1>
 <form method="POST">
-			
-	<label>Sugu</label><br>
-	<input type="radio" name="gender" value="male" > Mees<br>
-	<input type="radio" name="gender" value="female" > Naine<br>
-	<input type="radio" name="gender" value="Unknown" > Ei oska öelda<br>
-	
-	<!--<input type="text" name="gender" ><br>-->
-	
-	<br><br>
-	<label>Värv</label><br>
-	<input name="color" type="color"> 
-	
-	<br><br>
-	<input type="submit" value="Salvesta">
+	<fieldset>
+		<legend>Salvesta auto</legend>
+		<label>Auto mudel</label><br>
+		<input name="model" type="text">
+		<br><br>
+		
+		<label>Auto nr</label><br>
+		<input name="plate" type="text">
+		<br><br>
+		
+		<label>Auto värv</label><br>
+		<input type="color" name="color" >
+		<br><br>
+		
+		<label>Informatsioon</label><br>
+		<input name="information" type="text">
+		<br><br>
+		
+		<input type="submit" value="Salvesta">
+	</fieldset>
 	
 </form>
 
-<h2>Arhiiv</h2>
-<?php 
-	foreach($people as $p){
-		
-		echo 	"<h3 style=' color:".$p->clothingColor."; '>"
-				.$p->gender
-				."</h3>";
-	}
-?>
-
-<h2>Arhiivtabel</h2>
+<h2>Autod</h2>
 <?php 
 	
 	$html = "<table>";
-		$html .= "<tr>";
-			$html .= "<th>id</th>";
-			$html .= "<th>Sugu</th>";
-			$html .= "<th>Värv</th>";
-		$html .= "</tr>";
-		foreach($people as $p){
-			$html .= "<tr>";
-				$html .= "<td>".$p->id."</td>";
-				$html .= "<td>".$p->gender."</td>";
-				$html .= "<td style=' background-color:".$p->clothingColor."; '>"
-						.$p->clothingColor
-						."</td>";
-				//<img width="200" src=' ".$url." '>
-						
-			$html .= "</tr>";	
-		}
+	
+	$html .= "<tr>";
+		$html .= "<th>id</th>";
+		$html .= "<th>model</th>";
+		$html .= "<th>plate</th>";
+		$html .= "<th>color</th>";
+		$html .= "<th>information</th>";
+	$html .= "</tr>";
+	
+	//iga liikme kohta massiivis
+	foreach($carData as $c){
+		// iga auto on $c
+		//echo $c->plate."<br>";
 		
+		$html .= "<tr>";
+			$html .= "<td>".$c->id."</td>";
+			$html .= "<td>".$c->model."</td>";
+			$html .= "<td>".$c->plate."</td>";
+			$html .= "<td style='background-color:".$c->carColor."'>".$c->carColor."</td>";
+			$html .= "<td>".$c->information."</td>";
+		$html .= "</tr>";
+	}
+	
 	$html .= "</table>";
+	
 	echo $html;
+	
+	
+	$listHtml = "<br><br>";
+	
+	foreach($carData as $c){
+		
+		
+		$listHtml .= "<h1 style='color:".$c->carColor."'>".$c->plate."</h1>";
+		$listHtml .= "<p>color = ".$c->carColor."</p>";
+	}
+	
+	//echo $listHtml;
+	
+	
+	
+
 ?>
