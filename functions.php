@@ -1,8 +1,8 @@
 <?php
 	require_once("../config.php");
-	$database = "if16_hinrek";
-	
+
 	session_start();
+	$database = "if16_hinrek";
 	$mysqli = new mysqli($servername, $username, $password, $database);
 	
 	//***************
@@ -10,6 +10,7 @@
 	//***************
 
 	function signUp ($email, $password, $firsname, $lastname) {
+		
 		global $mysqli;
 		
 		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, firstname, lastname) VALUES (?, ?, ?, ?)");
@@ -34,22 +35,23 @@
 	//***************
 
 	function login ($email, $password) {
+		
 		global $mysqli;
 		
 		$error = "";
 
 		$stmt = $mysqli->prepare("
-		SELECT id, email, password, created
+		SELECT id, email, password, created, firstname, lastname
 		FROM user_sample
 		WHERE email = ?");
 
 		echo $mysqli->error;
 
-		//asendan küsimärgi
+		//replace ?-mark
 		$stmt->bind_param("s", $email);
 
-		//määran väärtused muutujatesse
-		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
+		//from sql -> local variables
+		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created, $firstNameFromDB, $lastNameFromDB);
 		$stmt->execute();
 
 		//andmed tulid andmebaasist või mitte
@@ -63,14 +65,14 @@
 
 				echo "Kasutaja logis sisse ".$id;
 
-				//määran sessiooni muutujad, millele saan ligi
-				// teistelt lehtedelt
+				//Session variables
 				$_SESSION["userId"] = $id;
 				$_SESSION["userEmail"] = $emailFromDb;
+				//ucfirst capitalizes string
+				$_SESSION["userFirstName"] = ucfirst($firstNameFromDB);
+				$_SESSION["userLastName"] = ucfirst($lastNameFromDB);
 
-				$_SESSION["message"] = "<h1>Tere tulemast!</h1>";
-
-				header("Location: data.php");
+				header("Location: user.php");
 				exit();
 
 			}else {
@@ -90,70 +92,6 @@
 
 	}
 
-
-	function saveCar ($plate, $color) {
-
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
-
-		$stmt = $mysqli->prepare("INSERT INTO cars_and_colors (plate, color) VALUES (?, ?)");
-
-		echo $mysqli->error;
-
-		$stmt->bind_param("ss", $plate, $color);
-
-		if($stmt->execute()) {
-			echo "salvestamine õnnestus";
-		} else {
-		 	echo "ERROR ".$stmt->error;
-		}
-
-		$stmt->close();
-		$mysqli->close();
-
-	}
-
-
-	function getAllCars() {
-
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
-
-		$stmt = $mysqli->prepare("
-			SELECT id, plate, color
-			FROM cars_and_colors
-		");
-		echo $mysqli->error;
-
-		$stmt->bind_result($id, $plate, $color);
-		$stmt->execute();
-
-
-		//tekitan massiivi
-		$result = array();
-
-		// tee seda seni, kuni on rida andmeid
-		// mis vastab select lausele
-		while ($stmt->fetch()) {
-
-			//tekitan objekti
-			$car = new StdClass();
-
-			$car->id = $id;
-			$car->plate = $plate;
-			$car->carColor = $color;
-
-			//echo $plate."<br>";
-			// iga kord massiivi lisan juurde nr märgi
-			array_push($result, $car);
-		}
-
-		$stmt->close();
-		$mysqli->close();
-
-		return $result;
-	}
-
 	//***************
 	//** CLEANINPUT *
 	//***************
@@ -168,16 +106,20 @@
 
 	}
 
-	function saveInterest ($interest) {
+	//***************
+	//** SSUBJECT ***
+	//***************
 
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+	function saveSubject ($subject) {
 
-		$stmt = $mysqli->prepare("INSERT INTO interests (interest) VALUES (?)");
+		global $mysqli;
+
+		//$stmt = $mysqli->prepare("INSERT INTO interests (interest) VALUES (?)");
+		$stmt = $mysqli->prepare("INSERT INTO subjects (subject) VALUES (?)");
 
 		echo $mysqli->error;
 
-		$stmt->bind_param("s", $interest);
+		$stmt->bind_param("s", $subject);
 
 		if($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -186,21 +128,20 @@
 		}
 
 		$stmt->close();
-		$mysqli->close();
 
 	}
 
-	function saveUserInterest ($interest_id) {
-		//Vaatan mida ja mis IDga salvestab
-		echo "huviala".$interest_id."<br>";
-		echo "kasutaja".$_SESSION["userId"]."<br>";
-		//-----------------------------------------
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+	//***************
+	//** SUSUBJECT **
+	//***************
+
+	function saveUserSubject ($subject_id) {
+		
+		global $mysqli;
 
 		//Kas huviala on juba olemas
-		$stmt = $mysqli->prepare("SELECT id FROM user_interests WHERE user_id=? AND interes_id=?");
-		$stmt->bind_param("ii",$_SESSION["userId"], $interest_id);
+		$stmt = $mysqli->prepare("SELECT id FROM user_subjects WHERE user_id=? AND subject_id=?");
+		$stmt->bind_param("ii",$_SESSION["userId"], $subject_id);
 		$stmt->execute();
 
 		if ($stmt->fetch()) {
@@ -212,11 +153,11 @@
 
 		$stmt->close();
 		//Jätkan salvestamisega
-		$stmt = $mysqli->prepare("INSERT INTO user_interests (user_id, interes_id) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO user_subjects (user_id, subject_id) VALUES (?, ?)");
 
 		echo $mysqli->error;
 
-		$stmt->bind_param("ii",$_SESSION["userId"], $interest_id);
+		$stmt->bind_param("ii",$_SESSION["userId"], $subject_id);
 
 		if($stmt->execute()) {
 			echo "salvestamine õnnestus";
@@ -225,22 +166,21 @@
 		}
 
 		$stmt->close();
-		$mysqli->close();
 
 	}
 
-	function getAllInterests() {
+	//****************
+	//* GALLSUBJECTS *
+	//****************
 
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+	function getAllSubjects() {
 
-		$stmt = $mysqli->prepare("
-			SELECT id, interest
-			FROM interests
-		");
+		global $mysqli;
+
+		$stmt = $mysqli->prepare("SELECT id, subject FROM subjects");
 		echo $mysqli->error;
 
-		$stmt->bind_result($id, $interest);
+		$stmt->bind_result($id, $subject);
 		$stmt->execute();
 
 
@@ -255,30 +195,32 @@
 			$i = new StdClass();
 
 			$i->id = $id;
-			$i->interest = $interest;
+			$i->subject = $subject;
 
 			array_push($result, $i);
 		}
 
 		$stmt->close();
-		$mysqli->close();
 
 		return $result;
 	}
 
-	function getAllUserInterests() {
+	//*****************
+	//* GALLUSUBJECTS *
+	//*****************
 
-		$database = "if16_hinrek";
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["username"], $GLOBALS["password"], $database);
+	function getAllUserSubjects() {
+		
+		global $mysqli;
 
-		$stmt = $mysqli->prepare("SELECT interest from interests join user_interests
-			on interests.id = user_interests.interes_id
-			where user_interests.user_id = ?");
+		$stmt = $mysqli->prepare("SELECT subject from subjects join user_subjects
+			on subjects.id = user_subjects.subject_id
+			where user_subjects.user_id = ?");
 		echo $mysqli->error;
 
 		$stmt->bind_param("i", $_SESSION["userId"]);
 
-		$stmt->bind_result($interest);
+		$stmt->bind_result($subjects);
 		$stmt->execute();
 
 
@@ -292,41 +234,14 @@
 			//tekitan objekti
 			$i = new StdClass();
 
-			$i->interest = $interest;
+			$i->subjects = $subjects;
 
 			array_push($result, $i);
 		}
 
 		$stmt->close();
-		$mysqli->close();
 
 		return $result;
 	}
-
-
-
-
-
-
-
-	/*function sum($x, $y) {
-
-		return $x + $y;
-
-	}
-
-
-	function hello($firsname, $lastname) {
-
-		return "Tere tulemast ".$firsname." ".$lastname."!";
-
-	}
-
-	echo sum(5123123,123123123);
-	echo "<br>";
-	echo hello("Romil", "Robtsenkov");
-	echo "<br>";
-	echo hello("Juku", "Juurikas");
-	*/
 
 ?>

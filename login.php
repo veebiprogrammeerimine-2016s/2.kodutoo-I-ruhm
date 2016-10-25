@@ -2,10 +2,10 @@
 	
 	require("functions.php");
 
-	//If allready logged in -> to data.php page
+	//If allready logged in -> to user.php page
 	if (isset($_SESSION["userId"])){
 		
-		header("Location: data.php");
+		header("Location: user.php");
 		exit();
 		
 	}
@@ -93,54 +93,63 @@
 	
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="et">
 <head>
-	<title>IF16 Tunniplaan ja kodused tööd!</title>
+	<!-- Basic Page Needs -->
+	<meta charset="utf-8">
+	<title>IF16 Tunniplaan ja kodused tööd</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- FONT -->
+	<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
 </head>
+
 <body>
+<div class="container">
+	<div class="row">	
 
-	<!--Login Start-->
-	<h1>Logi sisse</h1>
-	<form method="POST">
-		<p style="color:red;"><?=$error;?></p>
-		<label>E-post</label>
-		<br>
-		
-		<input name="loginEmail" placeholder="Sisestage email" type="text" value="<?=$loginEmail;?>">
-		<br><br>		
-		<label>Parool</label>
-		<br>
-		<input type="password" name="loginPassword" placeholder="***********">
-		<br><br>
-		
-		<input type="submit" value="Logi sisse">
-		
-		
-	</form>
-	<!--Login End-->	
+	<!-- Login Start -->
+		<div class="one-half column" align="center">
+			<h3>Logi sisse</h3>
+			<form method="POST">
+				<p style="color:red;"><?=$error;?></p>
+				<label>E-post</label>
+				<input name="loginEmail" placeholder="Sisestage email" type="text" value="<?=$loginEmail;?>"><br>
+				<label>Parool</label>
+				<input type="password" name="loginPassword"><br>
+				<input type="submit" value="Logi sisse">
+			</form>
+		</div>
 
-	<!--SignUp Start-->	
-	<h1>Loo kasutaja</h1>
-	<form method="POST">
+		<!-- SignUp Start -->
+		<div class="one-half column" align="center">	
+			<h3>Loo kasutaja</h3>
+			<form method="POST">
+				<label>Eesnimi</label>
+				<input type="text" name="firstname" placeholder="Sisestage eesnimi" value="<?=$firstname;?>">
+				<p style="color:red;"><?=$signupFirstNameError;?></p>
+				<label>Perekonnanimi</label>
+				<input type="text" name="lastname" placeholder="Sisestage perekonnanimi" value="<?=$lastname;?>">
+				<p style="color:red;"><?=$signupLastNameError;?></p>
+				<label>E-post</label>
+				<input name="signupEmail" type="text" placeholder="Sisestage email" value="<?=$signupEmail;?>">
+				<p style="color:red;"><?=$signupEmailError;?></p>
+				<label>Parool</label>
+				<input type="password" name="signupPassword">
+				<p style="color:red;"><?php echo $signupPasswordError; ?></p>
+				<input type="submit" value="Loo kasutaja">
+			</form>
+		</div>
 
-		<label>Eesnimi</label><br>
-		<input type="text" name="firstname" placeholder="Sisestage eesnimi" value="<?=$firstname;?>"> <?=$signupFirstNameError;?><br>
-		
-		<label>Perekonnanimi</label><br>
-		<input type="text" name="lastname" placeholder="Sisestage perekonnanimi" value="<?=$lastname;?>"> <?=$signupLastNameError;?><br>
-		
-		<label>E-post</label><br>
-		<input name="signupEmail" type="text" placeholder="Sisestage email" value="<?=$signupEmail;?>"> <?=$signupEmailError;?><br>
-		
-		<label>Parool</label><br>
-		<input type="password" name="signupPassword" placeholder="***********"> <?php echo $signupPasswordError; ?>
-		<br><br>
-		
-		<input type="submit" value="Loo kasutaja">
-		
-		
-	</form>
-	<!--SignUp End-->
-
+	</div>
+</div>
 </body>
 </html>

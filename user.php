@@ -19,93 +19,106 @@
 		exit();
 	}
 
-	$msg = "";
-	if(isset($_SESSION["message"])){
-		$msg = $_SESSION["message"];
-
-		//kui ühe näitame siis kustuta ära, et pärast refreshi ei näitaks
-		unset($_SESSION["message"]);
-	}
-
-
-	if ( isset($_POST["interest"]) &&
-		!empty($_POST["interest"])
+	if ( isset($_POST["subject"]) &&
+		!empty($_POST["subject"])
 	  ) {
 
-		saveInterest(cleanInput($_POST["interest"]));
+		saveSubject(cleanInput($_POST["subject"]));
 
 	}
 
-	if ( isset($_POST["userInterest"]) &&
-		!empty($_POST["userInterest"])
+	if ( isset($_POST["userSubject"]) &&
+		!empty($_POST["userSubject"])
 		) {
 
-		saveUserInterest(cleanInput($_POST["userInterest"]));
+		saveUserSubject(cleanInput($_POST["userSubject"]));
 
 	}
 
-    $interests = getAllInterests();
-		$userInterests = getAllUserInterests();
+    $subjects = getAllSubjects();
+	$userSubjects = getAllUserSubjects();
 ?>
-<h1><a href="data.php"> < tagasi</a> Kasutaja leht</h1>
-<?=$msg;?>
-<p>
-	Tere tulemast <?=$_SESSION["userEmail"];?>!
-	<a href="?logout=1">Logi välja</a>
-</p>
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<!-- Basic Page Needs -->
+	<meta charset="utf-8">
+	<title>IF16 Tunniplaan ja kodused tööd</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
 
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<h2>Salvesta hobi</h2>
-<?php
+	<!-- FONT -->
+	<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-    $listHtml = "<ul>";
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+</head>
+<body>
 
-	foreach($userInterests as $i){
+	<h3>Õppeained ja nende lisamine</h3>
+	<h4>Lisa õppeaine juhul, kui puudub nimekirjast</h4>
+	<form method="POST">
 
+		<label>Õppeaine nimi</label>
+		<input name="subject" type="text">
 
-		$listHtml .= "<li>".$i->interest."</li>";
+		<input type="submit" value="Salvesta">
 
-	}
-
-    $listHtml .= "</ul>";
-
-
-	echo $listHtml;
-
-?>
-<form method="POST">
-
-	<label>Hobi/huviala nimi</label><br>
-	<input name="interest" type="text">
-
-	<input type="submit" value="Salvesta">
-
-</form>
+	</form>
 
 
 
-<h2>Kasutaja hobid</h2>
-<form method="POST">
+	<h4>Kasutaja õppeained</h4>
+	<p>
+		Nimi: <?=$_SESSION["userFirstName"];?> <?=$_SESSION["userLastName"];?>
+	</p>
+	<?php
 
-	<label>Hobi/huviala nimi</label><br>
-	<select name="userInterest" type="text">
-        <?php
+	    $listHtml = "<ul>";
 
-            $listHtml = "";
-
-        	foreach($interests as $i){
-
-
-        		$listHtml .= "<option value='".$i->id."'>".$i->interest."</option>";
-
-        	}
-
-        	echo $listHtml;
-
-        ?>
-    </select>
+		foreach($userSubjects as $i){
 
 
-	<input type="submit" value="Lisa">
+			$listHtml .= "<li>".$i->subjects."</li>";
 
-</form>
+		}
+
+	    $listHtml .= "</ul>";
+
+
+		echo $listHtml;
+
+	?>
+	<form method="POST">
+
+		<label>Õppeaine nimi</label>
+		<select name="userSubject" type="text">
+	        <?php
+
+	            $listHtml = "";
+
+	        	foreach($subjects as $i){
+
+
+	        		$listHtml .= "<option value='".$i->id."'>".$i->subject."</option>";
+
+	        	}
+
+	        	echo $listHtml;
+
+	        ?>
+	    </select>
+
+
+		<input type="submit" value="Lisa">
+
+	</form>
+	<p>
+	<a class="button button-primary" href="?logout=1">Logi välja</a>
+	</p>
+</body>
+</html>
