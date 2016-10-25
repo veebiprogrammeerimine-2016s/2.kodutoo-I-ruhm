@@ -54,12 +54,8 @@
 		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created, $firstNameFromDB, $lastNameFromDB);
 		$stmt->execute();
 
-		//andmed tulid andmebaasist või mitte
-		// on tõene kui on vähemalt üks vaste
 		if($stmt->fetch()){
 
-			//oli sellise meiliga kasutaja
-			//password millega kasutaja tahab sisse logida
 			$hash = hash("sha512", $password);
 			if ($hash == $passwordFromDb) {
 
@@ -81,7 +77,6 @@
 
 		} else {
 
-			// ei leidnud kasutajat selle meiliga
 			$error = "Selline kasutaja puudub!";
 		}
 
@@ -114,7 +109,6 @@
 
 		global $mysqli;
 
-		//$stmt = $mysqli->prepare("INSERT INTO interests (interest) VALUES (?)");
 		$stmt = $mysqli->prepare("INSERT INTO subjects (subject) VALUES (?)");
 
 		echo $mysqli->error;
@@ -139,20 +133,19 @@
 		
 		global $mysqli;
 
-		//Kas huviala on juba olemas
 		$stmt = $mysqli->prepare("SELECT id FROM user_subjects WHERE user_id=? AND subject_id=?");
 		$stmt->bind_param("ii",$_SESSION["userId"], $subject_id);
 		$stmt->execute();
 
 		if ($stmt->fetch()) {
-			//oli olemas
+	
 			echo "juba olemas";
-			//ära salvestamisega jätekita
+
 			return;
 		}
 
 		$stmt->close();
-		//Jätkan salvestamisega
+
 		$stmt = $mysqli->prepare("INSERT INTO user_subjects (user_id, subject_id) VALUES (?, ?)");
 
 		echo $mysqli->error;
@@ -183,15 +176,10 @@
 		$stmt->bind_result($id, $subject);
 		$stmt->execute();
 
-
-		//tekitan massiivi
 		$result = array();
 
-		// tee seda seni, kuni on rida andmeid
-		// mis vastab select lausele
 		while ($stmt->fetch()) {
 
-			//tekitan objekti
 			$i = new StdClass();
 
 			$i->id = $id;
@@ -223,15 +211,10 @@
 		$stmt->bind_result($subjects);
 		$stmt->execute();
 
-
-		//tekitan massiivi
 		$result = array();
 
-		// tee seda seni, kuni on rida andmeid
-		// mis vastab select lausele
 		while ($stmt->fetch()) {
 
-			//tekitan objekti
 			$i = new StdClass();
 
 			$i->subjects = $subjects;

@@ -2,16 +2,14 @@
 
 	require("functions.php");
 
-	//kui ei ole kasutaja id'd
+	//If no user id
 	if (!isset($_SESSION["userId"])){
 
-		//suunan sisselogimise lehele
+		//to->login.php
 		header("Location: login.php");
 		exit();
 	}
 
-
-	//kui on ?logout aadressireal siis login välja
 	if (isset($_GET["logout"])) {
 
 		session_destroy();
@@ -58,43 +56,29 @@
 	<link rel="stylesheet" href="css/skeleton.css">
 </head>
 <body>
-
+<div class="container">
 	<h3>Õppeained ja nende lisamine</h3>
 	<h4>Lisa õppeaine juhul, kui puudub nimekirjast</h4>
 	<form method="POST">
-
 		<label>Õppeaine nimi</label>
 		<input name="subject" type="text">
-
 		<input type="submit" value="Salvesta">
-
 	</form>
-
-
 
 	<h4>Kasutaja õppeained</h4>
 	<p>
 		Nimi: <?=$_SESSION["userFirstName"];?> <?=$_SESSION["userLastName"];?>
 	</p>
 	<?php
-
 	    $listHtml = "<ul>";
-
 		foreach($userSubjects as $i){
-
-
 			$listHtml .= "<li>".$i->subjects."</li>";
-
 		}
 
 	    $listHtml .= "</ul>";
-
-
 		echo $listHtml;
-
 	?>
 	<form method="POST">
-
 		<label>Õppeaine nimi</label>
 		<select name="userSubject" type="text">
 	        <?php
@@ -112,13 +96,11 @@
 
 	        ?>
 	    </select>
-
-
 		<input type="submit" value="Lisa">
-
 	</form>
 	<p>
 	<a class="button button-primary" href="?logout=1">Logi välja</a>
 	</p>
+</div>
 </body>
 </html>
