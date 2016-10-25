@@ -2,10 +2,11 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
-require("config.php");
+require_once("config.php");
 
 function createBoard($table)
 {
+    //Creates new table that will be used for a new board
     $table = cleanInput($table);
 
     $query = "
@@ -20,31 +21,45 @@ function createBoard($table)
     trashed TINYINT(1) DEFAULT 0
     )";
 
-    return editTable("boards", $query);
+    return editTable($query);
+}
+
+
+function editTable($query)
+{
+    //For all sorts of queries
+    $mysqli = connectDB();
+    sqlConnectTest($mysqli);
+    if (!$mysqli->query($query)) {
+        echo "Table edit failed: (" . $mysqli->errno . ") " . $mysqli->error;
+        return false;
+    }
+    $mysqli->close();
+    return true;
 }
 
 function createPost($board, $name, $password, $post, $image)
 {
-    //WORKS
+    //Inserts new post data into database
     $mysqli = connectDB();
     sqlConnectTest($mysqli);
-//    var_dump($mysqli);
     cleanInput($name);
     cleanInput($post);
-//    echo $password;
-//    echo "<br>";
+
     $password = hash("sha512", $password);
-//    echo $password;
     $stmt = $mysqli->prepare("INSERT INTO $board (name, password, text, imgdir) VALUES (?,?,?,?)");
     $stmt->bind_param("ssss", $name, $password, $post, $image);
 
     if ($stmt->execute()) {
-        echo "<b>Post created</b>";
+        echo "<b>Post created!</b>";
     }
+    $stmt->close();
+    $mysqli->close();
 }
 
 function getAllPosts($board)
 {
+    //Returns all post data necessary for displaying it for users.
     $mysqli = connectDB();
     $stmt = $mysqli->prepare("
     SELECT id, name, text, imgdir, created
@@ -74,23 +89,27 @@ function getAllPosts($board)
 
 function editGetPost($board, $id)
 {
+    //Used for displaying current post values in the edit window.
     $mysqli = connectDB();
-    $stmt = $mysqli->prepare("
-    SELECT text, imgdir , password FROM $board WHERE id = $id
-    ");
-    echo $mysqli->error;
-    $stmt->execute();
-    $stmt->bind_result($text, $imgDir, $password);
-    $result = array();
-    while ($stmt->fetch()) {
-        $post = new stdClass();
-        $post->text = $text;
-        $post->imgdir = $imgDir;
-        $post->password = $password;
+    $query = "SELECT text, imgdir , password FROM $board WHERE id = $id";
+    if ($stmt = $mysqli->prepare($query)){
+        $stmt->execute();
+        $stmt->bind_result($text, $imgDir, $password);
+        $result = array();
+        while ($stmt->fetch()) {
+            $post = new stdClass();
+            $post->text = $text;
+            $post->imgdir = $imgDir;
+            $post->password = $password;
 
-        array_push($result, $post);
+            array_push($result, $post);
+        }
+        $stmt->close();    
+
+    } else {
+        echo "This board or post doesn't exist!";
+        $result = "";
     }
-    $stmt->close();
     $mysqli->close();
 
     return $result;
@@ -98,6 +117,7 @@ function editGetPost($board, $id)
 
 function editPost($board, $id, $text, $image)
 {
+    //Image or text can be empty. Field check done in boards.php
     $mysqli = connectDB();
     if ($text == "" || $text == NULL) {
         $text = " ";
@@ -125,6 +145,7 @@ function editPost($board, $id, $text, $image)
 }
 
 function deletePost($board, $id){
+    //Does not remove posts, just trashes them
     $mysqli = connectDB();
     $stmt = $mysqli->prepare("
     UPDATE $board
@@ -140,9 +161,10 @@ function deletePost($board, $id){
 
 function getTables()
 {
+    //Returns a list of tables into $return.
     $mysqli = connectDB();
     //sqlConnectTest("boards");
-    $query = "SHOW TABLES FROM if16_alaraasa_board";
+    $query = "SHOW TABLES FROM if16_alaraasa_board WHERE tables_in_if16_alaraasa_board NOT LIKE 'trashed_%'";
     $stmt = $mysqli->prepare($query);
     $stmt->bind_result($boards);
     $stmt->execute();
@@ -159,24 +181,22 @@ function getTables()
 }
 
 
-function editTable($database, $query)
+
+function trashBoard($board)
 {
+    //Available only to admin
+    //Adds "trashed" to table beginning, trashed board will not show for users
     $mysqli = connectDB();
     sqlConnectTest($mysqli);
+    $query = "
+    RENAME TABLE $board TO trashed_$board
+    ";
     if (!$mysqli->query($query)) {
-        echo "Table edit failed: (" . $mysqli->errno . ") " . $mysqli->error;
+        echo "Table trash failed: (" . $mysqli->errno . ") " . $mysqli->error;
         return false;
     }
     $mysqli->close();
     return true;
-}
-
-function disableBoard(){
-    $mysqli = connectDB();
-    
-
-    $mysqli->close;
-    return;
 }
 
 function cleanInput($input)
@@ -189,6 +209,7 @@ function cleanInput($input)
 
 function random_str()
 {
+    //For random password generation
     $string = bin2hex(openssl_random_pseudo_bytes(10));
     return $string;
 }

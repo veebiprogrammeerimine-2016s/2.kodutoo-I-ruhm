@@ -18,6 +18,9 @@ function createDB($database)
     $mysqli->close();
 }
 echo "This page regenerates the database!";
+
+//DO NOT REMOVE COMMENT, COMPLETELY UNTESTED ON TLU SERVERS
 //createDB();
+
 
 ?>

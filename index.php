@@ -7,8 +7,8 @@
 /**
  * @author Alar Aasa <alar@alaraasa.ee>
  */
-require("config.php");
-require("functions.php");
+require_once("config.php");
+require_once("functions.php");
 
 $createBoardError = "";
 $createBoard = "";
@@ -22,15 +22,17 @@ if (isset($_POST["createBoardName"])) {
         $createBoardError = "Board name cannot be empty.";
     }
     $boardName = $_POST["createBoardName"];
-    createBoard($boardName);
-    echo "Board " . $boardName . " created successfully! <br>";
+    if(createBoard($boardName)){
+        echo "Board " . $boardName . " created successfully!";
+    }
+    echo "<br>";
     $_POST["createBoardName"] = NULL;
 
 }
 
 $tableList = array();
 
-$mysqli = connectDB("boards");
+$mysqli = connectDB();
 sqlConnectTest($mysqli);
 
 $boardList = getTables();
