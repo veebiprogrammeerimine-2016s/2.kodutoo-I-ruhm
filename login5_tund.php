@@ -41,46 +41,31 @@
   $loginEmailError = "";
   $loginPasswordError = "";
 
-  //HINDAMISMUUTUJA
-  $ratingError = "";
 
-      if (isset ($_POST["loginEmail"]) ) {
+
+if (isset ($_POST["loginEmail"]) ) {
   //kas keegi vajutas submit nuppu nii, et e-mail oli olemas!
-              if (empty ($_POST["loginEmail"] ) ) {
+    if (empty ($_POST["loginEmail"] ) ) {
               // e-maili koht oli TÜHI!
-                  $loginEmailError =  "See väli on kohustuslik";
+    $loginEmailError =  "See väli on kohustuslik";
 
-              } else {
+    } else {
+        //e-mail on õige, oli olemas!
+    $loginEmail = $_POST["loginEmail"];
+    }
 
-                //e-mail on õige, oli olemas!
-                $loginEmail = $_POST["loginEmail"];
-              }
-
-         }
-        if (isset ($_POST["loginPassword"]) ) {
-
-              if (empty ($_POST["loginPassword"] ) ) {
-
-              $loginPasswordError =  "See väli on kohustuslik";
-
-        } else {
-
+       }
+if (isset ($_POST["loginPassword"]) ) {
+    if (empty ($_POST["loginPassword"] ) ) {
+    $loginPasswordError =  "See väli on kohustuslik";
+    } else {
             //tean, et parool oli ja see ei olnud tühi. vähemalt 8!
-
-         if (strlen($_POST["loginPassword"]) < 8 ) {
-
-         $loginPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
-          }
-
+            if (strlen($_POST["loginPassword"]) < 8 ) {
+              $loginPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
         }
-      }
 
-
-
-  //SIIAMAANI!!!!!!!!!!!!!
-
-
-
+            }
+                 }
 
       if (isset ($_POST["signUpEmail"]) ) {
   //kas keegi vajutas submit nuppu nii, et e-mail oli olemas!
@@ -236,11 +221,11 @@
 
           <br><br>
 
-          <input name = "signUpName" type = "name" placeholder ="Sinu nimi"> <?php echo $signUpNameError; ?>
+          <input name = "signUpName" type = "name" placeholder ="Sinu nimi" value= "<?=$signUpName;?>"> <?php echo $signUpNameError; ?>
 
           <br><br>
 
-          <input name = "signUpFamilyName" type = "familyname" placeholder = "Sinu perekonnanimi"> <?php echo $signUpFamilyNameError; ?>
+          <input name = "signUpFamilyName" type = "familyname" placeholder = "Sinu perekonnanimi" value= "<?=$signUpFamilyName;?>"> <?php echo $signUpFamilyNameError; ?>
           <br><br>
 
           <?php if($gender == "male") { ?>

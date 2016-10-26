@@ -53,8 +53,8 @@ $people = getAllClubs(); //käivitan funktsiooni
 //var_dump($people);
 ?>
 
-<h1> Data </h1>
-<p>Tere tulemast <?=$_SESSION ["firstname"];?> </p>
+<h1> Andmed </h1>
+<h3>Tere tulemast GlubOGo-sse <?=$_SESSION ["firstname"];?> </h3>
 
 <a href = "?logout=1"> Logi välja    </a>
 
@@ -62,17 +62,17 @@ $people = getAllClubs(); //käivitan funktsiooni
 <h1> Anna hinnang klubile </h1>
 
 <form method = "POST">
-  <label> Kirjuta klubi nimi </label>
-  <input name ="clubName" type = "text" placeholder="Klubi nimi"  value= "<?=$clubName;?>"> <?php echo $clubNameError; ?>
+  <label> Kirjuta klubi nimi: </label>
+  <input name ="clubName" type = "text" placeholder="Klubi nimi"> <?php echo $clubNameError; ?>
 
   <br> <br>
-  <label> Kirjuta klubi asukoht </label>
+  <label> Kirjuta klubi asukoht: </label>
 
-  <input  name = "clubLocation" type = "text" placeholder="Linn"  value= "<?=$clubLocation;?>"> <?php echo $clubLocationError; ?>
+  <input  name = "clubLocation" type = "text" placeholder="Linn"> <?php echo $clubLocationError; ?>
 
   <br> <br>
-  <label> Anna klubile hinnang  </label>
-  <!--   <label> Anna klubile hinnang  </label> -->
+  <label> Anna klubile hinnang:  </label>
+
   <br> <br>
         <?php if($rate == "1") { ?>
         <input type="radio" name="rate" value="1" checked> 1<br>
@@ -117,8 +117,6 @@ $people = getAllClubs(); //käivitan funktsiooni
 	}
 ?>
 
-
-<h3>Klubireitingute tabel</h3>
 <?php
 
 	$html = "<table>";
