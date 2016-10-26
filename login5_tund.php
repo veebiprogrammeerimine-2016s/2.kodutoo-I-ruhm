@@ -95,7 +95,7 @@
               }
 
          }
-                if (isset ($_POST["signUpPassword"]) ) {
+        if (isset ($_POST["signUpPassword"]) ) {
 
                     if (empty ($_POST["signUpPassword"] ) ) {
 
@@ -105,7 +105,7 @@
 
             //tean, et parool oli ja see ei olnud tühi. vähemalt 8!
 
-                  if (strlen($_POST["signUpPassword"]) < 8 ) {
+        if (strlen($_POST["signUpPassword"]) < 8 ) {
 
                       $signUpPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
                       }
@@ -123,7 +123,8 @@
             }
                 }
 
-                  if (isset ($_POST["signUpFamilyName"]) ) {
+          if (isset ($_POST["signUpFamilyName"]) ) {
+
 
                       if (empty ($_POST["signUpFamilyName"] ) ) {
             // oli e-mail, kuid see oli tühi
@@ -131,21 +132,23 @@
 
                 } else {
                     $signUpFamilyName = $_POST["signUpFamilyName"];
+                    if (strlen($_POST["signUpFamilyName"]) < 1 ) {
+
+                  //  $signUpFamilyNameError = "Perekonnanimi peab olema vähemalt 1 tähemärk pikk!";
                 }
             }
             //tean, et perekonnanimi oli ja see ei olnud tühi
 
-                      if (strlen($_POST["signUpFamilyName"]) < 1 ) {
 
-                      $signUpFamilyNameError = "Perekonnanimi peab olema vähemalt 1 tähemärk pikk!";
-                   }
+            //if (isset ($_POST["btnsubmit"]) ) {
+            if (isset ($_POST["gender"]) )
+                    if (empty ($_POST["gender"] ) ) {
+                  //  $answer = $_POST['radioGender'];
 
-   if (isset ($_POST["gender"]) ) {
-           if (empty ($_POST["gender"] ) ) {
-               $genderError =  "See väli on kohustuslik";
-           } else {
-             $gender = $_POST["gender"];
-           }
+                } else {
+                    //$gender = $_POST["gender"];
+                  $genderError =  "See väli on kohustuslik";
+            }
 
       }
 

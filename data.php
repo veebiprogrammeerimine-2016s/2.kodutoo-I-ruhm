@@ -7,6 +7,10 @@
 
 //kas ?logout on aadressireal
 
+$clubName = "";
+$clubLocation = "";
+$clubNameError = "";
+$clubLocationError = "";
 $rate = "";
 
 
@@ -19,64 +23,56 @@ if (isset ($_GET["logout"])) {
 
 //var_dump ($_POST);
 
-if ( isset ($_POST ["clubName"]) &&
-   isset ($_POST ["clubLocation"]) &&
-   isset ($_POST ["rate"]) ){
+//Kas klubi nimi ja asukoht on täidetud kontroll
 
-   if (
-     empty ($_POST ["clubName"]) &&
-     empty ($_POST ["clubLocation"]) &&
-     empty ($_POST ["rate"]) ){
+if (isset ($_POST ["clubName"]) )  {
+  if (empty ($_POST ["clubName"] ) ) {
+     $clubNameError = "See väli on kohustuslik!";
 
-       $ratingError =  "Need väljad on kohustuslikud";
+   } else {
+    $clubName = $_POST ["clubName"];
+   }
+       }
 
-     }else{
-       //save
-       $clubName = cleanInput ($_POST ["clubName"]);
-       $clubLocation = cleanInput ($_POST ["clubLocation"]);
-       $clubRate = cleanInput ($_POST ["rate"]);
+if (isset ($_POST ["clubLocation"])) {
+  if (empty ($_POST ["clubLocation"])) {
+     $clubLocationError = "See väli on kohustuslik!";
 
-       saveClubs ($clubName, $clubLocation,  $rate);
-     // login sisse
+  } else {
+    $clubLocation = $_POST ["clubLocation"];
+
+
+saveClubs ($_POST ["clubName"], $_POST ["clubLocation"], $_POST ["rate"] );
+  }
 
      }
 
-}
-  $people = getAllClubs(); //käivitan funktsiooni
+
 //  var_dump($people);
-
-
+$people = getAllClubs(); //käivitan funktsiooni
+//var_dump($people);
 ?>
-
 
 <h1> Data </h1>
 <p>Tere tulemast <?=$_SESSION ["firstname"];?> </p>
 
 <a href = "?logout=1"> Logi välja    </a>
 
-<?php
-
-
-  // echo "siin";
-
-?>
-
 
 <h1> Anna hinnang klubile </h1>
 
-
-
 <form method = "POST">
   <label> Kirjuta klubi nimi </label>
-  <input name ="clubName" type = "text" placeholder="Klubi nimi" >
+  <input name ="clubName" type = "text" placeholder="Klubi nimi"  value= "<?=$clubName;?>"> <?php echo $clubNameError; ?>
 
   <br> <br>
   <label> Kirjuta klubi asukoht </label>
 
-  <input  name = "clubLocation" type = "color" placeholder="Linn" >
+  <input  name = "clubLocation" type = "text" placeholder="Linn"  value= "<?=$clubLocation;?>"> <?php echo $clubLocationError; ?>
 
   <br> <br>
   <label> Anna klubile hinnang  </label>
+  <!--   <label> Anna klubile hinnang  </label> -->
   <br> <br>
         <?php if($rate == "1") { ?>
         <input type="radio" name="rate" value="1" checked> 1<br>
@@ -105,15 +101,13 @@ if ( isset ($_POST ["clubName"]) &&
         <?php if($rate == "5") { ?>
         <input type="radio" name="rate" value="5" checked> 5<br>
         <?php } else { ?>
-        <input type="radio" name="rate" value="5" > 5<br>
+        <input type="radio" name="rate" value="5" > 5<br><br>
         <?php } ?>
 
-  <input type = "submit" value = "EDASTA HINNANG">
+  <input type = "submit"  value = "EDASTA HINNANG">
 
 </form>
-<?php
-echo "Väljad tuleb täita";
-?>
+
 
 <h2>Varasemad hinnangud</h2>
 <?php
@@ -124,53 +118,47 @@ echo "Väljad tuleb täita";
 ?>
 
 
-<h2>Klubireitingute tabel</h2>
+<h3>Klubireitingute tabel</h3>
 <?php
 
 	$html = "<table>";
 		$html .= "<tr>";
 			//$html .= "<th>id</th>";
-			$html .= "<th>Klubi</th>";
-			$html .= "<th>Asukoht</th>";
-			$html .= "<th>Hinnang</th>";
+			$html .= "<th>KLUBI</th>";
+			$html .= "<th>ASUKOHT</th>";
+			$html .= "<th>HINNANG</th>";
 		$html .= "</tr>";
+
 		foreach($people as $p){
-
-
 
 			$html .= "<tr>";
 				$html .= "<td>".$p->clubName."</td>";
 				$html .= "<td>".$p->clubLocation."</td>";
 
-
         if ($p->rate == 1) {
-          $html .= "<td style=' background-color: red; '>".$p->rate."</td>";
+        $html .= "<td style=' background-color: red; '>".$p->rate."</td>";
         }
 
         if ($p->rate == 2) {
-          $html .= "<td style=' background-color: lightgreen; '>".$p->rate."</td>";
+          $html .= "<td style=' background-color: salmon; '>".$p->rate."</td>";
         }
 
         if ($p->rate == 3) {
-          $html .= "<td style=' background-color: yellow; '>".$p->rate."</td>";
+          $html .= "<td style=' background-color: pink; '>".$p->rate."</td>";
         }
 
         if ($p->rate == 4) {
-          $html .= "<td style=' background-color: purple; '>".$p->rate."</td>";
+          $html .= "<td style=' background-color: thistle; '>".$p->rate."</td>";
         }
 
         if ($p->rate == 5) {
-          $html .= "<td style=' background-color: lightblue; '>".$p->rate."</td>";
+          $html .= "<td style=' background-color: lime; '>".$p->rate."</td>";
         }
-
-
-
-
 
 
 			$html .= "</tr>";
 		}
 
 	$html .= "</table>";
-	echo $html;
+echo $html;
 ?>
