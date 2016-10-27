@@ -145,15 +145,14 @@
 		{
 		
 		echo "SALVESTAN...<br>";
-		echo "email ".$signupEmail."<br>";
+		echo "email: ".$signupEmail."<br>";
 		$password = hash ("sha512", $_POST["signupPassword"]);
-		echo "siin";
-		echo "parool ".$_POST["signupPassword"]."<br>";
-		echo "rasi ".$password."<br>";
-		echo "vanus ".$signupage."<br>";
-		echo "nimi ".$signupName." ".$signupLName."<br>";
-		echo "sugu ".$signupgender."<br>";
-        echo "telefoni number ".$phonenr."<br>";
+		echo "parool: ".$_POST["signupPassword"]."<br>";
+		echo "parooli rasi: ".$password."<br>";
+		echo "vanus: ".$signupage."<br>";
+		echo "nimi: ".$signupName." ".$signupLName."<br>";
+		echo "sugu: ".$signupgender."<br>";
+        echo "telefoni number: ".$phonenr."<br>";
 		
 		$signupEmail = cleanInput($signupEmail);
 		$password = cleanInput($password);
@@ -174,7 +173,7 @@
 		
 		if (empty($_POST["loginEmail"])){
 			
-			$loginemailError = "sisesta e-mail";
+			$loginemailError = "sisesta e-mail!";
 		}
 	}
 
@@ -241,20 +240,21 @@
 		<b><p class="restoguru">RestoGuru</p></b>
 
 		<h1 class="heading-center">Logi sisse</h1>
-		
+
+        <p class="errors"><?php echo $loginemailError; ?>
+        <p class="errors"><?php echo $loginpasswordError; ?>
+        <p class="errors"><?=$error;?></p>
 		<form method="POST">
-		
-			<p style="color:red;"><?=$error;?></p>
 	
 			<fieldset class="form-input">
 			
 			<legend class="legend-center"> Olemasolev kasutaja </legend>
 			
-			<input placeholder="E-mail" name="loginEmail" type="email"> <?php echo $loginemailError; ?>
+			<input placeholder="E-mail" name="loginEmail" type="email">
 			
 			<br><br>
 			
-			<input placeholder="Parool" name="loginPassword" type="password"> <?php echo $loginpasswordError; ?>
+			<input placeholder="Parool" name="loginPassword" type="password">
 			
 			
 			<br><br>
@@ -295,9 +295,9 @@
 			<input placeholder="Perekonnanimi" name="signupLName" type="text" value = "<?=$signupLName;?>"> </span>
 			
 			<br><br>
-			
+
             <a>Vanus</a><a><span style="float: right">Telefoni number</span></a><br>
-            &nbsp&nbsp
+            <h style="color:red;">*</h>
 			<input placeholder="Vanus" name="signupage" type="text"  value = "<?=$signupage;?>">
                 
 

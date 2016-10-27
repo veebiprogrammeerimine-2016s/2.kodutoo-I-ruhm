@@ -53,7 +53,8 @@
 				color:green;
 				}
 				.restoguru {
-				max-width: 180px;
+                min-width: 50px;
+				max-width: 300px;
 				color:green;
 				font-size: 70px;
 				margin: 0 auto;
