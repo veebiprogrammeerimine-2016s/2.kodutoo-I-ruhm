@@ -17,6 +17,7 @@
 	//var_dump($_POST);
 	
 	$signupEmailError = "";
+    $signupPassword2 = "";
 	$signupPasswordError = "";
 	$signupError = "";
 	$signupEmail = "";
@@ -128,6 +129,19 @@
             }
         }
     }
+    if (isset ($_POST ["signupPassword"]) or (isset($_POST ["signupPassword2"]))) {
+        if (empty($_POST ["signupPassword"]) or (empty($_POST ["signupPassword2"]))) {
+            //oli tõesti tühi
+            $signupPasswordError = "Sisesta Parool 2 korda!";
+        } elseif (($_POST ["signupPassword"]) != ($_POST ["signupPassword2"])) {
+            $signupPasswordError = "Paroolid ei ühti!";
+        } else {
+
+            $signupPassword = $_POST ["signupPassword"];
+
+        }
+    }
+
 		//tean yhtegi viga ei olnud
 	if( empty($signupEmailError)&&
 		empty($signupPasswordError)&&
@@ -282,10 +296,14 @@
                 <a>E-mail</a><a><span style="float: right">Parool</span></a><br>
 			<h style="color:red;">*</h>
 			<input placeholder="E-mail" name="signupEmail" type="email"  value = "<?=$signupEmail;?>">
-			<span style="float: right"><h style="color:red;">*</h>
-			<input placeholder="Parool" name="signupPassword" type="password"> </span>
 
-			<br><br>
+			<span style="float: right"><h style="color:red;">*</h>
+			<input placeholder="Parool" name="signupPassword" type="password">
+            <br><br>
+            <h style="color:red;">*</h>
+            <input placeholder="Korda parooli" name="signupPassword2" type="password"></span>
+
+			<br><br><br><br>
 			
             <a>Eesnimi</a><a><span style="float: right">Perekonnanimi</span></a><br>
 			<h style="color:red;">*</h>

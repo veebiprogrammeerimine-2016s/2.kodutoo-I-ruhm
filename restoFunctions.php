@@ -159,21 +159,4 @@
 		return $input;
 			
 	}
-	
-	/*
-	function issetANDNotEmpty($var){
-		
-	if (isset ($_POST["gender"])) {
-		if (empty($_POST["gender"])) {
-			$genderError = "See väli on kohustuslik";
-		} else {	
-			$gender = $_POST["gender"];
-		}
-	}
-	}
-	
-	
-	
-	
-	*/
 	?>

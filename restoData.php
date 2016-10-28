@@ -75,10 +75,15 @@
 					margin: 0 auto;
 					max-width: 180px;
 				}
+                .fieldset{
+                    min-width: 150px;
+                    max-width: 630px;
+                }
 			</style>
 			
 		<p><span style="float: right" class="logout">
-		<a href="?logout=1">LOGI VALJA</a><br><?=$_SESSION["email"];?></span></p>
+		<a href="?logout=1">LOGI VALJA</a><br><br>
+                <a href="restoUser.php"><?=$_SESSION["email"];?></a></span></p>
 
 	
 	<h1 class="restoguru">RestoGuru</h1>
@@ -117,7 +122,7 @@
 		
 		</form>
 		
-<h2>Arhiiv</h2>
+<h2>Kasutajate tagasiside</h2>
 <?php
 	foreach($person as $P){
 			if($P->grade=="1"){
@@ -155,8 +160,9 @@
 			echo '<h2 style="color:green;">'.$P->restoName.'</h2>';
 			break;
 	}*/
-?>	
-<h2>arhiivtabel</h2>
+?>
+<fieldset class="fieldset">
+<h2>Tagasiside tabel</h2>
 <?php
 
 	$html = "<Table>";
@@ -184,6 +190,7 @@
 	echo $html;
 	
 ?>
+</fieldset>
 </fieldset>
 <audio fadein autoplay loop >
     <source src="firstrain.mp3" type="audio/mpeg"  >;
