@@ -99,14 +99,14 @@ function hello ($firstname, $lastname) {
 	}
 	
 	
-	function savePeople ($book, $autor, $rating) {
+	function savePeople ($book, $autor, $rating, $notes) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO Lugemispaevik (book, autor, rating) VALUES (?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO Lugemispaevik (book, autor, rating, notes) VALUES (?, ?, ?, ?)");
 		echo $mysqli->error;
 
-		$stmt->bind_param("ssi", $book, $autor, $rating);
+		$stmt->bind_param("ssis", $book, $autor, $rating, $notes);
 		
 		if ($stmt->execute()) {
 			echo "salvestamine õnnestus";
