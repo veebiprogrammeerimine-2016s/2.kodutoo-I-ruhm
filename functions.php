@@ -1,9 +1,7 @@
 <?php
 
-	require("../../config.php");
-	
 	//functions.php
-
+	require("../../config.php");
 	//alustan sessiooni, et saaks kasutada &_SESSION muutujaid
 	session_start();
 	
@@ -13,24 +11,22 @@
 	//&name="regiinakrivulina";
 	
 	$database = "if16_regiinakrivulina";	
-	
-	function signup ($email, $password) {
+	function signup ($email, $password, $firstname, $lastname, $birthyear, $gender) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, firstname, lastname, birthyear, gender) VALUES (?, ?, ?, ?, ?, ?)");
+		
 		echo $mysqli->error;
 
-		$stmt->bind_param("ss", $email, $password);
+		$stmt->bind_param("ssssis", $email, $password, $firstname, $familyname, $birthyear, $gender);
 		
 		if ($stmt->execute()) {
 			echo "salvestamine õnnestus";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
-		
 	}
-	
 	
 	function login($email, $password) {
 		
@@ -39,10 +35,11 @@
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
 		$stmt = $mysqli->prepare("
-			SELECT id, email, password, created 
+			SELECT id, email, password, created, firstname
 			FROM user_sample
 			WHERE email = ?
 		");
+		
 		echo $mysqli->error;
 		
 		//asendan küsimärgi
@@ -62,12 +59,13 @@
 				
 				echo "kasutaja ".$id." logis sisse";
 				
-				
 				$_SESSION["userId"] = $id;
 				$_SESSION["email"] = $emailFromDb;
+				$_SESSION ["firstname"] = $firstnameFromDatabase;
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
+				exit();
 				
 			} else {
 				$error = "parool vale";
@@ -76,42 +74,45 @@
 		
 		} else {
 			//ei olnud 
-			
 			$error = "sellise emailiga ".$email." kasutajat ei olnud";
 		}
-		
 		return $error;
-		
 	}
 	
 	//uus funktsioon - savePeople() 
 	//signup funktsioon aluseks 
 	
-		function savePeople($Gender, $Color) {
+	function savePeople ($date, $mood, $feeling, $activities, $thoughts) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO ClothingOnTheCampus (Gender, Color) VALUES (?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO EverydayBlog (date, mood, feeling, activities, thoughts) VALUES (?, ?, ?, ?, ?)");
+		
 		echo $mysqli->error;
 		
-		$stmt->bind_param("ss", $Gender, $Color);
+		$stmt->bind_param("issss", $date, $mood, $feeling, $activities, $thoughts);
 		
 		if ($stmt->execute()) {
 			echo "salvestamine õnnestus";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
+	}
 		
-		}
 		
-		
-		function getAllPeople() {
+	function getAllPeople() {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("SELECT Id, Gender, Color, Created FROM ClothingOnTheCampus");
+		$stmt = $mysqli->prepare("
+			SELECT id, date, mood, feeling, activities, thoughts
+			FROM EverydayBlog
+		");
+		
 		echo $mysqli->error;
-		$stmt->bind_result($Id, $Gender, $Color, $Created);
+
+		$stmt->bind_result($id, $date, $mood, $feeling, $activities, $thoughts);
+		
 		$stmt->execute();
 		
 		//array("Regiina", "K")
@@ -119,14 +120,14 @@
 		
 		//seni kuni on üks rida andmeid saada (10 rida = 10 korda)
 		while ($stmt->fetch()) {
-			
 			$person = new StdClass();
-			$person -> Id = $Id;
-			$person -> Gender = $Gender;
-			$person -> ClothingColor = $Color;
-			$person -> Created = $Created;
-			
-			//echo $Color."<br>";
+			$person -> id = $id;
+			$person -> date = $date;
+			$person -> mood = $mood;
+			$person -> feeling = $feeling;
+			$person -> activities = $activities;
+			$person -> thoughts = $thoughts;
+
 			array_push($result, $person);
 		}
 		
@@ -134,15 +135,15 @@
 		$mysqli->close();
 		
 		return $result;
-		}
+	}
 		
 	function cleanInput($input) {
 		
-			$input = trim ($input);
-			$input = stripslashes ($input);
-			$input = htmlspecialchars ($input);
+		$input = trim ($input);
+		$input = stripslashes ($input);
+		$input = htmlspecialchars ($input);
 			
-			return $input;
+		return $input;
 	}
 
 	/*function sum ($x, $y) {

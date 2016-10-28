@@ -7,6 +7,7 @@
 	//kas kasutaja on sisse loginud
 	if(isset($_SESSION["userId"])) {
 		header("Location: data.php");
+		exit();
 	}
 
 	//var_dump($_GET);
@@ -16,26 +17,70 @@
 	
 	
 	//MUUTUJAD
-	$signupEmailError = "";
-	$signupPassword1Error = "";
-	$signupPassword2Error = "";
-	$signupName1Error = "";
-	$signupName2Error = "";
-	$signupEmail = "";
-	$gender = "male";
+	$gender = "female";
 	// KUI Tühi
 	// $gender = "";
+	$signupFirstName = "";
+	$signupLastName = "";
+	$signupBirthyear = "";
+	$signupEmail = "";
+	$signupPassword = "";
+	
+	$signupGenderError = "";
+	$signupFirstNameError = "";
+	$signupLastNameError = "";
+	$signupBirthyearError = "";
+	$signupEmailError = "";
+	$signupPasswordError = "";
+	
+	$loginEmail = "";
+	$loginPassword = "";
+	$loginEmailError = "";
+	$loginPasswordError = "";
+
+	
+	//KASUTAJA LOOMINE
+	//kas eesnimi oli olemas
+	if (isset ($_POST["signupFirstName"])) {
+		
+		if (empty ($_POST["signupFirstName"])) {
+			$signupFirstNameError = "See väli on kohustuslik!";
+			
+		} else {
+			$signupFirstName = $_POST["signupFirstName"];
+		}
+	}
+	
+	//kas perenimi oli olemas
+	if (isset ($_POST["signupLastName"])) {
+		
+		if (empty ($_POST["signupLastName"])) {
+			$signupLastNameError = "See väli on kohustuslik!";
+			
+		} else {
+			$signupLastName = $_POST["signupLastName"];
+		}
+	}
+	
+	//kas sünniaasta oli olemas
+	if (isset ($_POST["signupBirthyear"])) {
+		
+		if (empty ($_POST["signupBirthyear"])) {
+			$signupBirthyearError = "See väli on kohustuslik!";
+			
+		} else {
+			$signupBirthyear = $_POST["signupBirthyear"];
+		}
+	}	
 	
 	//kas epost oli olemas
-	if ( isset ($_POST["signupEmail"])) {
+	if (isset ($_POST["signupEmail"])) {
 		
 		if (empty ($_POST["signupEmail"])) {
-			
 			//oli email, kuid see oli tühi
 			$signupEmailError = "See väli on kohustuslik!";
 			
 		} else {
-			
 			//email on oige, salvestan vaartuse muutujasse
 			$signupEmail = $_POST["signupEmail"];
 		}
@@ -44,94 +89,66 @@
 	//kas parool oli olemas
 	if (isset ($_POST["signupPassword"])) {
 			
-		if ( empty ($_POST["signupPassword"])) {
-				
+		if (empty ($_POST["signupPassword"])) {
 			//oli parool, kuid see oli tühi
 			$signupPasswordError = "See väli on kohustuslik!";
-			} 
 			
-			else {
-			
+		} else {
 			//tean, et oli parool ja see ei olnud tühi
 			//VÄHEMALT 8, soovitatav 16 täheline parool
 			
-			if ( strlen($_POST["signupPassword"]) < 8 ) {
-				
+			if (strlen($_POST["signupPassword"]) < 8 ) {
 				$signupPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk";
 			}	
 		}
 	}
+	//TEHA PAROOLIKORDUS/KINNITUS???
 	
-	//kas paroolikordus on sama
-	if (isset ($_POST["signupPassword1"])) {
-		
-		if (empty ($_POST["signupPassword1"])) {
-			
-			$signupPassword1Error = "See väli on kohustuslik!";
-		}
-	}	
-	
-	//kas eesnimi oli olemas
-	if (isset ($_POST["signupName1"])) {
-		
-		if (empty ($_POST["signupName1"])) {
-			
-			$signupName1Error = "See väli on kohustuslik!";
-		}
-	}
-	
-	//kas perenimi oli olemas
-	if (isset ($_POST["signupName2"])) {
-		
-		if (empty ($_POST["signupName2"])) {
-			
-			$signupName2Error = "See väli on kohustuslik!";
-		}
-	}
-	
-	
-		if ( isset ( $_POST["gender"] ) ) {
-		if ( empty ( $_POST["gender"] ) ) {
-			$genderError = "See väli on kohustuslik!";
-		} else {
-			$gender = $_POST["gender"];
-		}
-	}
+
 	
 	//Kus tean, et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
-	if ( isset($_POST["signupPassword1"]) &&
-		 isset($_POST["signupEmail"]) &&	
-		 empty($signupEmailError) && 
-		 empty($signupPassword1Error)
-	   ) {
+	if( isset($_POST["signupFirstName"])&& 
+		isset($_POST["signupLastName"])&&
+		isset($_POST["signupBirthyear"]) &&
+		isset($_POST["signupEmail"]) &&
+		isset($_POST["signupPassword"]) && 
+		isset($_POST["gender"]) && 
+		empty($signupFirstNameError) &&
+		empty($signupLastNameError) &&
+		empty($signupBirthyearError) && 
+		empty($signupEmailError) && 
+		empty($signupPasswordError) && 
+		empty($signupgenderError)){
 		
 		echo "Salvestan...<br>";
 		echo "email ".$signupEmail. "<br>";
-
-		$password = hash("sha512", $_POST["signupPassword1"]);
-		
-		echo "parool ".$_POST["signupPassword1"]."<br>";
+		$password = hash("sha512", $_POST["signupPassword"]);
+		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "räsi ".$password."<br>";
+        
 		
 		//echo $serverPassword;
 		
-		
 		$signupEmail = cleanInput ($signupEmail);
-		$password = cleanInput($password);
+		$signupPassword = cleanInput($password);
+		$signupFirstName = cleanInput ($signupFirstName);
+        $signupLastName = cleanInput ($signupLastName);
 		
-		signup($signupEmail, $password);
-		
+		signup($signupFirstName, $signupLastName, $signupBirthyear, $signupEmail, $password, $gender);
 	}
 	
+	//SISSE LOGIMINE
+	
 	$error = "";
-	//kontrollin, et kasutaja t'itis v'lja ja v]ib sisse logida
-	if(isset($_POST ["loginEmail"])&&
+	
+	//kontrollin, et kasutaja täitis väljad ja võib sisse logida
+	if( isset($_POST ["loginEmail"])&&
 		isset($_POST["loginPassword"]) &&
 		!empty($_POST["loginEmail"]) &&
 		!empty($_POST["loginPassword"])
 	) {
 		//login sisse
-		login($_POST["loginEmail"],$_POST["loginPassword"]);
+		$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
 	}
 ?>
 
@@ -146,7 +163,6 @@
 		<h1>Logi sisse</h1>
 		
 		<form method = "POST">
-		
 			<p style="color:red;"><?=$error;?></p>
 		
 			<input name = "loginEmail" type = "email" placeholder = "E-mail">
@@ -154,30 +170,18 @@
 			<br><br>
 			
 			<input name = "loginPassword" type = "password" placeholder = "Salasõna">
-			
-			<br><br>
-							
-			<input name = "loginGender" type = "gender" placeholder = "Sugu">
-			
+	
 			<br><br>
 			
-			<label> Sinu riidevärv </label>
-			<br>
-			<input name = "loginColor" type = "color" placeholder = "Riidevärv">
-			
-			<br><br>
-			
-			<input type = "submit" value = "Logi sisse">
-			
+			<input type = "submit" value = "Logi sisse">		
 		</form>
-			
-		</form>
+		
 			
 		<h1>Loo konto</h1>	
 		
 		<form method = "POST">
 		
-			<input name = "signupName1" type = "name" placeholder = "Eesnimi"> <?php echo $signupName1Error; ?> <input name = "signupName2" type = "name" placeholder = "Perekonnanimi"> <?php echo $signupName2Error; ?>
+			<input name = "signupFirstName" type = "name" placeholder = "Eesnimi"> <?php echo $signupFirstNameError; ?> <input name = "signupLastName" type = "name" placeholder = "Perekonnanimi"> <?php echo $signupLastNameError; ?>
 			
 			<br><br>
 			
@@ -189,37 +193,30 @@
 			
 			<br><br>
 			
-			<input name = "signupPassword1" type = "password" placeholder = "Salasõna"> <?php echo $signupPassword1Error; ?> <input name = "signupPassword2" type = "password" placeholder = "Salasõna kinnitus"> <?php echo $signupPassword2Error; ?>
+			<input name = "signupPassword" type = "password" placeholder = "Salasõna"> <?php echo $signupPasswordError; ?>
 			
 			<br><br>
 			
 			 <?php if($gender == "male") { ?>
-				<input type="radio" name="gender" value="male" checked> Male<br>
+				<input type="radio" name="gender" value="male" checked> Mees <br>
 			 <?php } else { ?>
-				<input type="radio" name="gender" value="male" > Male<br>
+				<input type="radio" name="gender" value="male" > Mees <br>
 			 <?php } ?>
 			 
 			 <?php if($gender == "female") { ?>
-				<input type="radio" name="gender" value="female" checked> Female<br>
+				<input type="radio" name="gender" value="female" checked> Naine <br>
 			 <?php } else { ?>
-				<input type="radio" name="gender" value="female" > Female<br>
-			 <?php } ?>
-			 
-			 <?php if($gender == "other") { ?>
-				<input type="radio" name="gender" value="other" checked> Other<br>
-			 <?php } else { ?>
-				<input type="radio" name="gender" value="other" > Other<br>
+				<input type="radio" name="gender" value="female" > Naine <br>
 			 <?php } ?>
 			 
 			<br>
 			
 			<input type = "submit" value = "Loo kasutaja">
 		
-			<br><br>
+			<br>
 		
 		</form>
 		
-	<!--Tegemist hakkab olema arvamuste avaldamise leheküljega, kus vastavalt teemadele, kas siis aktuaalsuse või populaarsuse järgi inimesed saavad oma arvamusi teistega jagada. Või näiteks lehekülg, kus inimesed saavad testida erinevaid arendusi ja tarkvarasid ning anda tagasisidet testitavate toodete kohta.
-	--!>
+	<!--Tegemist hakkab olema igapäevase blogi pidamise portaaliga, kus saab sisestada kuupäeva, tuju, enesetunde, päevategevused ning mõtted--!>
 	</body>
 </html>
