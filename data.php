@@ -1,130 +1,82 @@
-<?php 
-	
-	require("functions.php");
-	
-	//kui ei ole kasutaja id'd
-	if (!isset($_SESSION["userId"])){
-		
-		//suunan sisselogimise lehele
-		header("Location: login.php");
-		exit();
+<?php
+   require("functions.php");
+   
+   //kas on sisseloginud, kui ei ole siis
+   //suunata login lehele
+   if (!isset ($_SESSION["userId"])) {
+	   
+	   //header("Location: login.php");
+	   
 	}
-	
-	
-	//kui on ?logout aadressireal siis login välja
-	if (isset($_GET["logout"])) {
-		
-		session_destroy();
-		header("Location: login.php");
-		exit();
-	}
-	
-	$msg = "";
-	if(isset($_SESSION["message"])){
-		$msg = $_SESSION["message"];
-		
-		//kui ühe näitame siis kustuta ära, et pärast refreshi ei näitaks
-		unset($_SESSION["message"]);
-	}
-	
-	
-	if ( isset($_POST["location"]) && 
-		isset($_POST["area"]) && 
-		isset ($_POST ["rooms"])&&
-		!empty($_POST["location"]) && 
-		!empty($_POST["area"]) &&
-		!empty ($POST["rooms"])
-		
-	  ) {
+   
+   //kas ?loguout on aadressireal
+   if (isset($_GET["loguout"])) {
+	   
+	   session_destroy();
+	   
+	   header("Location: login.php");
+	   exit();
+	   
+
+	   
+   }
+   
+   if ( isset($_POST["city"]) &&
+	     isset($_POST["street"]) &&
+		 isset($_POST["area"]) &&
+		 isset($_POST["rooms"]) &&
+		 !empty($_POST["city"]) &&
+		 !empty($_POST["street"]) &&
+		 !empty($_POST["area"]) &&
+		 !empty($_POST["rooms"]) ) {
 		  
-		saveApartment (cleanInput($_POST["location"]), cleanInput($_POST["area"]), cleanInput($_POST["rooms"]));
+		$city = cleanInput($_POST["city"]);
+        $street = cleanInput($_POST["street"]);
+        $area = cleanInput($_POST["area"]);
+        $rooms = cleanInput($_POST["rooms"]);	
+		
+		saveGoals($_POST["city"], $_POST["street"], $_POST["area"], $_POST["rooms"]);
 		
 	}
 	
-	//saan kõik korteri andmed
-	$apartmentData = getAllApartments();
-	//echo "<pre>";
-	//var_dump($carData);
-	//echo "</pre>";
-?>
-<h1>Korteriotsingu salvestamine</h1>
-<?=$msg;?>
-<p>
-	Tere tulemast <a href="user.php"><?=$_SESSION["userEmail"];?>!</a>
-	<a href="?logout=1">Logi välja</a>
-</p>
-
-
-<h2>Otsi korterit</h2>
-<form method="POST">
+	$people = getAllGoals();
 	
-	<label>Korteri asukoht</label><br>
-	<input name="location" type="text">
-	<br><br>
-	
-	<label>Korteri pindala</label><br>
-	<input type="int" name="area" >
-	<br><br>
-	
-	<label>Tubade arv</label><br>
-	<input type="int" name="rooms">
-	<br><br>
-	
-	<input type="submit" value="Salvesta">
-	
-	
-</form>
-
-<h2>Korterid</h2>
-<?php 
-	
-	$html = "<table>";
-	
-	$html .= "<tr>";
-		$html .= "<th>id</th>";
-		$html .= "<th>location</th>";
-		$html .= "<th>area</th>";
-		$html .= "<th>rooms</th>";
-	$html .= "</tr>";
-	
-	//iga liikme kohta massiivis
-	foreach($apartmentData as $c){
-		// iga auto on $c
-		//echo $c->plate."<br>";
-		
-		$html .= "<tr>";
-			$html .= "<td>".$c->id."</td>";
-			$html .= "<td>".$c->location."</td>";
-			$html .= "<td>".$c->area."</td>";
-			$html .= "<td>".$c->rooms."</td>";
-		$html .= "</tr>";
-	}
-	
-	$html .= "</table>";
-	
-	echo $html;
-	
-	
-	$listHtml = "<br><br>";
-	
-	foreach($apartmentData as $c){
-		
-		
-		$listHtml .= "<h1 style='text':".$c->location."'>".$c->location."</h1>";
-		$listHtml .= "<h1 style='text' = ".$c->area."</p>";
-	}
-	
-	
-	echo $listHtml;
-	
-	
-	
+	echo "<pre>";
+	var_dump($people);
+	echo "</pre>";
 
 ?>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-
+<html>
+    <head>
+        <h1>Üürikorteri otsingu registreerimine</h1>
+        <p>
+        Tere tulemast <?=$_SESSION["email"];?>!
+        <a href="?loguout=1">Logi välja</a>
+        </p>
+	</head>	
+        <body>
+            <h1>Andmed</h1>
+            <form method="POST">
+	
+	            <label>Linn</label><br>
+	            <input name="city" type="text">
+	            <br><br>
+	
+	            <label>Tänav</label><br>
+	            <input name="street" type="text" >
+	            <br><br>
+	
+	            <label>Pindala</label><br>
+	            <input name="area" type="int" >
+	            <br><br>
+	
+	            <label>Tubade arv</label><br>
+	            <input name="rooms" type="int" >
+	            <br><br>
+	
+	            <input type="submit" value="Salvesta">
+	
+	
+                </form>
+		</body>		
+</html>		

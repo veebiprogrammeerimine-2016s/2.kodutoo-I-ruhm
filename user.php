@@ -27,16 +27,15 @@
 		unset($_SESSION["message"]);
 	}
 	
-	
 	if ( isset($_POST["interest"]) && 
 		!empty($_POST["interest"])
 	  ) {
-		  
+	
+    	
 		saveInterest(cleanInput($_POST["interest"]));
-		
 	}
-
-		if ( isset($_POST["userInterest"]) && 
+	
+	if ( isset($_POST["userInterest"]) && 
 		!empty($_POST["userInterest"])
 	  ) {
 		  
@@ -44,7 +43,9 @@
 		
 	}
 	
-    $userInterest = getAllInterests();
+    $interests = getAllInterests();
+	
+	$userInterestst = getAllUserInterests();
 ?>
 <h1><a href="data.php"> < tagasi</a> Kasutaja leht</h1>
 <?=$msg;?>
@@ -59,15 +60,13 @@
     
     $listHtml = "<ul>";
 	
-	foreach($userInterest as $i){
+	foreach($userInterestst as $i){
 		
 		
 		$listHtml .= "<li>".$i->interest."</li>";
-
 	}
     
     $listHtml .= "</ul>";
-
 	
 	echo $listHtml;
     
