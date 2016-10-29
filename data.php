@@ -21,87 +21,84 @@
 	   
    }
    
-   if ( isset($_POST["gender"]) &&
-	     isset($_POST["color"]) &&
-		 !empty($_POST["gender"]) &&
-		 !empty($_POST["color"]) 
-	  ) {
+   if ( isset($_POST["goal_name"]) &&
+	     isset($_POST["goal_explanation"]) &&
+		 isset($_POST["due_date"]) &&
+		 isset($_POST["created"]) &&
+		 !empty($_POST["goal_name"]) &&
+		 !empty($_POST["goal_explanation"]) &&
+		 !empty($_POST["due_date"]) &&
+		 !empty($_POST["created"]) ) {
 		  
-		$gender = cleanInput($_POST["gender"]);  
-		  
-		savePeople($_POST["gender"], $_POST["color"]);
+		$goal_name = cleanInput($_POST["goal_name"]);
+        $goal_explanation = cleanInput($_POST["goal_explanation"]);
+        $due_time = cleanInput($_POST["due_date"]);
+        $created = cleanInput($_POST["created"]);	
+		
+		saveGoals($_POST["goal_name"], $_POST["goal_explanation"], $_POST["due_date"], $_POST["created"]);
 		
 	}
 	
-	$people = getAllPeople();
+	$people = getAllGoals();
 	
 	echo "<pre>";
 	var_dump($people);
 	echo "</pre>";
 
 ?>
-<h1>Data</h1>
-<p>
-   Tere tulemast <?=$_SESSION["email"];?>!
-   <a href="?loguout=1">Logi välja</a>
-</p>
-
-
-<h1>Salvesta inimene</h1>
-<form method="POST">
-			
-	<label>Sugu</label><br>
-	<input type="text" name="gender" ><br>
+<html>
+    <head>
+         <h1>Goalhelper</h1> 
+    <p>
+    Tere tulemast <a href="user.php"><?=$_SESSION["email"];?>!
+    <a href="?loguout=1">Logi välja</a>
+    </p>
+	</head>	
+        <body>
+            <h1>Eesm2rgi registreerimine</h1>
+            <form method="POST">
 	
-	<br><br>
-	<label>Värv</label><br>
-	<input name="color" type="color"> 
+	            <label>Eesm2rk</label><br>
+	            <input name="goal_name" type="text">
+	            <br><br>
 	
-	<br><br>
-	<input type="submit" value="Salvesta">
+	            <label>Eesm2rgi sisu</label><br>
+	            <input name="goal_explanation" type="text" >
+	            <br><br>
 	
-</form>
-
-<h2>Arhiiv</h2>
-<?php
-
-    foreach($people as $p) {
-		
-		echo    "<h3 style=' color:".$p->clothingColor."; '>"
-		        .$p->gender
-		        ."</h3>";
-		
-		
-	}
-?>
-
-<h2>Arhiivtabel</h2>
-<?php
-
-    $html = "<table>";
+	            <label>T2htaeg</label><br>
+	            <input name="due_date" type="text" >
+	            <br><br>
 	
-	    $html .= "<tr>";
-	        $html .= "<th>id</th>";
-			$html .= "<th>Sugu</th>";
-			$html .= "<th>Värv</th>";
-			$html .= "<th>Loodud</th>";
-	    $html .= "</tr>";
+	            <label>Eesm2rgi registreerimisaeg</label><br>
+	            <input name="created" type="text" >
+	            <br><br>
 	
-    foreach($people as $p) {
-		$html .= "<tr>";
-				$html .= "<td>".$p->id."</td>";
-				$html .= "<td>".$p->gender."</td>";
-				$html .= "<td style=' background-color:".$p->clothingColor."; '>"
-						.$p->clothingColor
-						."</td>";
-				$html .= "<td>".$p->created."</td>";
-			$html .= "</tr>";
-
-    }
+	            <input type="submit" value="Salvesta">
 	
-	$html .= "</table>";
 	
-	echo $html;
+                </form>
+		</body>		
+</html>		
 
 
-?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

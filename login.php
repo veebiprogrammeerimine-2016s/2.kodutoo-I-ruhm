@@ -1,5 +1,4 @@
 
-
 <?php
      
 	//võtab ja kopeerib faili sisu
@@ -19,13 +18,15 @@
 	//var_dump($_POST);
 	
 	//MUUTUJAD
-	$signupEmailError="";
-	$signupPasswordError="";
+	$signupEmailError = "";
+	$signupPasswordError = "";
 	$signupEmail = "";
 	$signupName = "";
 	$signupNameError = "";
 	$loginEmail = "";
 	$loginEmailError = "";
+	$loginPassword = "";
+	$loginPasswordError = "";
 	
 	// kas e-post oli olemas
 	if (isset($_POST["signupPassword"])){
@@ -52,7 +53,7 @@
 		} else {
 			
 			// email on õige, salvestan väärtuse muutujasse
-			$signupEmail = $_POST["signupEmail"]; 
+			$signupEmail = cleanInput($_POST["signupEmail"]); 
 		
 		}
 	}
@@ -64,7 +65,33 @@
 			
 		}
 	}	
+	
+	if (isset($_POST["loginEmail"])){
+				
+		if (empty($_POST["loginEmail"])){
+					
+			$loginEmailError="Sisetage oma E-post!";
+		
+		} else {
+			
+			$loginEmail = cleanInput($_POST["loginEmail"]); 
+			
+		}
+	}
 
+	if (isset($_POST["loginPassword"])){
+				
+		if (empty($_POST["loginPassword"])){
+					
+			$loginPasswordError="Sisetage oma parool!";
+		
+		} else {
+			
+			$loginPassword = cleanInput($_POST["loginPassword"]); 
+			
+		}
+	}
+	
 $gender = "male";
 	// KUI Tühi
 	// $gender = "";
@@ -85,20 +112,19 @@ $gender = "male";
 		 empty($signupPasswordError) 
 	   ) {
 		
+		// Salvestame andmebaasi
 		echo "Salvestan...<br>";
-		echo "email ".$signupEmail."<br>";
 		
 		$password = hash("sha512", $_POST["signupPassword"]);
 		
-		echo "parool ".$_POST["signupPassword"]."<br>";
-		echo "räsi ".$password."<br>";
-	    
 		//echo $serverPassword
 		
 		$signupEmail = cleanInput($signupEmail);
 		$password = cleanInput($password);
+		$signupName = cleanInput($signupName);
+		$loginEmail = cleanInput($loginEmail);
 		
-		signup($signupEmail, $password);
+		signup($signupEmail, cleanInput($password));
 		
 		
 		
@@ -111,15 +137,16 @@ $gender = "male";
 	if ( isset($_POST["loginEmail"]) &&
 	     isset($_POST["loginPassword"]) &&
 		 !empty($_POST["loginEmail"]) &&
-		 !empty($_POST["loginPassword"]) 
+		 !empty($_POST["loginPassword"])
+		 
 	  ) {
 		  
 		//login sisse
-		$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
+		$error = login(cleanInput($_POST["loginEmail"]), cleanInput($_POST["loginPassword"]));
 		
 	}
 	
-
+   
 
 ?>
 
@@ -141,7 +168,7 @@ $gender = "male";
 				
 				<br><br>
 				
-				<input name="loginPassword" type="password" placeholder="Parool">
+				<input name="loginPassword" type="password" placeholder="Parool"> <?php echo $loginPasswordError; ?>
 				
 				<br> <br>
 				
