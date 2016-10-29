@@ -63,7 +63,6 @@
 			$SignupEmail=$_POST["SignupEmail"];
 		}
 		
-	
 	}
 	
 	//kas password oli sisse logimisel olemas
@@ -149,17 +148,17 @@ if( isset($_POST["SignupName"])&&
 	isset($_POST["gender"]) && 
 	empty($SignupNameError) && 
 	empty($SignupAgeError) && 
-	empty ($SignupEmailError) && 
-	empty ($SignupPasswordError) && 
+	empty($SignupEmailError) && 
+	empty($SignupPasswordError) && 
 	empty($SignupgenderError)){
-		echo "siin";
-		echo "Salvestan...<br>";
-		echo "Email ".$SignupEmail."<br>";
+		//echo "siin";
+		//echo "Salvestamine õnnestus<br>";
+		//echo "Email ".$SignupEmail."<br>";
 		
 		$password=hash("sha512", $_POST["SignupPassword"]);
 		
-		echo "parool ".$_POST["SignupPassword"]."<br>";
-		echo "räsi ".$password."<br>";
+		//echo "parool ".$_POST["SignupPassword"]."<br>";
+		//echo "räsi ".$password."<br>";
 		
 		//echo $serverPassword;
 		
@@ -177,7 +176,7 @@ if( isset($_POST["SignupName"])&&
 	//kontrollin, et kasutaja täitis välja ja võib sisse logida
 	if(isset($_POST["LoginEmail"]) && isset($_POST["LoginPassword"]) && !empty($_POST["LoginEmail"]) && !empty($_POST["LoginPassword"])){
 	
-		echo "siin";
+		//echo "siin";
 		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
 		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
 		
@@ -198,8 +197,8 @@ if( isset($_POST["SignupName"])&&
 
 		<form method="POST">
 			<p style="color:red;"><?=$error;?></p>
-			<label>E-post</label><br>
-			<input name="LoginEmail" type="email" value="<?=$LoginEmail;?>"> <?php echo $LoginEmailError;?>
+			
+			<input name="LoginEmail" type="email" placeholder="E-post" value="<?=$LoginEmail;?>"> <?php echo $LoginEmailError;?>
 		
 			<br><br>
 		

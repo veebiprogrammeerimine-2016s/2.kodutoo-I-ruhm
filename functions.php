@@ -19,13 +19,13 @@
 		
 		//asendan küsimärgi väärtustega
 		//iga muutuja kohta üks täht, mis tüüpi muutuja on
-		//s-stringi
+		//s-string
 		//i-integer
 		//d-double/float
 		$stmt->bind_param("sisss",$Name, $Age, $Email, $password, $gender);
 		
 		if($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 			
 		} else {
 				echo "ERROR ".$stmt->error;
@@ -71,7 +71,7 @@
 				
 				$_SESSION["userId"]=$id;
 				$_SESSION["Email"]=$EmailFromDB;
-				$_SESSION["name"]=$nameFromDB;
+				$_SESSION["name"]=$NameFromDB;
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
@@ -105,7 +105,7 @@
 		$stmt->bind_param("siiii",$Gender, $Age, $date, $NumberofSteps, $LandLength);
 		
 		if($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 			
 		} else {
 				echo "ERROR ".$stmt->error;
