@@ -82,7 +82,15 @@
 		signUp(cleanInput($signupEmail), cleanInput($password), cleanInput($firstname), cleanInput($lastname));
 		
 	}
-
+	
+	if ( isset($_POST["loginEmail"]) && !empty($_POST["loginEmail"]) ) {
+		
+		$error = login(cleanInput($_POST["loginEmail"]), cleanInput($_POST["loginPassword"]));
+		
+		//Save loginEmail to $loginEmail variable
+		$loginEmail = cleanInput($_POST["loginEmail"]);
+	}
+	
 	if ( isset($_POST["loginEmail"]) && isset($_POST["loginPassword"]) && !empty($_POST["loginEmail"]) && !empty($_POST["loginPassword"]) ) {
 		
 		$error = login(cleanInput($_POST["loginEmail"]), cleanInput($_POST["loginPassword"]));

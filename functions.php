@@ -3,7 +3,7 @@
 
 	session_start();
 	$database = "if16_hinrek";
-	$mysqli = new mysqli($servername, $username, $password, $database);
+	$mysqli = new mysqli($serverHost, $serverUsername, $serverPassword, $database);
 	
 	//***************
 	//**** SIGNUP ***
@@ -122,7 +122,7 @@
 		}
 
 		$stmt->close();
-
+		
 	}
 
 	//***************

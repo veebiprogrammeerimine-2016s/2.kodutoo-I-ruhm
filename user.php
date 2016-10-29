@@ -1,5 +1,7 @@
 <?php
-
+	
+	$emptyFieldError = "";
+	
 	require("functions.php");
 
 	//If no user id
@@ -17,12 +19,16 @@
 		exit();
 	}
 
-	if ( isset($_POST["subject"]) &&
-		!empty($_POST["subject"])
-	  ) {
+	if ( isset($_POST["subject"]) && !empty($_POST["subject"]) ) {
 
 		saveSubject(cleanInput($_POST["subject"]));
 
+	} 
+	
+	if ( isset($_POST["subject"]) && empty($_POST["subject"]) ) {
+		
+		$emptyFieldError = "See väli on kohustuslik!";
+		
 	}
 
 	if ( isset($_POST["userSubject"]) &&
@@ -61,7 +67,7 @@
 	<h4>Lisa õppeaine juhul, kui puudub nimekirjast</h4>
 	<form method="POST">
 		<label>Õppeaine nimi</label>
-		<input name="subject" type="text">
+		<input name="subject" type="text"><p style="color:red;"><?=$emptyFieldError;?></p>
 		<input type="submit" value="Salvesta">
 	</form>
 
