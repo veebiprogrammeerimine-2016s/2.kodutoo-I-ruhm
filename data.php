@@ -49,10 +49,10 @@
 <html>
     <head>
         <h1>Üürikorteri otsingu registreerimine</h1>
-        <p>
-        Tere tulemast <?=$_SESSION["email"];?>!
-        <a href="?loguout=1">Logi välja</a>
-        </p>
+    <p>
+	Tere tulemast <a href="user.php"><?=$_SESSION["email"];?>!</a>
+	<a href="?logout=1">Logi välja</a>
+</p>
 	</head>	
         <body>
             <h1>Andmed</h1>

@@ -27,12 +27,13 @@
 		unset($_SESSION["message"]);
 	}
 	
+	
 	if ( isset($_POST["interest"]) && 
 		!empty($_POST["interest"])
 	  ) {
-	
-    	
+		  
 		saveInterest(cleanInput($_POST["interest"]));
+		
 	}
 	
 	if ( isset($_POST["userInterest"]) && 
@@ -43,14 +44,17 @@
 		
 	}
 	
+	
+	
     $interests = getAllInterests();
 	
-	$userInterestst = getAllUserInterests();
+    $userInterests = getAllUserInterests();
+	
 ?>
 <h1><a href="data.php"> < tagasi</a> Kasutaja leht</h1>
 <?=$msg;?>
 <p>
-	Tere tulemast <?=$_SESSION["userEmail"];?>!
+	Tere tulemast <?=$_SESSION["email"];?>!
 	<a href="?logout=1">Logi välja</a>
 </p>
 
@@ -60,13 +64,15 @@
     
     $listHtml = "<ul>";
 	
-	foreach($userInterestst as $i){
+	foreach($userInterests as $i){
 		
 		
 		$listHtml .= "<li>".$i->interest."</li>";
+
 	}
     
     $listHtml .= "</ul>";
+
 	
 	echo $listHtml;
     
