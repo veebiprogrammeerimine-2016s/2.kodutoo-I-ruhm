@@ -18,6 +18,7 @@
 	$loginEmailError = "";
 	$loginPasswordError = "";
 	$signupDateError = "";
+	$signupNameError = "";
 	$signupEmail = "";
 	$loginEmail = "";
 	$gender = "";
@@ -25,6 +26,34 @@
 	
 	
 	
+	
+	
+	//kas eposti v2li on t8hi
+	if (isset ($_POST["loginEmail"]) ) {
+		
+		if( empty ($_POST["loginEmail"]) ) {
+			
+			$loginEmailError = "See väli on kohustuslik!";
+		}
+	}	
+	//kas parooli v2li on t8hi
+	if (isset ($_POST["loginPassword"]) ) {
+		
+		if( empty ($_POST["loginPassword"]) ) {
+			
+			$loginPasswordError = "See väli on kohustuslik!";
+		} else {
+			//tean et parool ja see ei olnud tühi
+			//vähemalt 8 tähemärki pikk
+			
+			if ( strlen($_POST["loginPassword"]) < 8) {
+				
+				$loginPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk!";	
+			}
+		
+		
+	    }
+	}	
 	
 	//kas epost oli olemas
 	if (isset ($_POST["signupEmail"]) ) {
@@ -55,49 +84,39 @@
 			}	
 		}	
 	}
-	//kas eposti v2li on t8hi
-	if (isset ($_POST["loginEmail"]) ) {
+	
+	if (isset ($_POST["name"]) ) {
 		
-		if( empty ($_POST["loginEmail"]) ) {
+		if( empty ($_POST["name"]) ) {
 			
-			$loginEmailError = "See väli on kohustuslik!";
+			$signupNameError = "See väli on kohustuslik!";
 		}
 	}	
-	//kas parooli v2li on t8hi
-	if (isset ($_POST["loginPassword"]) ) {
+	
+	if (isset ($_POST["birthday"]) ) {
 		
-		if( empty ($_POST["loginPassword"]) ) {
+		if( empty ($_POST["birthday"]) ) {
 			
-			$loginPasswordError = "See väli on kohustuslik!";
+			$signupDateError = "See väli on kohustuslik!";
 		} else {
 			//tean et parool ja see ei olnud tühi
 			//vähemalt 8 tähemärki pikk
 			
-			if ( strlen($_POST["loginPassword"]) < 8) {
+			if ( strlen($_POST["birthday"]) != 10) {
 				
-				$loginPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk!";	
+				$signupDateError = "Kuupäev vales formaadis!";	
 			}
 		
 		
 	    }
 	}	
-	//kontrollib kas sünnikuupäev on õiges formaadis, väli ei ole kohustuslik
-	if (isset ($_POST["signupDate"]) ) {
+	
+	if (isset ($_POST["name"]) ) {
 		
-		if (strlen ($_POST["signupDate"]) != 10) {
+		if( empty ($_POST["name"]) ) {
 			
-			
-			if (strlen ($_POST["signupDate"]) != 0 ) {
-				
-				$signupDateError = "Kuupäev on vales formaadis! Sisesta palun nii: pp/kk/aaaa";
-				
-			}
-			
-			
-			
+			$signupNameError = "See väli on kohustuslik!";
 		}
-				
-				
 	}	
 	
 	if ( isset ( $_POST["name"] ) ) {
@@ -133,17 +152,21 @@
 	// tean et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
 	if ( isset($_POST["signupPassword"]) &&
 		 isset($_POST["signupEmail"]) &&
+		 isset($_POST["name"]) &&
+		 isset($_POST["birthday"]) &&
+		 empty($signupNameError) &&
+		 empty($signupDateError) &&
 		 empty($signupEmailError) &&	
 		 empty($signupPasswordError) 
 		) {
 		
 		echo "Salvestan...<br>";
-		echo "email ".$signupEmail."<br>";
+		echo "Email: ".$signupEmail."<br>";
 		
 		$password = hash("sha512", $_POST["signupPassword"]);
 		
-		echo "parool ".$_POST["signupPassword"]."<br>";
-		echo "räsi ".$password."<br>";
+		//echo "parool ".$_POST["signupPassword"]."<br>";
+		//echo "räsi ".$password."<br>";
 		
 		$signupEmail = cleanInput($signupEmail);
 		$password = cleanInput($password);
@@ -204,11 +227,11 @@
 	
 		<form method="POST">
 			
-			<input type="email" name="signupEmail" placeholder="E-post" > <?php echo $signupEmailError;?>
+			<input type="email" id="signupEmail" name="signupEmail" placeholder="E-post" tabindex="1" value="<?php if(isset($_POST['signupEmail'])){ echo htmlentities($_POST['signupEmail']);}?>" > <?php echo $signupEmailError;?>
 			<br><p>
 			<input type="password" name="signupPassword" placeholder="Parool"> <?php echo $signupPasswordError;?>
 			<br><p>
-			<input type="text" name="name" placeholder="Nimi"> 
+			<input type="text" id="name" name="name" placeholder="Nimi"  tabindex="1" value="<?php if(isset($_POST['name'])){ echo htmlentities($_POST['name']);}?>" > <?php echo $signupNameError;?>
 			<br><br>
 			
 			 <?php if($gender == "male") { ?>
@@ -226,11 +249,11 @@
 			 <?php if($gender == "other") { ?>
 				<input type="radio" name="gender" value="other" checked> Muu<br>
 			 <?php } else { ?>
-				<input type="radio" name="gender" value="other" > Muu<br>
+				<input type="radio" name="gender" value="other" checked> Muu<br>
 			 <?php } ?>
 			<br>
 			
-			<input type="date" name="birthday" placeholder="Sünnikuupäev"> <?php echo $signupDateError;?>
+			<input type="text" id="birthday" name="birthday" placeholder="Sünnikuupäev" tabindex="1" value="<?php if(isset($_POST['birthday'])){ echo htmlentities($_POST['birthday']);}?>" > <?php echo $signupDateError;?>
 			<br><sup>pp/kk/aaaa</sup>
 			<br><p>
 			<input type="submit" value="Registreeri kasutaja">
@@ -240,7 +263,7 @@
 	
 	
 	
-	 
+	 <!--<input id="FirstName" name="FirstName" placeholder="First name" title="First Name" required="" tabindex="1" type="text" value="<?php if(isset($_POST['FirstName'])){ echo htmlentities($_POST['FirstName']);}?>"/> -->
 	
 	
 	</body>

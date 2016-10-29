@@ -103,32 +103,7 @@
 		return $error;
 		
 	}
-	//andmete salvestamine andmebaasi
-	function savePeople ($sex, $color) {
-		
-		$error = "";
-		
-		//ühendus
-		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
-		//käsk
-		$stmt = $mysqli->prepare("INSERT INTO clothingOnTheCampus (sex, color) VALUES (?, ?)");
-		
-		echo $mysqli->error;
-		//asendan küsimärgi väärtusetega
-		//iga muutuja kohta 1 täht, mis tüüpi muutuja on
-		// s- sring, i- integer, d- double/float
-		$stmt->bind_param("ss", $sex, $color);
-		
-		if ($stmt->execute()) {
-			
-			
-			echo "salvestamine õnnestus"."<br>";
-		} else {
-			echo "ERROR ".$stmt->error;
-		}
-		
-		
-	}
+	
 	//andmete salvestamine andmebaasi
 	function saveCars ($make, $model, $fuel, $carcolor) {
 		
@@ -137,7 +112,7 @@
 		//ühendus
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 		//käsk
-		$stmt = $mysqli->prepare("INSERT INTO autod (make, model, fuel, carcolor) VALUES (?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO cars (make, model, fuel, carcolor) VALUES (?, ?, ?, ?)");
 		
 		echo $mysqli->error;
 		//asendan küsimärgi väärtusetega
@@ -148,52 +123,20 @@
 		if ($stmt->execute()) {
 			
 			
-			echo "salvestamine õnnestus"."<br>";
+			echo "Salvestamine õnnestus!"."<br>";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
 		
 		
 	}
-	//fetchib andmeid andmebaasist
-	function getAllPeople () {
-		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 	
-		$stmt = $mysqli->prepare("SELECT id, sex, color, created FROM clothingOnTheCampus");
-		
-		echo $mysqli->error;
-		
-		$stmt->bind_result($id, $sex, $color, $created);
-		$stmt->execute();
-		
-		$result = array();
-		
-		
-		//seni kuni on 1 rida andmeid saada (10 rida = 10 korda)
-		while ($stmt->fetch()) {
-			
-			$person = new StdClass();
-			$person->id = $id;
-			$person->sex = $sex;
-			$person->clothingColor = $color;
-			$person->created = $created;
-			
-			//echo $color."<br>";
-			array_push($result, $person);
-			
-		}
-		$stmt->close();
-		$mysqli->close();
-		return $result;
-		
-		
-	}
 	
 	//fetchib andmeid andmebaasist
 	function getAllCars () {
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 	
-		$stmt = $mysqli->prepare("SELECT id, make, model, fuel, carcolor, created FROM autod");
+		$stmt = $mysqli->prepare("SELECT id, make, model, fuel, carcolor, created FROM cars");
 		
 		echo $mysqli->error;
 		

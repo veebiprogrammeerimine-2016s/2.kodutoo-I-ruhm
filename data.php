@@ -21,17 +21,7 @@
 		exit();
 	}
 	
-	//data faili vormi kontroll et väljad poleks tühjad
-	if ( isset($_POST["sex"]) &&
-		 isset($_POST["color"]) &&
-		 !empty($_POST["sex"]) &&
-		 !empty($_POST["color"]) 
-	) {
-		
-		$sex = cleanInput($_POST["sex"]);
-		
-		savePeople($_POST["sex"], $_POST["color"]);	
-	}
+	
 	
 	//data faili vormi kontroll et väljad poleks tühjad
 	if ( isset($_POST["make"]) &&
@@ -48,7 +38,6 @@
 	}
 	
 	
-	$people = getAllPeople();
 	$cars = getAllCars();
 	
 	
@@ -85,14 +74,6 @@
 	}
 	
 	
-	
-	
-	
-	
-	
-	//echo "<pre>";
-	//var_dump($people);
-	//echo "</pre>";
 
 ?>
 
@@ -166,27 +147,7 @@
 
 
 
-<!--
-	
-<h2>Salvesta inimene</h2>
-<form method="POST">
-			
-	<label>Sugu</label><br>
-	<input type="radio" name="sex" value="mees" > Mees<br>
-	<input type="radio" name="sex" value="naine" > Naine<br>
-	<input type="radio" name="sex" value="teadmata" > Ei oska öelda<br>
-	
-	
-	
-	<br><br>
-	<label>Värv</label><br>
-	<input name="color" type="color"> 
-	
-	<br><br>
-	<input type="submit" value="Salvesta">
-	
-</form>
--->
+
 <h3>Arhiiv</h3>
 
 
