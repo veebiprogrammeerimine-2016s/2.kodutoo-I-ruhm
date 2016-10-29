@@ -89,12 +89,12 @@ if (isset ($_SESSION["userId"])) {
 		 {
 		
 		echo "Salvestan...<br>";
-		echo "email ".$signupemail."<br>";
+		#echo "email ".$signupemail."<br>";
 		
 		$password = hash("sha512", $_POST["signuppassword"]);
 		
-		echo "parool ".$_POST["signuppassword"]."<br>";
-		echo "räsi ".$password."<br>";
+		#echo "parool ".$_POST["signuppassword"]."<br>";
+		#echo "räsi ".$password."<br>";
 		
 		
 		$signupemail = cleanInput($signupemail);

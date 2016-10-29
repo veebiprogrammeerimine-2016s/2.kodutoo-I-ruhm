@@ -24,7 +24,7 @@
 		$stmt->bind_param("sss", $email, $password, $nickname);
 		
 		if ($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Kasutaja loodud";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
