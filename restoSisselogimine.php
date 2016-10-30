@@ -159,14 +159,14 @@
 		{
 		
 		echo "SALVESTAN...<br>";
-		echo "email: ".$signupEmail."<br>";
+		//echo "email: ".$signupEmail."<br>";
 		$password = hash ("sha512", $_POST["signupPassword"]);
-		echo "parool: ".$_POST["signupPassword"]."<br>";
-		echo "parooli rasi: ".$password."<br>";
-		echo "vanus: ".$signupage."<br>";
-		echo "nimi: ".$signupName." ".$signupLName."<br>";
-		echo "sugu: ".$signupgender."<br>";
-        echo "telefoni number: ".$phonenr."<br>";
+		//echo "parool: ".$_POST["signupPassword"]."<br>";
+		//echo "parooli rasi: ".$password."<br>";
+		//echo "vanus: ".$signupage."<br>";
+		//echo "nimi: ".$signupName." ".$signupLName."<br>";
+		//echo "sugu: ".$signupgender."<br>";
+        //echo "telefoni number: ".$phonenr."<br>";
 		
 		$signupEmail = cleanInput($signupEmail);
 		$password = cleanInput($password);
@@ -284,8 +284,8 @@
 		<p class="errors"><?php echo $signupEmailError; ?></p><br>
 		<p class="errors"><?php echo $signupPasswordError; ?></p><br>
 		<p class="errors"><?php echo $signupNameError; ?></p><br>
-		<p class="errors"><?php echo $signupLNameError; ?></p>
-        <p class="errors"><?php echo $signupageError; ?></p>
+		<p class="errors"><?php echo $signupLNameError; ?></p><br>
+        <p class="errors"><?php echo $signupageError; ?></p><br>
         <p class="errors"><?php echo $signupgenderError; ?></p>
 
 		<form method="POST">

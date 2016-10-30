@@ -30,7 +30,7 @@
 		$stmt->bind_param("sssssis", $signupEmail, $signupPassword, $signupName, $signupLName, $signupage, $phonenr, $signupgender);
 		
 		if($stmt->execute()){
-			echo "salvestamine onnestus ";
+			echo "kasutaja loomine õnnestus";
 		}else {
 			echo"ERROR ".$stmt->error;
 		}

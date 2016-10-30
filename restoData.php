@@ -24,6 +24,8 @@
 	$comment= "";
 	$customer_sex = "";
 	$person = "";
+    $restoNameError = "";
+    $commentError = "";
 	//kontrollin et valjad poleks tyhjad
 	if( isset($_POST["restoName"]) &&
 		isset($_POST["comment"]) &&
@@ -37,6 +39,27 @@
 	}
 	
 		$person = getallrestos();
+
+    if (isset ($_POST ["restoName"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST ["restoName"])) {
+            //oli tõesti tühi
+            $restoNameError = "Sisesta restorani nimi!";
+        } else {
+            $restoName = $_POST ["restoName"];
+        }
+    }
+    if (isset ($_POST ["comment"])) {
+        // oli olemas, ehk keegi vajutas nuppu
+        if (empty($_POST ["comment"])) {
+            //oli tõesti tühi
+            $commentError = "Sisesta kommentaar!";
+        } else {
+            $comment = $_POST ["comment"];
+        }
+    }
+
+
 
 //echo"<pre>";
 		//var_dump($person);
@@ -79,6 +102,10 @@
                     min-width: 150px;
                     max-width: 630px;
                 }
+                .errors {
+                    max-width: 150px;
+                    color:red;
+                }
 			</style>
 			
 		<p><span style="float: right" class="logout">
@@ -95,7 +122,7 @@
 	<br><br>
 		
 		<form method="POST">
-		
+            <p class="errors"><?php echo $restoNameError; ?></p>
 			<input placeholder="Restorani nimi" name="restoName" type="text">
 			
 			<br><br>
@@ -107,13 +134,13 @@
 			<input type="radio" name="grade" value="5" checked> 5
 			
 			<br><br>
-			
+            <p class="errors"><?php echo $commentError; ?></p>
 			<input placeholder="kommentaar" name="comment" type="text">
 			
 			<br><br>
 
             Sugu:<br>
-            <input type="radio" name="customer_sex" value="Mees"> Mees<br>
+            <input type="radio" name="customer_sex" value="Mees" checked> Mees<br>
             <input type="radio" name="customer_sex" value="Naine"> Naine
 			
 			<br><br>
@@ -165,7 +192,7 @@
 <h2>Tagasiside tabel</h2>
 <?php
 
-	$html = "<Table>";
+	$html = "<table>";
 		$html .= "<tr>";
 			$html .= "<th>id</th>";
 			$html .= "<th>restorani nimi</th>";
