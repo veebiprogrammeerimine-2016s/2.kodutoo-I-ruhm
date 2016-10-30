@@ -138,12 +138,6 @@
 			<input placeholder="kommentaar" name="comment" type="text">
 			
 			<br><br>
-
-            Sugu:<br>
-            <input type="radio" name="customer_sex" value="Mees" checked> Mees<br>
-            <input type="radio" name="customer_sex" value="Naine"> Naine
-			
-			<br><br>
 			
 			<input type="submit">
 		
@@ -189,7 +183,7 @@
 	}*/
 ?>
 <fieldset class="fieldset">
-<h2>Tagasiside tabel</h2>
+<h2>Kasutajate tagasiside tabel</h2>
 <?php
 
 	$html = "<table>";
