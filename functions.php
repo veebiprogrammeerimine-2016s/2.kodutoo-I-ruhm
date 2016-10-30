@@ -10,40 +10,38 @@ require("../../config.php");
 	//***************
 	//**** SIGNUP ***
 	//***************
+	$database = "if16_jant";
 	
-	function signUp ($email, $password) {
+	function signup ($email, $password, $instrument) {
 		
-		$database = "if16_mreintop";
-		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
-		$stmt = $mysqli->prepare("INSERT INTO MVP (email, password) VALUES (?, ?)");
-	
+		
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, instrument) VALUES (?, ?, ?)");
 		echo $mysqli->error;
 		
-		$stmt->bind_param("ss", $email, $password);
+		$stmt->bind_param("sss", $email, $password, $instrument);
 		
 		if($stmt->execute()) {
-			echo "salvestamine ınnestus";
+			echo "Salvestamine ınnestus!";
 		} else {
 		 	echo "ERROR ".$stmt->error;
 		}
 		
-		$stmt->close();
-		$mysqli->close();
 		
 	}
 	
 	
 	function login ($email, $password) {
-		
 		$error = "";
-		echo $email;
 		
-		$database = "if16_mreintop";
-		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $database);
+		$mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"],$GLOBALS["database"]);
+		
 		$stmt = $mysqli->prepare("
-		SELECT id, email, password, created 
-		FROM MVP
-		WHERE email = ?");
+				SELECT id, email, password, instrument, created
+				FROM user_sample
+				WHERE email = ?
+	");
 	
 		echo $mysqli->error;
 		
@@ -51,27 +49,26 @@ require("../../config.php");
 		$stmt->bind_param("s", $email);
 		
 		//m‰‰ran v‰‰rtused muutujatesse
-		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
+		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $instrumentFromDb, $created);
 		$stmt->execute();
 		
 		//andmed tulid andmebaasist vıi mitte
 		// on tıene kui on v‰hemalt ¸ks vaste
 		if($stmt->fetch()){
 			
-			
-			$hash = hash("whirlpool", $password);
+			//vırdlen paroole
+			$hash = hash("sha512", $password);
 			if ($hash == $passwordFromDb) {
 				
-				echo "Kasutaja logis sisse ".$id;
+				echo "Kasutaja ".$id." logis sisse";
 				
 				//m‰‰ran sessiooni muutujad, millele saan ligi
 				// teistelt lehtedelt
 				$_SESSION["userId"] = $id;
-				$_SESSION["userEmail"] = $emailFromDb;
-				$_SESSION["message"] = "<h1>Tere tulemast!</h1>";
-				
+				$_SESSION["email"] = $emailFromDb;
 				
 				header("Location: data.php");
+				exit();
 				
 			}else {
 				$error = "vale parool";
@@ -81,13 +78,25 @@ require("../../config.php");
 		} else {
 			
 			// ei leidnud kasutajat selle meiliga
-			$error = "ei ole sellist emaili";
+			$error = "Sellise emailiga kasutajat ei ole!";
 		}
 		
 		return $error;
 		
 	}
 	
-	
+	function cleanInput($input) {
+		
+		//input = "romiL@tlu.ee   "
+		
+		$input = trim($input);
+		
+		//input = "romiL@tlu.ee"
+			
+		$input = stripslashes($input);
+		$input = htmlspecialchars($input);
+		return $input;
+		
+	}
 	
 ?>

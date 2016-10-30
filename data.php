@@ -7,7 +7,7 @@
 	if (!isset($_SESSION["userId"])){
 		
 		//suunan sisselogimise lehele
-		header("Location: login.php");
+		header("Location: login2.php");
 		
 	}
 	
@@ -15,7 +15,7 @@
 	if (isset($_GET["logout"])) {
 		
 		session_destroy();
-		header("Location: login.php");
+		header("Location: login2.php");
 		
 	}
 	
@@ -46,7 +46,7 @@
 
 
 <p><font face="verdana" color="green">
-	Tere tulemast <?=$_SESSION["userEmail"];?>!
+	Tere tulemast <?=$_SESSION["email"];?>!
 	<a href="?logout=1">Logi välja</a>
 	</font>
 </p>

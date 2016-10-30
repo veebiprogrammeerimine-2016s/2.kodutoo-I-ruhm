@@ -7,7 +7,8 @@
 	//kas kasutaja on sisse logitud
 	if (isset ($_SESSION["userId"])) {
 		
-		//header("Location: data.php");
+		header("Location: data.php");
+		exit();
 	}
 	
 	
@@ -33,11 +34,14 @@
 		//jah on olemas
 		// kas on tühi
 		if( empty($_POST["signupEmail"])){
-		
+			
+			//oli email, kuid see oli tühi
 			$signupEmailError = "See väli on kohustuslik";
-		} else{
-			//email on õige
+		} else {
+			
+			//email on õige, salvestan väärtuse muutujasse
 			$signupEmail = $_POST["signupEmail"];
+			
 		}
 	}
 		
@@ -46,7 +50,7 @@
 			if( empty($_POST["signupPassword"])){
 			
 				$signupPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk!";
-			}else{
+			}else {
 				//siia jõuan siis kui parool oli olemas -isset
 				//parool ei olnud tühi -empty
 				
@@ -58,22 +62,17 @@
 			
 			}
 		}
-	$gender = "male";
-	// KUI Tühi
-	// $gender = "";
-	
-	if ( isset ( $_POST["gender"] ) ) {
-		
-		if ( empty ( $_POST["gender"] ) ) {
-			
-			$genderError = "See väli on kohustuslik!";
-		
-		} else {
-			
-			$gender = $_POST["gender"];
-		}
-	}
 
+		// GENDER
+	if( isset( $_POST["signupGender"] ) ){
+		
+		if(!empty( $_POST["signupGender"] ) ){
+		
+			$signupGender = $_POST["signupGender"];
+			
+		}
+		
+	} 
 	if(isset($_POST["signupAge"])){
 			
 			if ( empty($_POST["signupAge"])){
@@ -83,7 +82,7 @@
 			} else {
 				//Miinimumvanus peab olema vähemalt 16 aastat
 				
-				if($_POST["signupAge"] < 16 ) {
+				if(strlen($_POST["signupAge"]) >16 ) {
 					
 					$signupAgeError = "Registreerumiseks peate olema vähemalt 16 aastat vana";
 				}
@@ -97,7 +96,7 @@
 			$signupInstrumentError = "Instrumendi lisamine on kohustuslik";
 			
 		} else {
-				//Instrimendi lisamine on kohustuslik
+				//Instrumendi lisamine on kohustuslik
 				
 			$instrument = $_POST["signupInstrument"];
 		}		
@@ -105,43 +104,46 @@
 	}
 
 	if ( isset ($_POST["signupPassword"]) &&
-		 isset ($_POST["signupEmail"]) &&
-		 isset ($_POST["signupAge"]) &&
-		 isset ($_POST["signupInstrument"]) &&
-		 empty($signupEmailError) && 
-		 empty($signupPasswordError) &&
-		 empty($signupAgeError) &&
+			isset ($_POST["signupEmail"]) &&
+			isset ($_POST["signupAge"]) &&
+			isset ($_POST["signupInstrument"]) &&
+			empty($signupEmailError) && 
+			empty($signupPasswordError) &&
+			empty($signupAgeError) &&
 		 empty($signupInstrumentError)
 		) {
-		 
 		
-		echo "Salvestan...<br>";
-		echo "email ".$signupEmail."<br>";
-		
-		$password = hash("sha512", $_POST["signupPassword"]);
-		
-		echo "parool ".$_POST["signupPassword"]. "<br>";
-		echo "räsi ".$password."<br>";
-		
-		//echo $serverUsername;
-		
-		signup($signupEmail, $password);
+			$password = hash("sha512", $_POST["signupPassword"]);
 		
 		
-	}
+		
+			//echo $serverPassword;
+			
+			$signupEmail = cleanInput($signupEmail);
+			$password = cleanInput($password);
+			
+			signup($signupEmail, $password, $instrument);
+		}	
 	
 	
+	$error = "";
 	//kontrollin, et kasutaja täitis kõik väljad ja võib sisse logida
 	if ( isset($_POST["LoginEmail"]) &&
 		 isset($_POST["LoginPassword"]) &&
 		 !empty($_POST["LoginEmail"]) &&
 		 !empty($_POST["LoginPassword"])
 	) {
+		
+		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
+		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
+		
 		//login sisse
 		$error = login($_POST["LoginEmail"], $_POST["LoginPassword"]);
 		
 		
 	}		
+		
+		
 		
 ?>
 
@@ -215,6 +217,7 @@
 				<option value="percussion">Löökpillid</option>
 				<option value="piano">Klahvpillid</option>
 				<option value="unknown">Mingi muu</option>
+
 			</select>
 			<?php? echo $signupInstrumentError; ?>
 			
