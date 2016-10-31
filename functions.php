@@ -23,7 +23,7 @@
 		$stmt->bind_param("ssss", $email, $password, $number, $name);
 		
 		if ($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Kasutaja loomine õnnestus";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}

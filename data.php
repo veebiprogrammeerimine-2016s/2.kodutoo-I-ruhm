@@ -4,8 +4,54 @@
 	// kas on sisseloginud, kui ei ole siis
 	// suunata login lehele
 	
+	
+	$modelError = "";
+	$model = "";
+	$plateError = "";
+	$plate = "";
+	$informationError = "";
+	$information = "";
 
+	if ( isset ( $_POST["model"] ) ) {
+		
+		if ( empty ( $_POST["model"] ) ) {
+			
+			$modelError = "See väli on kohustuslik!";
+			
+		} else {
 
+			$model = $_POST["model"];
+			
+		}
+	}
+		
+		
+	if ( isset ( $_POST["plate"] ) ) {
+		
+		if ( empty ( $_POST["plate"] ) ) {
+			
+			$plateError = "See väli on kohustuslik!";
+			
+		} else {
+
+			$plate = $_POST["plate"];
+			
+		}		
+
+	}
+	
+	if ( isset ( $_POST["information"] ) ) {
+		
+		if ( empty ( $_POST["information"] ) ) {
+			
+			$informationError = "See väli on kohustuslik!";
+			
+		} else {
+
+			$information = $_POST["information"];
+			
+		}
+	}
 	
 	if (!isset ($_SESSION["userId"])) {
 		
@@ -32,7 +78,7 @@
 		!empty($_POST["color"]) && 
 		!empty($_POST["information"])
 	  ) {
-		  
+		echo "Auto andmied salvestatakse...<br>";  
 		saveCar(cleanInput($_POST["model"]), cleanInput($_POST["plate"]), cleanInput($_POST["color"]), cleanInput($_POST["information"]));
 		
 	}
@@ -55,11 +101,11 @@
 	<fieldset>
 		<legend>Salvesta auto</legend>
 		<label>Auto mudel</label><br>
-		<input name="model" type="text">
+		<input name="model" type="text" value="<?=$model;?>"> <?php echo $modelError; ?>
 		<br><br>
 		
 		<label>Auto nr</label><br>
-		<input name="plate" type="text">
+		<input name="plate" type="text" value="<?=$plate;?>"> <?php echo $plateError; ?>
 		<br><br>
 		
 		<label>Auto värv</label><br>
@@ -67,7 +113,7 @@
 		<br><br>
 		
 		<label>Informatsioon</label><br>
-		<input name="information" type="text">
+		<input name="information" type="text" value="<?=$information;?>"> <?php echo $informationError; ?>
 		<br><br>
 		
 		<input type="submit" value="Salvesta">

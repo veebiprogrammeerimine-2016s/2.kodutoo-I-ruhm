@@ -132,14 +132,14 @@
 	   ) {
 		
 		echo "Salvestan...<br>";
-		echo "email ".$signupEmail."<br>";
+		//echo "email ".$signupEmail."<br>";
 		
 		$password = hash("sha512", $_POST["signupPassword"]);
 		$number = $_POST["signupNumber"];
 		$name = $_POST["signupName"];
 		
-		echo "parool ".$_POST["signupPassword"]."<br>";
-		echo "räsi ".$password."<br>";
+		//echo "parool ".$_POST["signupPassword"]."<br>";
+		//echo "räsi ".$password."<br>";
 		
 		
 		
