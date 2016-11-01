@@ -2,8 +2,8 @@
 
 ## Kirjeldus
 
-1. Võimalda oma lehel kasutajat luua ja sisselogida.
-1. Kontrolli kõik kasutaja loomise ja sisselogimise vormi väljad, kui on tühjad, siis anna veateade!
+olemas1. Võimalda oma lehel kasutajat luua ja sisselogida.
+olemas1. Kontrolli kõik kasutaja loomise ja sisselogimise vormi väljad, kui on tühjad, siis anna veateade!
 1. Veendu, et mingit jama ei saaks andmebaasi salvestada (nt JavaScript). 
 1. Veendu, et väljad jääksid täidetud, kui saadetakse vorm osaliselt.
 1. Võimalda salvestada andmebaasi kirjeid oma ideele vastavalt (ainult sisselogitud kasutaja peaks saama salvestada).
