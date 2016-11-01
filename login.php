@@ -106,7 +106,7 @@
 	}
 	
 	
-	$error = "";
+	
 	//Kus tean et uhtegi viga ei olnud ja saan kasutaja andmed salvestada
 	if ( isset($_POST["signupPassword"]) &&
 		 isset($_POST["signupEmail"]) &&
@@ -117,23 +117,20 @@
 		 empty($signupPasswordError) 
 	   ) {
 		
-		echo "Salvestan...<br>";
-		echo "email ".$signupEmail."<br>";
-		echo "kasutajanimi ".$signupUsername."<br>";
-		
 		$password = hash("sha512", $_POST["signupPassword"]);
 		
-		echo "parooli hash ".$password."<br>";
 		
 		$signupEmail=cleanInput($signupEmail);
 		$signupUsername=cleanInput($signupUsername);
 		$password=cleanInput($password);
 		
 		
-		signup($signupEmail, $signupUsername, $password);
+		signUp($signupEmail, $signupUsername, $password);
 		
 		
 	}
+	
+	$error = "";
 	
 	if( isset($_POST["loginEmail"]) && isset($_POST["loginPassword"]) && !empty($_POST["loginEmail"]) && !empty($_POST["loginPassword"])){
 	
@@ -146,7 +143,7 @@
 <!DOCTYPE html>
 <html>
 
-	<link rel="stylesheet" type="text/css" href="1.css">
+	
 
 	<head>
 		<title>Sisselogimise lehekülg</title>
