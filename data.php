@@ -1,6 +1,9 @@
 <?php
 	require("functions.php");
 	
+	$makeError = "";
+	$fuelError = "";
+	
 	// kas on sisse loginud, kui ei ole siis suunata login lehele
 	
 	
@@ -39,11 +42,12 @@
 	
 	
 	$cars = getAllCars();
+
 	
 	
 	if ( isset ( $_POST["make"] ) ) {
 		if ( empty ( $_POST["make"] ) ) {
-			$makeError = "See väli on kohustuslik!";
+			$makeError = "Palun täida väljad!";
 		} else {
 			$make = $_POST["make"];
 		}
@@ -51,7 +55,7 @@
 	
 	if ( isset ( $_POST["model"] ) ) {
 		if ( empty ( $_POST["model"] ) ) {
-			$modelError = "See väli on kohustuslik!";
+			$modelError = "Palun täida väljad!";
 		} else {
 			$model = $_POST["model"];
 		}
@@ -59,7 +63,7 @@
 	
 	if ( isset ( $_POST["fuel"] ) ) {
 		if ( empty ( $_POST["fuel"] ) ) {
-			$modelError = "See väli on kohustuslik!";
+			$makeError = "Palun täida väljad!";
 		} else {
 			$fuel = $_POST["fuel"];
 		}
@@ -67,7 +71,7 @@
 	
 	if ( isset ( $_POST["carcolor"] ) ) {
 		if ( empty ( $_POST["carcolor"] ) ) {
-			$modelError = "See väli on kohustuslik!";
+			$carcolorlError = "Palun täida väljad!";
 		} else {
 			$carcolor = $_POST["carcolor"];
 		}
@@ -86,12 +90,13 @@
 	<a href="?logout=1">Logi välja</a>
 
 <h2>Salvesta auto andmed</h2>
+<p style="color:red;"><?php echo $makeError;?></p>
 <form method="POST">
 			
 	<label>Mark</label><br>
 
-		<select id="car" name="make" onchange="ChangeCarList()"> 
-		<option value="">Vali mark</option> 
+		<select id="car" name="make" placeholder="Vali mark" onchange="ChangeCarList()"> 
+		<option value=""></option> 
 		<option value="Volvo">Volvo</option>
 		<option value="Toyota">Toyota</option> 
 		<option value="Volkswagen">Volkswagen</option> 
@@ -104,6 +109,7 @@
 	<br><br>
 	<label>Kütus</label><br>
 	<select  name="fuel"> 
+		<option value=""></option> 
 		<option value="Diisel">Diisel</option> 
 		<option value="Bensiin">Bensiin</option> 
 		<option value="Bensiin/Gaas">Bensiin/Gaas</option> 
@@ -122,8 +128,8 @@
 		var carsAndModels = {};
 		carsAndModels['Volvo'] = ['Vali mudel', 'V70', 'XC60', 'XC90', 'S60', 'S80', 'S90'];
 		carsAndModels['Toyota'] = ['Vali mudel', 'Auris', 'Avensis', 'Corolla', 'Hilux', 'Land Cruiser', 'Prius'];
-		carsAndModels['Volkswagen'] = ['--Vali mudel--', 'Golf', 'Polo', 'Scirocco', 'Touareg', 'Passat', 'Transporter'];
-		carsAndModels['BMW'] = ['--Vali mudel--', '1.seeria', '2.seeria', '3.seeria', '4.seeria', '5.seeria', '6.seeria', '7.seeria', '8.seeria'];
+		carsAndModels['Volkswagen'] = ['Vali mudel', 'Golf', 'Polo', 'Scirocco', 'Touareg', 'Passat', 'Transporter'];
+		carsAndModels['BMW'] = ['Vali mudel', '1.seeria', '2.seeria', '3.seeria', '4.seeria', '5.seeria', '6.seeria', '7.seeria', '8.seeria'];
 
 		function ChangeCarList() {
 			var carList = document.getElementById("car");

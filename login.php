@@ -215,7 +215,7 @@
 		<form method="POST">
 			
 			<p style="color:red;"><?=$error;?></p>
-			<input type="email"  name="loginEmail" placeholder="E-post" value="<?=$loginEmail;?>" value="<?=$signupEmail;?>"> <?php echo $loginEmailError;?>
+			<input type="email" id="loginEmail" name="loginEmail" placeholder="E-post"  tabindex="1" value="<?php if(isset($_POST['loginEmail'])){ echo htmlentities($_POST['loginEmail']);}?>"  value="<?=$loginEmail;?>" value="<?=$signupEmail;?>"> <?php echo $loginEmailError;?>
 			<br><p>
 			<input type="password" name="loginPassword" placeholder="Parool"> <?php echo $loginPasswordError;?> 
 			<br><p>
