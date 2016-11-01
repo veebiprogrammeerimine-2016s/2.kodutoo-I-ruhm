@@ -39,19 +39,16 @@
 		
 	}
 	
-	$people = getAllGoals();
+	$goals = getAllGoals();
 	
-	echo "<pre>";
-	var_dump($people);
-	echo "</pre>";
 
 ?>
 <html>
     <head>
          <h1>Goalhelper</h1> 
     <p>
-    Tere tulemast <a href="user.php"><?=$_SESSION["email"];?>!
-    <a href="?loguout=1">Logi välja</a>
+    Tere tulemast <a href="user.php"><?=$_SESSION["email"];?>!</a>
+    <a href="?loguout=1">Logi v2lja</a>
     </p>
 	</head>	
         <body>
@@ -82,6 +79,32 @@
 </html>		
 
 
+<h2>Eesm2rkide tabel</h2>
+<?php 
+	
+	$html = "<table>";
+		$html .= "<tr>";
+			$html .= "<th>id</th>";
+			$html .= "<th>goal_name</th>";
+			$html .= "<th>goal_explanation</th>";
+			$html .= "<th>due_date</th>";
+			$html .= "<th>created</th>";
+		$html .= "</tr>";
+
+		foreach($goals as $g){
+			$html .= "<tr>";
+				$html .= "<td>".$g->id."</td>";
+				$html .= "<td>".$g->goal_name."</td>";
+				$html .= "<td>".$g->goal_explanation."</td>";
+				$html .= "<td>".$g->due_date."</td>";
+				$html .= "<td>".$g->created."</td>";
+			$html .= "</tr>";	
+		}
+		
+	$html .= "</table>";
+	echo $html;
+
+?>
 
 
 
