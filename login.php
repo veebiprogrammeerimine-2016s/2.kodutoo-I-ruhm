@@ -145,10 +145,13 @@
 
 <!DOCTYPE html>
 <html>
+
+	<link rel="stylesheet" type="text/css" href="1.css">
+
 	<head>
 		<title>Sisselogimise lehekülg</title>
 	</head>
-		<body>
+		<body style="background-color:bisque;">
 
 			<h1>Logi sisse</h1>
 		

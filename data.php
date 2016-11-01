@@ -63,7 +63,7 @@
 <h1>Esileht</h1>
 <p>
 
-	Tere tulemast <?=$_SESSION["username"];?>! Nuudsest on sinu nimi juhuslikult valituna Gaylord.
+	Tere tulemast <a href="user.php"><?=$_SESSION["username"];?>!</a>! Nuudsest on sinu nimi juhuslikult valituna Gaylord.
 	<br>
 	Kui sulle see ei meeldi, siis palun lahku! 
 	<a href="?logout=1">Logi valja</a>
@@ -75,7 +75,9 @@
 
 <!DOCTYPE html>
 <html>
-	<body>
+	
+	<body style="background-color:bisque;">
+	
 		<h1>Uldine paneel</h1>
 		<h2>Tekita thread</h2>
 			
@@ -117,7 +119,7 @@
 				
 				<img src=' ".$p->url." '>
 				
-				$p->url
+				
 				<br><br>
 				$p->color"
 				;
