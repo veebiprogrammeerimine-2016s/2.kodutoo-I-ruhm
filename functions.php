@@ -96,7 +96,7 @@
 		if ($stmt->execute()) {
 			echo "Salvestamine õnnestus";
 		} else {
-			echo "ERROR ".$stmt->error;
+			echo "ERROR". $stmt->error;
 		}
 		
 	}
@@ -163,7 +163,7 @@
 		$stmt->bind_param("s", $interest);
 		
 		if($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 		} else {
 		 	echo "ERROR ".$stmt->error;
 		}
@@ -190,7 +190,7 @@
 		
 		if ($stmt->fetch()) {
 			// oli olemas 
-			echo "juba olemas";
+			echo "Juba olemas";
 			
 			//ära salvestamisega jätka
 			return;
@@ -209,7 +209,7 @@
 		$stmt->bind_param("ii", $_SESSION["userId"], $interest_id);
 		
 		if($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 		} else {
 		 	echo "ERROR ".$stmt->error;
 		}

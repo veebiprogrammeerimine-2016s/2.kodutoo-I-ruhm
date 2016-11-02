@@ -17,9 +17,8 @@
 	   header("Location: login.php");
 	   exit();
 	   
-
-	   
-   }
+   }  
+   $informationError="";
    
    if ( isset($_POST["city"]) &&
 	     isset($_POST["street"]) &&
@@ -39,11 +38,19 @@
 		
 	}
 	
+	 if (empty ($_POST["city"]) &&
+	     empty($_POST["street"]) &&
+		 empty($_POST["area"]) &&
+		 empty($_POST["rooms"])) 
+{
+			 $informationError = "Täita tuleb kõik väljad!";
+			 
+		}
+	
+		
+	
 	$people = getAllGoals();
 	
-	echo "<pre>";
-	var_dump($people);
-	echo "</pre>";
 
 ?>
 <html>
@@ -55,9 +62,9 @@
 </p>
 	</head>	
         <body>
+			
             <h1>Andmed</h1>
             <form method="POST">
-	
 	            <label>Linn</label><br>
 	            <input name="city" type="text">
 	            <br><br>
@@ -75,8 +82,36 @@
 	            <br><br>
 	
 	            <input type="submit" value="Salvesta">
-	
+				
+
 	
                 </form>
 		</body>		
 </html>		
+
+<h2>Korterite tabel</h2>
+<?php 
+	
+	$html = "<table>";
+		$html .= "<tr>";
+			$html .= "<th>id</th>";
+			$html .= "<th>city</th>";
+			$html .= "<th>street</th>";
+			$html .= "<th>area</th>";
+			$html .= "<th>rooms</th>";
+		$html .= "</tr>";
+
+		foreach($people as $g){
+			$html .= "<tr>";
+				$html .= "<td>".$g->id."</td>";
+				$html .= "<td>".$g->city."</td>";
+				$html .= "<td>".$g->street."</td>";
+				$html .= "<td>".$g->area."</td>";
+				$html .= "<td>".$g->rooms."</td>";
+			$html .= "</tr>";	
+		}
+		
+	$html .= "</table>";
+	echo $html;
+
+?>
