@@ -33,12 +33,12 @@
 		!empty($_POST["comment"])
 	)	{
 		//login sisse
-		saverestos($_POST["restoName"],$_POST["grade"],$_POST["comment"],$_POST["customer_sex"]);
+		$Resto->saverestos($_POST["restoName"],$_POST["grade"],$_POST["comment"],$_POST["customer_sex"]);
 		header("Location: restoData.php");
 		exit();
 	}
 	
-		$person = getallrestos();
+		$person = $Resto->getallrestos();
 
     if (isset ($_POST ["restoName"])) {
         // oli olemas, ehk keegi vajutas nuppu
@@ -204,6 +204,7 @@
 			$html .= '<td>'.$P->comment."</td>";
 			$html .= '<td>'.$P->customer_sex."</td>";
 			$html .= '<td>'.$P->created."</td>";
+        $html .= "<td><a href='edit.php?id=".$P->id."'>muuda</a></td>";
 		$html .= "</tr>";
 		
 	}

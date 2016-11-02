@@ -168,9 +168,9 @@
 		//echo "sugu: ".$signupgender."<br>";
         //echo "telefoni number: ".$phonenr."<br>";
 		
-		$signupEmail = cleanInput($signupEmail);
-		$password = cleanInput($password);
-		signup($signupEmail, $password, $signupName, $signupLName, $signupage, $phonenr, $signupgender);
+		$signupEmail = $Helper->cleanInput($signupEmail);
+		$password = $Helper->cleanInput($password);
+		$User->signup($signupEmail, $password, $signupName, $signupLName, $signupage, $phonenr, $signupgender);
 		
 	}
 	
@@ -200,10 +200,10 @@
 
 	)	{
 		
-		$_POST["loginEmail"] = cleanInput($_POST["loginEmail"]);
-		$_POST["loginPassword"] = cleanInput($_POST["loginPassword"]);
+		$_POST["loginEmail"] = $Helper->cleanInput($_POST["loginEmail"]);
+		$_POST["loginPassword"] = $Helper->cleanInput($_POST["loginPassword"]);
 		//login sisse
-		$error = login($_POST["loginEmail"],$_POST["loginPassword"]);
+		$error = $User->login($_POST["loginEmail"],$_POST["loginPassword"]);
 	}
 ?>
 <!DOCTYPE html>
