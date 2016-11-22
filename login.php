@@ -102,8 +102,6 @@
 			}	
 		}
 	}
-	//TEHA PAROOLIKORDUS/KINNITUS???
-	
 
 	
 	//Kus tean, et ühtegi viga ei olnud ja saan kasutaja andmed salvestada
@@ -122,7 +120,9 @@
 		
 		echo "Salvestan...<br>";
 		echo "email ".$signupEmail. "<br>";
+		
 		$password = hash("sha512", $_POST["signupPassword"]);
+		
 		echo "parool ".$_POST["signupPassword"]."<br>";
 		echo "räsi ".$password."<br>";
         
@@ -133,11 +133,21 @@
 		$signupPassword = cleanInput($password);
 		$signupFirstName = cleanInput ($signupFirstName);
         $signupLastName = cleanInput ($signupLastName);
+		$signupBirthyear = cleanInput ($signupBirthyear);
 		
 		signup($signupFirstName, $signupLastName, $signupBirthyear, $signupEmail, $password, $gender);
 	}
 	
 	//SISSE LOGIMINE
+	
+	if (isset ($_POST["loginEmail"]) ) {
+	
+		if (empty ($_POST["loginEmail"]) ) { 
+			$loginEmailError = "See väli on kohustuslik!";
+		} else {
+			$loginEmail = $_POST["loginEmail"];   //jätab e-maili meelde, kui parool on vale
+		}
+	}
 	
 	$error = "";
 	
@@ -147,9 +157,12 @@
 		!empty($_POST["loginEmail"]) &&
 		!empty($_POST["loginPassword"])
 	) {
+		$loginEmail = cleanInput($loginEmail);
+		$loginPassword = cleanInput($_POST["loginPassword"]);
+			
 		//login sisse
-		$error = login($_POST["loginEmail"], $_POST["loginPassword"]);
-	}
+		$error = login($_POST["loginEmail"], $loginPassword);
+		}
 ?>
 
 
@@ -161,11 +174,10 @@
 	<body>
 
 		<h1>Logi sisse</h1>
-		
 		<form method = "POST">
 			<p style="color:red;"><?=$error;?></p>
 		
-			<input name = "loginEmail" type = "email" placeholder = "E-mail">
+			<input name="loginEmail" type="email" value="<?=$loginEmail;?>" placeholder="E-maili aadress"> <?php echo $loginEmailError; ?>
 			
 			<br><br>
 			
@@ -177,11 +189,14 @@
 		</form>
 		
 			
-		<h1>Loo konto</h1>	
-		
+		<h1>Loo kasutaja</h1>	
 		<form method = "POST">
 		
-			<input name = "signupFirstName" type = "name" placeholder = "Eesnimi"> <?php echo $signupFirstNameError; ?> <input name = "signupLastName" type = "name" placeholder = "Perekonnanimi"> <?php echo $signupLastNameError; ?>
+			<input name = "signupFirstName" type = "name" value="<?=$signupFirstName;?>" placeholder = "Eesnimi"> <?php echo $signupFirstNameError; ?>
+			
+			<br><br>
+			
+			<input name = "signupLastName" type = "name" value="<?=$signupLastName;?>" placeholder = "Perekonnanimi"> <?php echo $signupLastNameError; ?>
 			
 			<br><br>
 			
@@ -189,13 +204,14 @@
 			
 			<br><br>
 			
-			<input name = "signupEmail" type = "email" value = "<?=$signupEmail;?>" placeholder = "E-mail"> <?php echo $signupEmailError; ?>
+			<input name = "signupEmail" type = "email" value="<?=$signupEmail;?>" placeholder = "E-mail"> <?php echo $signupEmailError; ?>
 			
 			<br><br>
 			
 			<input name = "signupPassword" type = "password" placeholder = "Salasõna"> <?php echo $signupPasswordError; ?>
-			
 			<br><br>
+			
+			<label>Sugu</label><br>
 			
 			 <?php if($gender == "male") { ?>
 				<input type="radio" name="gender" value="male" checked> Mees <br>

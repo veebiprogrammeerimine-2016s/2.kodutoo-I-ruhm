@@ -11,18 +11,18 @@
 	//&name="regiinakrivulina";
 	
 	$database = "if16_regiinakrivulina";	
-	function signup ($email, $password, $firstname, $lastname, $birthyear, $gender) {
+	function signup ($email, $password) {
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password, firstname, lastname, birthyear, gender) VALUES (?, ?, ?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?, ?)");
 		
 		echo $mysqli->error;
 
-		$stmt->bind_param("ssssis", $email, $password, $firstname, $familyname, $birthyear, $gender);
+		$stmt->bind_param("ss", $email, $password);
 		
 		if ($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
@@ -35,7 +35,7 @@
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
 		$stmt = $mysqli->prepare("
-			SELECT id, email, password, created, firstname
+			SELECT id, email, password, created
 			FROM user_sample
 			WHERE email = ?
 		");
@@ -46,7 +46,7 @@
 		$stmt->bind_param("s", $email);
 		
 		//määran tupladele muutujad
-		$stmt->bind_result($id, $emailFromDb, $passwordFromDb, $created);
+		$stmt->bind_result($id, $emailFromDatabase, $passwordFromDatabase, $created);
 		$stmt->execute();
 		
 		//küsin rea andmeid
@@ -55,26 +55,25 @@
 		
 			// võrdlen paroole
 			$hash = hash("sha512", $password);
-			if($hash == $passwordFromDb) {
+			if($hash == $passwordFromDatabase) {
 				
-				echo "kasutaja ".$id." logis sisse";
+				echo "Kasutaja ".$id." logis sisse";
 				
 				$_SESSION["userId"] = $id;
-				$_SESSION["email"] = $emailFromDb;
-				$_SESSION ["firstname"] = $firstnameFromDatabase;
+				$_SESSION["email"] = $emailFromDatabase;
 				
 				//suunaks uuele lehele
 				header("Location: data.php");
 				exit();
 				
 			} else {
-				$error = "parool vale";
+				$error = "Vale parool";
 			}
 			
 		
 		} else {
 			//ei olnud 
-			$error = "sellise emailiga ".$email." kasutajat ei olnud";
+			$error = "Sellise emailiga ".$email." kasutajat ei olnud";
 		}
 		return $error;
 	}
@@ -86,14 +85,14 @@
 		
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO EverydayBlog (date, mood, feeling, activities, thoughts) VALUES (?, ?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO EverydayBlog (date, mood, feeling, activities, thoughts, user) VALUES (?, ?, ?, ?, ?, ?)");
 		
 		echo $mysqli->error;
 		
-		$stmt->bind_param("issss", $date, $mood, $feeling, $activities, $thoughts);
+		$stmt->bind_param("sssssi", $date, $mood, $feeling, $activities, $thoughts, $_SESSION["userId"]);
 		
 		if ($stmt->execute()) {
-			echo "salvestamine õnnestus";
+			echo "Salvestamine õnnestus";
 		} else {
 			echo "ERROR ".$stmt->error;
 		}
@@ -105,13 +104,13 @@
 		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
 
 		$stmt = $mysqli->prepare("
-			SELECT id, date, mood, feeling, activities, thoughts
+			SELECT id, date, mood, feeling, activities, thoughts, created
 			FROM EverydayBlog
 		");
 		
 		echo $mysqli->error;
-
-		$stmt->bind_result($id, $date, $mood, $feeling, $activities, $thoughts);
+		//$stmt->bind_param("i", $_SESSION["userId"]);
+		$stmt->bind_result($id, $date, $mood, $feeling, $activities, $thoughts, $created);
 		
 		$stmt->execute();
 		
@@ -127,6 +126,7 @@
 			$person -> feeling = $feeling;
 			$person -> activities = $activities;
 			$person -> thoughts = $thoughts;
+			$person -> created = $created;
 
 			array_push($result, $person);
 		}
